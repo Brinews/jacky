@@ -1,0 +1,16 @@
+1. 数据库准备（mysql)
+	☆安装mysql,运行mysql终端，输入命令：source "路径+CS1reassdb_sql.txt""
+	完成创建数据表及导入测试数据；
+
+2. 编写连接SQL的java类MySqlProxy:
+	☆功能包括：连接connect, 断开close, 查询query, 更新update
+	☆编译时：-classpath libsql.jar
+
+3. 定制样式－导航功能
+	☆分块+颜色控制
+	☆javascript控制导航
+
+4. 页面servlet编写（实际控制逻辑）
+	☆employee信息更新(empList.jsp显示员工信息列表；empUpdate.jsp更新员工信息,后端servlet为EmpUpdate.java)
+	☆添加员工培训信息(cosAdd.jsp添加员工完成课程情况；后端servlet为CosAdd.java)
+	☆查询员工未完成培训信息

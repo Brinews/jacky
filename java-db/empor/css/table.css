@@ -1,0 +1,17 @@
+.query td{color:green;font-size:12px;}
+
+.input {color:gray; background:#fff}
+
+table {  
+padding:0;   
+margin:0 auto;  
+border-collapse: collapse;  
+}  
+
+td {  
+background: #fff;  
+font-size:12px;  
+padding: 3px 3px 3px 8px;  
+color: #4f6b72;  
+}  
+

@@ -1,0 +1,12 @@
+.menu {width:960px;}
+.menu ul{list-style:none;}
+.menu li{float:left; width:300px;background:#CCC;margin-left:3px;line-height:30px;}
+.menu a{display:block; text-align:center; height:30px;}
+.menu a:link{color:#666;background:#CCC;text-decoration:none;}
+.menu a:visited{color:#666;text-decoration:underline;}
+.menu a:hover{color:#FFF; font-weight:bold;text-decoration:underline;background:#F00;}
+
+.main {position:absolute;top:65px; left:50px;width:905px;height:88%;background-color:none; border:1px; border-style:solid; border-color:silver;}
+.frm {margin:0px; width:905px;height:100%;border:0px;}
+
+.table input{width:180px;}

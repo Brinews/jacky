@@ -1,0 +1,1 @@
+javac -Xlint:deprecation -Xlint:unchecked -classpath ./WEB-INF/lib/libsql.jar;../../lib/servlet-api.jar  -d ./WEB-INF/classes/ ./src/MySqlProxy.java ./src/Employee.java ./src/EmpInfo.java ./src/EmpUpdate.java ./src/TrainingInfo.java ./src/CosAdd.java
