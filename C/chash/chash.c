@@ -102,7 +102,7 @@ int main()
 	int hashsize = 0;
 
 	/* begin process */
-	while (scanf("%d", &hashsize) && hashsize)
+	while (scanf("%d", &hashsize) != EOF)
 	{
 		int i = 0, vcnt = 0, min = 0x7f, minpos;
 
@@ -142,7 +142,7 @@ int main()
 
 			//printf("[%d, %d]", min, minpos);
 			printf("%d", min);
-			if (vcnt >= 0) printf(" ");
+			if (vcnt > 0) printf(" ");
 
 			/* when an element is selected, then release another element if possible */
 			int npos = minpos + 1;

@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
         } 
 		else 
 		if (error_occupied(board, size, blockedrow, blockedcol)) {
-                printf("Position already occupied, try again\n");
+			printf("Position already occupied, try again\n");
 		}
 		else
 		{
