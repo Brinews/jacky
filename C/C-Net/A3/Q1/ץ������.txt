@@ -1,0 +1,261 @@
+抓包工具 tcpdump
+
+TcpDump可以将网络中传送的数据包的“头”完全截获下来提供分析。它支持针对网络层、协议、主机、网络或端口的过滤，并提供and、or、not等逻辑语句来帮助你去掉无用的信息，tcpdump，就是：dump the traffic on a network，根据使用者的定义对网络上的数据包进行截获的包分析工具。
+
+默认情况下，tcpdump将监视第一个网络接口上所有流过的数据包 tcpdump总的的输出格式为：系统时间 来源主机.端口 > 目标主机.端口 数据包参数
+
+参数
+tcpdump支持相当多的不同参数，如使用-i参数指定tcpdump监听的网络接口，这在计算机具有多个网络接口时非常有用，使用-c参数指定要监听的数据包数量，使用-w参数指定将监听到的数据包写入文件中保存，等等。
+然而更复杂的tcpdump参数是用于过滤目的，这是因为网络中流量很大，如果不加分辨将所有的数据包都截留下来，数据量太大反而不容易发现需要的数据包。使用这些参数定义的过滤规则可以截留特定的数据包，以缩小目标，才能更好的分析网络中存在的问题。tcpdump使用参数指定要监视数据包的类型、地址、端口等，根据具体的网络问题，充分利用这些过滤规则就能达到迅速定位故障的目的。
+
+解码
+tcpdump对截获的数据并没有进行彻底解码，数据包内的大部分内容是使用十六进制的形式直接打印输出的。
+ 
+
+tcpdump的选项介绍
+tcpdump采用命令行方式，它的命令格式为：
+tcpdump -h
+tcpdump version 4.2.1
+libpcap version 1.1.1
+Usage: tcpdump [-aAbdDefhHIKlLnNOpqRStuUvxX] [ -B size ] [ -c count ]
+        [ -C file_size ] [ -E algo:secret ] [ -F file ] [ -G seconds ]
+        [ -i interface ] [ -M secret ]
+        [ -r file ] [ -s snaplen ] [ -T type ] [ -w file ]
+        [ -W filecount ] [ -y datalinktype ] [ -z command ]
+        [ -Z user ] [ expression ]
+
+tcpdump的选项介绍
+-a 　　　将网络地址和广播地址转变成名字；
+-d 　　　将匹配信息包的代码以人们能够理解的汇编格式给出；
+-dd 　　　将匹配信息包的代码以c语言程序段的格式给出；
+-ddd 　　　将匹配信息包的代码以十进制的形式给出；
+-e 　　　在输出行打印出数据链路层的头部信息；
+-f 　　　将外部的Internet地址以数字的形式打印出来；
+-l 　　　使标准输出变为缓冲行形式；
+-n 　　　不把网络地址转换成名字；
+-t 　　　在输出的每一行不打印时间戳；
+-v 　　　输出一个稍微详细的信息，例如在ip包中可以包括ttl和服务类型的信息；
+-vv 　　　输出详细的报文信息；
+-c 　　　在收到指定的包的数目后，tcpdump就会停止；
+-F 　　　从指定的文件中读取表达式,忽略其它的表达式；
+-i 　　　指定监听的网络接口；
+-r 　　　从指定的文件中读取包(这些包一般通过-w选项产生)；
+-w 　　　直接将包写入文件中，并不分析和打印出来；
+-T 　　　将监听到的包直接解释为指定的类型的报文，常见的类型有rpc （远程过程调用）和snmp（简单网络管理协议；））
+
+表达式介绍
+表达式是一个正则表达式，tcpdump利用它作为过滤报文的条件，如果一个报文满足表达式的条件；
+则这个报文将会被捕获，如果没有给出任何条件，则网络上所有的信息包将会被截获。
+
+在表达式中一般如下几种类型的关键字，
+一种是关于类型的关键字，主要包括host，net，port, 例如 host 210.27.48.2，指明 210.27.48.2是一台主机；
+net 202.0.0.0 指明202.0.0.0是一个网络地址，port 23 指明端口号是23。如果没有指定类型，缺省的类型是host.
+
+第二种是确定传输方向的关键字，主要包括src , dst ,dst or src, dst and src ,这些关键字指明了传输的方向；
+举例说明，src 210.27.48.2 ,指明ip包中源地址是210.27.48.2 , dst net 202.0.0.0 指明目的网络地址是202.0.0.0 。
+如果没有指明方向关键字，则缺省是src or dst关键字。
+
+第三种是协议的关键字，主要包括fddi,ip ,arp,rarp,tcp,udp等类型。Fddi指明是在FDDI(分布式光纤数据接口网络)上的特定的网络协议；
+实际上它是"ether"的别名，fddi和ether具有类似的源地址和目的地址，所以可以将fddi协议包当作ether的包进行处理和分析；
+其他的几个关键字就是指明了监听的包的协议内容。如果没有指定任何协议，则tcpdump将会监听所有协议的信息包。
+
+除了这三种类型的关键字之外，其它重要的关键字如下：
+gateway, broadcast,less,greater,还有三种逻辑运算，取非运算是 'not ' '! ', 与运算是'and','&&';或运算 是'or' ,'||'；
+ 
+
+表达式例子
+1 想要截获所有192.168.57.71 的主机收到的和发出的所有的数据包：
+tcpdump host 192.168.57.71
+
+2 想要截获主机192.168.57.71 和主机192.168.57.72 或192.168.57.73 的通信，使用命令
+tcpdump host 192.168.57.71 and \(192.168.57.72 or 192.168.57.73 \)
+
+3 想要获取主机192.168.57.71除了和主机192.168.57.72之外所有主机通信的ip包，使用命令：
+tcpdump ip host 192.168.57.71 and ! 192.168.57.72
+
+4 想要获取主机192.168.57.71接收或发出的telnet包，使用如下命令：
+tcpdump tcp port 23 and host 192.168.57.71
+
+5 想要获取发往主机的所有icmp 包
+tcpdump icmp -vvn -i eth0
+
+6 想要获取主机与192.168.4.35的所有icmp 包
+tcpdump -nnv icmp and host 192.168.4.35
+
+TCP包的输出信息
+用TCPDUMP捕获的TCP包的一般输出信息是：
+src > dst: flags data-seqno ack window urgent options
+src > dst:表明从源地址到目的地址, flags是TCP包中的标志信息,S 是SYN标志, F (FIN), P (PUSH) , R (RST) "." (没有标记);
+data-seqno是数据包中的数据的顺序号, ack是下次期望的顺序号, window是接收缓存的窗口大小,
+urgent表明数据包中是否有紧急指针. Options是选项.
+
+每一行中间都有这个包所携带的标志：
+S=SYN   发起连接标志
+P=PUSH  传送数据标志
+F=FIN    关闭连接标志
+ack     表示确认包
+RST= RESET  异常关闭连接
+.      表示没有任何标志
+
+ 
+
+tcpdump例子
+ 
+
+telnet 80端口
+
+    telnet 211.x.x.x 80 
+
+Trying 211.x.x.x...
+Connected to 211.x.x.x.
+Escape character is '^]'.
+HTTP/1.0 408 Request Time-out
+Cache-Control: no-cache
+Connection: close
+Content-Type: text/html
+
+<html><body><h1>408 Request Time-out</h1>
+Your browser didn't send a complete request in time.
+</body></html>
+Connection closed by foreign host.
+ 
+
+    tcpdump -n host 192.168.4.33 and 211.x.x.x  
+
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
+17:45:04.665707 IP 192.168.4.33.43591 > 211.x.x.x.80: Flags [S], seq 2726144355, win 14600, options [mss 1460,sackOK,TS val 7864869 ecr 0,nop,wscale 5], length 0
+17:45:04.671141 IP 211.x.x.x.80 > 192.168.4.33.43591: Flags [S.], seq 3916293769, ack 2726144356, win 5792, options [mss 1460,sackOK,TS val 4294457575 ecr 7864869,nop,wscale 7], length 0
+17:45:04.671225 IP 192.168.4.33.43591 > 211.x.x.x.80: Flags [.], ack 1, win 457, options [nop,nop,TS val 7864870 ecr 4294457575], length 0
+17:45:04.671396 IP 192.168.4.33.43591 > 211.x.x.x.80: Flags [P.], seq 1:165, ack 1, win 457, options [nop,nop,TS val 7864870 ecr 4294457575], length 164
+17:45:04.714707 IP 211.x.x.x.80 > 192.168.4.33.43591: Flags [.], ack 165, win 54, options [nop,nop,TS val 4294457621 ecr 7864870], length 0
+17:45:04.864227 IP 211.x.x.x.80 > 192.168.4.33.43591: Flags [P.], seq 1:400, ack 165, win 54, options [nop,nop,TS val 4294457768 ecr 7864870], length 399
+17:45:04.864265 IP 192.168.4.33.43591 > 211.x.x.x.80: Flags [.], ack 400, win 490, options [nop,nop,TS val 7864918 ecr 4294457768], length 0
+17:45:04.864887 IP 192.168.4.33.43591 > 211.x.x.x.80: Flags [F.], seq 165, ack 400, win 490, options [nop,nop,TS val 7864918 ecr 4294457768], length 0
+17:45:04.867834 IP 211.x.x.x.80 > 192.168.4.33.43591: Flags [F.], seq 400, ack 166, win 54, options [nop,nop,TS val 4294457773 ecr 7864918], length 0
+17:45:04.867869 IP 192.168.4.33.43591 > 211.x.x.x.80: Flags [.], ack 401, win 490, options [nop,nop,TS val 7864919 ecr 4294457773], length 0
+
+ 
+
+dhcp
+
+    tcpdump -vvn udp port 67 and host 192.168.4.157 
+
+tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
+11:22:27.625950 IP (tos 0x0, ttl 64, id 11914, offset 0, flags [none], proto UDP (17), length 328)
+    192.168.4.157.68 > 255.255.255.255.67: [udp sum ok] BOOTP/DHCP, Request from 08:00:27:26:1f:be, length 300, xid 0xb93952ce, Flags [none] (0x0000)
+      Client-IP 192.168.4.157
+      Client-Ethernet-Address 08:00:27:26:1f:be
+      Vendor-rfc1048 Extensions
+        Magic Cookie 0x63825363
+        DHCP-Message Option 53, length 1: Request
+        Client-ID Option 61, length 7: ether 08:00:27:26:1f:be
+        Hostname Option 12, length 5: "zmxp2"
+        FQDN Option 81, length 9: "zmxp2."
+        Vendor-Class Option 60, length 8: "MSFT 5.0"
+        Parameter-Request Option 55, length 11:
+          Subnet-Mask, Domain-Name, Default-Gateway, Domain-Name-Server
+          Netbios-Name-Server, Netbios-Node, Netbios-Scope, Router-Discovery
+          Static-Route, Classless-Static-Route-Microsoft, Vendor-Option
+        Vendor-Option Option 43, length 3: 220.1.0
+11:22:27.625963 IP (tos 0x0, ttl 64, id 11914, offset 0, flags [none], proto UDP (17), length 328)
+    192.168.4.157.68 > 255.255.255.255.67: [udp sum ok] BOOTP/DHCP, Request from 08:00:27:26:1f:be, length 300, xid 0xb93952ce, Flags [none] (0x0000)
+      Client-IP 192.168.4.157
+      Client-Ethernet-Address 08:00:27:26:1f:be
+      Vendor-rfc1048 Extensions
+        Magic Cookie 0x63825363
+        DHCP-Message Option 53, length 1: Request
+        Client-ID Option 61, length 7: ether 08:00:27:26:1f:be
+        Hostname Option 12, length 5: "zmxp2"
+        FQDN Option 81, length 9: "zmxp2."
+        Vendor-Class Option 60, length 8: "MSFT 5.0"
+        Parameter-Request Option 55, length 11:
+          Subnet-Mask, Domain-Name, Default-Gateway, Domain-Name-Server
+          Netbios-Name-Server, Netbios-Node, Netbios-Scope, Router-Discovery
+          Static-Route, Classless-Static-Route-Microsoft, Vendor-Option
+        Vendor-Option Option 43, length 3: 220.1.0
+11:22:27.628615 IP (tos 0x0, ttl 255, id 15597, offset 0, flags [none], proto UDP (17), length 328)
+    192.168.4.1.67 > 192.168.4.157.68: [udp sum ok] BOOTP/DHCP, Reply, length 300, xid 0xb93952ce, Flags [none] (0x0000)
+      Your-IP 192.168.4.157
+      Gateway-IP 192.168.4.1
+      Client-Ethernet-Address 08:00:27:26:1f:be
+      Vendor-rfc1048 Extensions
+        Magic Cookie 0x63825363
+        DHCP-Message Option 53, length 1: ACK
+        RN Option 58, length 4: 43200
+        RB Option 59, length 4: 75600
+        Lease-Time Option 51, length 4: 86400
+        Server-ID Option 54, length 4: 192.168.58.9
+        Subnet-Mask Option 1, length 4: 255.255.255.0
+        FQDN Option 81, length 3: 255/255 ""
+        Default-Gateway Option 3, length 4: 192.168.4.1
+        Domain-Name-Server Option 6, length 8: 192.168.57.5,202.106.0.20
+11:22:30.253792 IP (tos 0x0, ttl 64, id 11915, offset 0, flags [none], proto UDP (17), length 328)
+    192.168.4.157.68 > 192.168.58.9.67: [udp sum ok] BOOTP/DHCP, Request from 08:00:27:26:1f:be, length 300, xid 0x470b860, Flags [none] (0x0000)
+      Client-IP 192.168.4.157
+      Client-Ethernet-Address 08:00:27:26:1f:be
+      Vendor-rfc1048 Extensions
+        Magic Cookie 0x63825363
+        DHCP-Message Option 53, length 1: Request
+        Client-ID Option 61, length 7: ether 08:00:27:26:1f:be
+        Hostname Option 12, length 5: "zmxp2"
+        FQDN Option 81, length 9: "zmxp2."
+        Vendor-Class Option 60, length 8: "MSFT 5.0"
+        Parameter-Request Option 55, length 11:
+          Subnet-Mask, Domain-Name, Default-Gateway, Domain-Name-Server
+          Netbios-Name-Server, Netbios-Node, Netbios-Scope, Router-Discovery
+          Static-Route, Classless-Static-Route-Microsoft, Vendor-Option
+        Vendor-Option Option 43, length 3: 220.1.0
+11:22:30.254521 IP (tos 0x0, ttl 127, id 15722, offset 0, flags [none], proto UDP (17), length 328)
+    192.168.58.9.67 > 192.168.4.157.68: [udp sum ok] BOOTP/DHCP, Reply, length 300, xid 0x470b860, Flags [none] (0x0000)
+      Your-IP 192.168.4.157
+      Client-Ethernet-Address 08:00:27:26:1f:be
+      Vendor-rfc1048 Extensions
+        Magic Cookie 0x63825363
+        DHCP-Message Option 53, length 1: ACK
+        RN Option 58, length 4: 43200
+        RB Option 59, length 4: 75600
+        Lease-Time Option 51, length 4: 86400
+        Server-ID Option 54, length 4: 192.168.58.9
+        Subnet-Mask Option 1, length 4: 255.255.255.0
+        FQDN Option 81, length 3: 255/255 ""
+        Default-Gateway Option 3, length 4: 192.168.4.1
+        Domain-Name-Server Option 6, length 8: 192.168.57.5,202.106.0.20
+ 
+
+分析tcp包 以telnet 80端口为例
+
+telnet web 服务器80 端口直至超时，由客户端断开连接，这个过程包括tcp三次握手。
+17:45:04 （时间）
+665707    (ID)
+IP       (协议）
+192.168.4.33.43591 > 211.x.x.x.80 (源IP，端口，目的IP，端口 中间>表示方向)
+Flags [*](
+每一行中间都有这个包所携带的标志：
+S=SYN   发起连接标志
+P=PUSH  传送数据标志
+F=FIN    关闭连接标志
+ack     表示确认包
+RST= RESET  异常关闭连接
+.      表示没有任何标志
+)
+seq 2726144355  (IP包序号，相对序号为0)
+win 14600 (数据窗口大小，告诉对方本机接收窗口大小)
+options [mss 1460,sackOK,TS val 7864869 ecr 0,nop,wscale 5] (对应TCP包头中的选项字段)
+MSS: Maxitum Segment Size 最大分段大小，MSS表示TCP传往另一端的最大块数据的长度。当一个连接建立时，连接的双方都要通告各自的MSS。如果一方不接收来自另一方的MSS值，则MSS就定为默认的536字节。
+
+A主机发送序号为2726144355的SYN(Flags [S])包到B，同时带有自身的WIN(win 14600)和MSS(mss 1460)大小。
+B主机收到后，发送SYN+ACK的返回包(Flags [S.])到A，也带自身的WIN(win 5792)和MSS(mss 1460)大小，3916293769，同时为为上一个包的应答包2726144356。
+A主机返回ACK，包序号为1(Flags [.], ack 1)
+...............略
+A主机发送序号为seq 165的FIN(Flags [F.])包到B
+B主机收到后同意关闭连接，发送seq 400 FIN(Flags [F.])包到A,ack 166
+A主机发送ack 401 确认关闭
+
+ 
+
+参考
+
+http://baike.baidu.com/view/76504.htm
+
+
