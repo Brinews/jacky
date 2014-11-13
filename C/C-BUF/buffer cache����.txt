@@ -1,0 +1,168 @@
+PostgreSQL源码分析之shared buffer的分配与替换 2013-06-10
+
+分类： Mysql/postgreSQL
+
+    前面提到了shared buffer 本质是一个cache，缓存了常用的磁盘文件的某些个内容，了解shared buffer到磁盘文件的映射关系。既然是缓存，shared buffer的capacity终究是低于磁盘文件的capacity的，不可能将所有磁盘文件，一律缓存到shared buffer。比如我们把shared buffer设置成64M，而磁盘上的文件，随着relation中记录的增加，会变得越来越大，这就必然牵扯到cache的page replacement。就是找不到空闲buffer的时候，应该把哪个buffer作为victim踢出去。本篇博客重点学习shared buffer的分配（alloc）和替换（replacement）。
+
+    代码落在src/backend/storage/buffer目录下，最重要的文件是bufmgr.c这个文件里面有两个函数是全文件的核心BufferAlloc和BgBufferSync。第一个函数顾名思义，就是用来分配buffer的，第二个函数BgBufferSync，说它重要，是因为他是一个主要进程BackgroundWriterMain的主要干活函数。这个函数非常重要，代码量很少，无奈代码不好懂，这个函数折磨的我死去活来，让我费了不少功夫，按下不表（第二个函数不是本文的内容，我还再此提及，可见怨念极深啊）。
+   OK，我们关心的重点函数是BufferAlloc，以他为脉络，讲解Alloc以及replacment。
+
+   BufferAlloc要做的事情是给某个relation对应的磁盘文件的某个8KB block分配一个shared buffer，用来存放数据作为缓存。稍等一下，OS的cache不也能提供这种缓存的机制吗？为啥PostgreSQL非要自己再多此一举，自己做个缓存机制。原因就是OS的cache是为OS下的所有进程服务的，不会专门为PostgreSQL定制cache，而且OS的cache的替换策略是LRU，而PostgreSQL自己的shared buffer采用了完全按不同的替换策略，叫做clock-sweep出来，可以这么理解：第一PostgreSQL很自私，首先占领一块内存，自己玩，至于其他的进程，不好意思，不要动我的shared buffer，您一边玩儿而去，第二PostgreSQL为自己的shared buffer的定制了一套替换的策略或者说是机制，PostgreSQL可能认为比OS的LRU换页机制更适合自己。OK，解释了为啥多此一举。
+   需要注意两点： 
+   1 可能同一个页面即在OS的cache中，又在PostgreSQL的shared buffer中，有点浪费哈，总之了，为了性能。判断那些页面即在OS cahce 又在shared buffer本身这个话题就可以延伸出一篇文章，可是我得克制，否则唧唧歪歪本文就没完没了了，这谁受得了啊。关心这个话题的，自行google pgfincore 。
+   2 换页机制，目前9.1.9采用的是我提到的clock-sweep，这个换页机制其实是操作系统很有名的一个问题，操作系统experts也搞出了很多算法，如LRU，LFU,LIRS（Low Inter-reference Recency Set），ARC（Adaptive Replacement Cache ）CLOCK-Pro。其中LRU是Linux用的，LIRS是很有名气的，MySQL采用这种换页算法，ARC是IBM搞出来的，好像很厉害，直接说比LRU更好的换页算法，这个算法细节我也不太懂，总是是个好东西，好像ZFS也用了这个ARC相关的算法算法，可惜有专利，我们PostgreSQL曾经用过ARC做为换页的算法，后来因为专利剔除了ARC。我们不多说，我功力不到，而且这也不是一篇博客所能讲述清楚的，这换页估计可以搞出一本书的内容。
+    我瞎扯了半天，可以开始分析code了，要不然，源码分析就成了挂羊头买白菜了。 
+    Hash 查找
+    shared buffer是有hash table来方便定位某个文件的某个block是否在shared buffers中。
+
+    static volatile BufferDesc *
+    BufferAlloc(SMgrRelation smgr, char relpersistence, ForkNumber forkNum,
+                BlockNumber blockNum,
+                BufferAccessStrategy strategy,
+                bool *foundPtr)
+    {    
+        ....
+           /* create a tag so we can lookup the buffer */
+        INIT_BUFFERTAG(newTag, smgr->smgr_rnode.node, forkNum, blockNum);
+
+        /* determine its hash code and partition lock ID */
+        newHash = BufTableHashCode(&newTag);
+        newPartitionLock = BufMappingPartitionLock(newHash);
+
+        /* see if the block is in the buffer pool already */
+        LWLockAcquire(newPartitionLock, LW_SHARED);
+        buf_id = BufTableLookup(&newTag, newHash);
+        if (buf_id >= 0)
+        {
+                 ...
+                 *foundPtr = TRUE;
+                 ....
+                 return buf;
+        }
+        ...
+    }
+
+    foundPtr是传进来的指针，在函数中会对它赋值，如果TRUE表示在hash table中找到了对应的文件的对应的block，如果FALSE表示当前shared buffer中压根就没有这个block，是我从shared buffer中分配了一个。当然了，如果新分配一个，会插入到hash table，下次来找这个block，就很方便的找到了。 
+
+    #define INIT_BUFFERTAG(a,xx_rnode,xx_forkNum,xx_blockNum)
+    (
+        (a).rnode = (xx_rnode),
+        (a).forkNum = (xx_forkNum),
+        (a).blockNum = (xx_blockNum)
+    )
+
+    上篇博文已经讲过BufferTag到relation的磁盘文件的映射了，不赘述，此处以这个BufferTag作为key去hash table查找，shared buffer中有没有对应的block。这里面有一个算法思想在里面，hash table需要插入，需要删除，需要查找，并发的情况下需要加锁，这个是显而易见的的，但是如果1把锁会引起性能的降低，Shared buffer做了改进，16把锁，相当与将竞争减少到了1把锁的1/16,一个小技巧就缓解了竞争能力。至于LWLockAcquire属于PostgreSQL的Lock机制，我还不太动，不瞎扯，总之是加了一把共享锁。
+
+    #define BufTableHashPartition(hashcode)
+        ((hashcode) % NUM_BUFFER_PARTITIONS)
+    #define BufMappingPartitionLock(hashcode)
+        ((LWLockId) (FirstBufMappingLock + BufTableHashPartition(hashcode)))
+
+ newPartitionLock = BufMappingPartitionLock(newHash);
+
+ LWLockAcquire(newPartitionLock, LW_SHARED);
+
+    如果在hashtable中找到了BufferTag对应的block，就意味着在Shared buffer中存在该block，皆大欢喜啊，返回buffer同时将foundPtr设置成TRUE告诉调用者 ，在share buffer中找到了该block。
+   如果没找到，就需要查找空闲的buffer，如果没有空闲，那么就要将现有的buffer置换出去，用这个buffer响应系当前这个请求。这个查找free 以及没有free的buffer就选择一个牺牲品这个事情是由StrategyGetBuffer函数完成的，所谓的clock sweep算法也是这个短小函数实现的。因为这里面有很多的细节，我接触的时间短，不能做到事事了然，所以我主要讲算法思想，细节我就力不逮己了。
+    查找free的buffer
+   首先是查找free：
+
+    while (StrategyControl->firstFreeBuffer >= 0)
+        {
+            buf = &BufferDescriptors[StrategyControl->firstFreeBuffer];
+            Assert(buf->freeNext != FREENEXT_NOT_IN_LIST);
+
+            /* Unconditionally remove buffer from freelist */
+            StrategyControl->firstFreeBuffer = buf->freeNext;
+            buf->freeNext = FREENEXT_NOT_IN_LIST;
+
+            /*
+             * If the buffer is pinned or has a nonzero usage_count, we cannot use
+             * it; discard it and retry. (This can only happen if VACUUM put a
+             * valid buffer in the freelist and then someone else used it before
+             * we got to it. It's probably impossible altogether as of 8.3, but
+             * we'd better check anyway.)
+             */
+            LockBufHdr(buf);
+            if (buf->refcount == 0 && buf->usage_count == 0)
+            {
+                if (strategy != NULL)
+                    AddBufferToRing(strategy, buf);
+                return buf;
+            }
+            UnlockBufHdr(buf);
+        }
+
+    原理比较简单，所有的free buffer都在 StrategyControl->firstFreeBuffer为头节点的链表上，初始化的时候，将所有的buffer都放入这个这个单链表。每次取头部的第一个拿来用。本来然后将第一的freeNext作为新的firstFreeBuffer。没啥说的，单链表，大家懂的。但是这里面判断了refcount和usage_count，按说没被使用这俩值不会有大于0的情况，这个判断纯属多余，但是上面有注释，解释了某情况下会出现，blabla我也不懂。
+   能取到free当然好，但是如果你的shared buffer比较少，没有free的，那就惨了，就要选择一个牺牲品，将现有的内容驱逐出去，然后将buffer给当前的这个请求用。但是选谁当牺牲品呢？这是PostgreSQL clock sweep算法干的事儿。
+    clock sweep 置换算法
+   所谓clock sweep听起来很NB，其实原理还是蛮简单的，复杂的原理必然带来复杂的实现，对于BufferAlloc这种调用很频繁的函数，复杂的实现必然带来性能的降低，所以take it easy 。
+   buffer有个参数叫usage_count,顾名思义就是使用次数，如果你需要这个BufferTag对应的文件，我也需要，那么这个次数就是2 ，也就是BufferAlloc之后，会对这个值+1,PostgreSQL不是无限制的增加：  
+
+            buf->refcount++;
+            if (strategy == NULL)
+            {
+                if (buf->usage_count < BM_MAX_USAGE_COUNT)
+                    buf->usage_count++;
+            }
+
+    BM_MAX_USAGE_COUNT = 5,这个usage_count最多是5.这个值来决定该置换哪个buffer。所有的buffer都不是空闲的，那么就剔除那个usage_count最小的。如何执行？环形扫描，如果扫到了你，你的usage_count--,直到遇到第一usage_count变成0的buffer。
+
+        /* Nothing on the freelist, so run the "clock sweep" algorithm */
+        trycounter = NBuffers;
+        for (;;)
+        {
+            buf = &BufferDescriptors[StrategyControl->nextVictimBuffer];
+
+            if (++StrategyControl->nextVictimBuffer >= NBuffers)
+            {
+                StrategyControl->nextVictimBuffer = 0;
+                StrategyControl->completePasses++;
+            }
+
+            /*
+             * If the buffer is pinned or has a nonzero usage_count, we cannot use
+             * it; decrement the usage_count (unless pinned) and keep scanning.
+             */
+            LockBufHdr(buf);
+            if (buf->refcount == 0)
+            {
+                if (buf->usage_count > 0)
+                {
+                    buf->usage_count--; //扫到buffer，buffer的usage_count--，buffer usage_count小的会首先顶不住减小到0
+                    trycounter = NBuffers;
+                }
+                else
+                {
+                    /* Found a usable buffer */
+                    if (strategy != NULL)
+                        AddBufferToRing(strategy, buf);
+                    return buf;     //有buffer顶不住了，变成了0,那么就选择这个buffer作为牺牲品，替换掉。
+                }
+            }
+            else if (--trycounter == 0)
+            {
+                /*
+                 * We've scanned all the buffers without making any state changes,
+                 * so all the buffers are pinned (or were when we looked at them).
+                 * We could hope that someone will free one eventually, but it's
+                 * probably better to fail than to risk getting stuck in an
+                 * infinite loop.
+                 */
+                UnlockBufHdr(buf);
+                elog(ERROR, "no unpinned buffers available");
+            }
+            UnlockBufHdr(buf);
+        }
+
+    PostgreSQL有pg_buffercache的扩展，可以查看每个buffer的一些信息：如下图所示：
+ 
+   选到了buffer有可能是dirty的，换言之，buffer上的内容比磁盘上的对应block要新，需要sync到磁盘上（调用FlushBuffer），如果原hashtable中不存在，是新加入的buffer，需要插入的hash table中（调用BufTableInsert），这是事情我就不一一赘述了。 
+   对于这个算法，新加入的buffer 容易被置换出去，已经有开发者提出并质疑这个问题了，今年三月份有个讨论十分牛，各路大神出没，有人整理成了30多页的文档，对这个topic的理解帮助极大。讨论名字叫 Page replacement algorithm in buffer cache。
+   算法基本讲了，如何monitor shared buffer的状态，如何测量当前的shared buffer的性能情况，这是下面要分析的内容。 
+
+参考文献：
+1 Greg Smith大神的 inside the PostgreSQL Shared Buffer Cache （强烈推荐）
+2 PostgreSQL 9.1.9
+3 Page replacement algorithm in buffer cache
+
