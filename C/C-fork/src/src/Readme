@@ -1,0 +1,16 @@
+1. compile
+   Requirement: pthread installed.
+   $ make
+
+2. run
+   Console A: $./elevator
+   Console B: $./board
+   Console C: $./people
+   Console D: $./people
+   Console E: $./people
+
+3. others
+   A. default 5 floors
+   B. in board process, you can input: 2 1 , which means you are at 2 floor, want to go to 1 floor;
+   C. in people process, you can input: 2 0, which means you are at 2 floor, press up button.
+
