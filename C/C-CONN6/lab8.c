@@ -46,10 +46,6 @@ int main(int argc, char** argv) {
     printf("Enter board dimensions (n), n>=6 and n<=21: ");
     scanf("%d", &size);
 
-	char selectColor[10];
-	printf("Computer playing B or W?: ");
-	scanf("%s", selectColor);
-
 	/* 1. init */
 
     for (i = 0; i < size; i++) {
@@ -58,7 +54,12 @@ int main(int argc, char** argv) {
         }
     }
 
-    printArray(board, size);
+	printArray(board, size);
+
+	char selectColor[10];
+	printf("Computer playing B or W?: ");
+	scanf("%s", selectColor);
+
 
 	/* 2. place red blocks */
 

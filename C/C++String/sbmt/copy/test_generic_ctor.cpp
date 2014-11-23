@@ -15,10 +15,10 @@ int main ()
         // SETUP FIXTURE
 
         // TEST
-        String  str(X);
+        String  str('A');
 
         // VERIFY
-        assert(str == YYY);
+        assert(str == 'A');
     }
 
     {
@@ -26,10 +26,10 @@ int main ()
         // SETUP FIXTURE
 
         // TEST
-        String  str(X);
+        String  str("STRING");
 
         // VERIFY
-        assert(str == YYY);
+        assert(str == "STRING");
     }
 
     {
@@ -37,10 +37,11 @@ int main ()
         // SETUP FIXTURE
 
         // TEST
-        String  str(X);
+		String str1 ("STRING");
+        String  str(str1);
 
         // VERIFY
-        assert(str == YYY);
+        assert(str == "STRING");
     }
 
     {
@@ -48,10 +49,11 @@ int main ()
         // SETUP FIXTURE
 
         // TEST
-        String  str(X);
+		String str1("STRING");
+        String  str = str1;
 
         // VERIFY
-        assert(str == YYY);
+        assert(str == "STRING");
     }
 
     {
@@ -59,15 +61,15 @@ int main ()
         // SETUP FIXTURE
 
         // TEST
-        String  str(X);
+        String  str(10, "LONGWORD");
 
         // VERIFY
-        assert(str == YYY);
+        assert(str == "LONGWORD");
     }
 
     // ADD ADDITIONAL TESTS AS NECESSARY
     
-    std::cout << "Done testing XXX." << std::endl;
+    std::cout << "Done testing ctor." << std::endl;
 
 }
 

@@ -1,5 +1,5 @@
 HEADER = $(wildcard *.hpp)
-SRC = String.cpp
+SRC = string.cpp
 OBJ = $(patsubst %.cpp,%.o,$(SRC))
 FLAGS = -g -ansi -Wall -pedantic
 

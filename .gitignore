@@ -15,6 +15,11 @@ local.properties
 .classpath
 .settings/
 .loadpath
+*.exe
+*.tar.gz
+*.zip
+*.o
+*.class
 
 # External tool builders
 .externalToolBuilders/

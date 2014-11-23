@@ -198,6 +198,10 @@ StrategyGetBuffer(BufferAccessStrategy strategy, bool *lock_held)
 		{
 			if (strategy != NULL)
 				AddBufferToRing(strategy, buf);
+
+			/* record usage time */
+			buf->usage_time = GetCurrentTime();
+
 			return buf;
 		}
 		UnlockBufHdr(buf);
@@ -241,12 +245,14 @@ StrategyGetBuffer(BufferAccessStrategy strategy, bool *lock_held)
 
 		if (buf->refcount == 0)
 		{
+			/* not consider usage_count 
 			if (buf->usage_count > 0)
 			{
 				buf->usage_count--;
 				trycounter = NBuffers;
 			}
 			else
+			*/
 			{
 				/* when find the first buf where usage_count = 0, 
 				   do a more round search. Then return the buf with min
@@ -272,6 +278,7 @@ StrategyGetBuffer(BufferAccessStrategy strategy, bool *lock_held)
 					buf = &BufferDescriptors[min_buf_id];
 
 					LockBufHdr(buf);
+
 					buf->usage_time = GetCurrentTime();
 
 					/* Found a usable buffer */

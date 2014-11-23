@@ -14,96 +14,96 @@ int main ()
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  left(X);
-        String  right(X);
+        String  left("left");
+        String  right("right");
 
         // TEST
-        RESULT_TYPE result = (left OP right);
+        String result = left + right;
 
         // VERIFY
-        assert(result == X);
-        assert(left   == X);
-        assert(right  == X);
+        assert(result == "leftright");
+        assert(left   == "left");
+        assert(right  == "right");
     }
 
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  left(X);
-        String  right(X);
+        String  left("ok");
+        String  right("ok");
 
         // TEST
-        RESULT_TYPE result = (left OP right);
+        bool result = (left == right);
 
         // VERIFY
-        assert(result == X);
-        assert(left   == X);
-        assert(right  == X);
+        assert(result == true);
+        assert(left   == "ok");
+        assert(right  == "ok");
     }
 
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  left(X);
-        String  right(X);
+        String  left("A");
+        String  right("B");
 
         // TEST
-        RESULT_TYPE result = (left OP right);
+        bool result = (left < right);
 
         // VERIFY
-        assert(result == X);
-        assert(left   == X);
-        assert(right  == X);
+        assert(result == true);
+        assert(left   == "A");
+        assert(right  == "B");
     }
 
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  left(X);
-        String  right(X);
+        String  left("1");
+        String  right("2");
 
         // TEST
-        RESULT_TYPE result = (left OP right);
+        bool result = (left > right);
 
         // VERIFY
-        assert(result == X);
-        assert(left   == X);
-        assert(right  == X);
+        assert(result == false);
+        assert(left   == "1");
+        assert(right  == "2");
     }
 
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  left(X);
-        String  right(X);
+        String  left('A');
+        String  right("A");
 
         // TEST
-        RESULT_TYPE result = (left OP right);
+        bool result = (left == right);
 
         // VERIFY
-        assert(result == X);
-        assert(left   == X);
-        assert(right  == X);
+        assert(result == true);
+        assert(left   == 'A');
+        assert(right  == "A");
     }
 
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  left(X);
-        String  right(X);
+        String  left("WORD");
+        String  right('S');
 
         // TEST
-        RESULT_TYPE result = (left OP right);
+        String result = (left + right);
 
         // VERIFY
-        assert(result == X);
-        assert(left   == X);
-        assert(right  == X);
+        assert(result == "WORDS");
+        assert(left   == "WORD");
+        assert(right  == 'S');
     }
     
 
     // ADD ADDITIONAL TESTS AS NECESSARY
     
-    std::cout << "Done testing XXX." << std::endl;
+    std::cout << "Done testing binary_op." << std::endl;
 }
 

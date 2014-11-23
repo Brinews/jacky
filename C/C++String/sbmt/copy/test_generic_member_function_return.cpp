@@ -13,83 +13,83 @@ int main ()
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  str(X);
+        String  str("word in sentence");
 
         // TEST
-        RESULT_TYPE result = str.OP();
+        String result = str.substr(0, 4);
 
         // VERIFY
-        assert(str    == X);
-        assert(result == X);
+        assert(str    == "word in sentence");
+        assert(result == "word");
     }
 
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  str(X);
+        String  str("word");
 
         // TEST
-        RESULT_TYPE result = str.OP();
+        int result = str.findstr("ord", 0);
 
         // VERIFY
-        assert(str    == X);
-        assert(result == X);
+        assert(str    == "word");
+        assert(result == 1);
     }
 
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  str(X);
+        String  str("word");
 
         // TEST
-        RESULT_TYPE result = str.OP();
+        int result = str.findchar('o', 0);
 
         // VERIFY
-        assert(str    == X);
-        assert(result == X);
+        assert(str    == "word");
+        assert(result == 1);
     }
 
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  str(X);
+        String  str("wor d");
 
         // TEST
-        RESULT_TYPE result = str.OP();
+        int result = str.findNextBlank(0);
 
         // VERIFY
-        assert(str    == X);
-        assert(result == X);
+        assert(str    == "wor d");
+        assert(result == 3);
     }
 
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  str(X);
+        String  str("word in word");
 
         // TEST
-        RESULT_TYPE result = str.OP();
+        int result = str.findNextNonBlank(4);
 
         // VERIFY
-        assert(str    == X);
-        assert(result == X);
+        assert(str    == "word in word");
+        assert(result == 5);
     }
 
     {
         //------------------------------------------------------
         // SETUP FIXTURE
-        String  str(X);
+        String  str("word");
 
         // TEST
-        RESULT_TYPE result = str.OP();
+        String result = str.insertAt("-", 2);
 
         // VERIFY
-        assert(str    == X);
-        assert(result == X);
+        assert(str    == "word");
+        assert(result == "wo-rd");
     }
 
     // ADD ADDITIONAL TESTS AS NECESSARY
     
-    std::cout << "Done testing XXX." << std::endl;
+    std::cout << "Done testing return_function." << std::endl;
 }
 
