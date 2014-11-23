@@ -1,0 +1,36 @@
+0 The speaker 那個演講者
+1 has been accused of 已被指控為
+2 whipping 煽動
+4 crowds 人群
+3 up into 起
+8 frenzies 狂怒
+7 of 的
+5 violent 強烈
+6 hatred 憎惡
+-1
+3 young 年輕
+4 couples 愛侶
+5 were 在
+8 smooching 熱烈擁吻
+7 all over 各處
+6 campus 校園
+2 after 後
+1 finishing 結束
+0 finals 期末考
+-1
+2 A scheme 計劃
+1 of which 的
+0 every part promises delight 十全十美的
+3 can never be 總不會
+4 successful 成功
+-1
+0 I 我
+1 have never 從沒有
+2 been good at 擅長過
+3 mathematics 數學
+4 which I have always attributed to 我總是歸因於
+7 missing 缺了
+8 several years of school 幾年學
+5 when 當
+6 I was a child 我小的時候
+-1
