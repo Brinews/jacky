@@ -1,0 +1,15 @@
+
+all: crypt_a crypt_b crypt_c crypt_e
+
+crypt_a : crypt_a.o rsa.o
+	g++ -Wall -o $@ $^ -lm
+
+crypt_e : crypt_e.o rsa.o
+	g++ -Wall -o $@ $^ -lm
+
+rsa.o : rsa.h rsa.cpp
+
+crypt_%.o : crypt_%.cpp
+
+clean:
+	-rm crypt_a crypt_b crypt_c crypt_e *.o

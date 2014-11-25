@@ -1,0 +1,68 @@
+1. Preparation
+==============
+	A: server
+	B: client
+ B connect A through TCP.
+
+ 2. Flow Chart
+ =============
+ 
+    A (Get public and private Key By RSA)
+    A --------send public key---------------> B
+
+	            (Initialize simple Key(a,b,c) B
+	(Encrypt Key(a,b,c) by public Key from A) B
+	A <---receive Key(a',b',c') from B------- B
+	A (Decrypt Key(a',b',c') by RSA)
+
+	             (Encrypt Data by Key(a,b,c)) B
+	A <---receive data from B-----------------B
+	A Decrypt Data by Key(a,b,c)
+
+3. Basic Algorithm
+==================
+A) Diffie-Hellman algorithm
+	First encryption is non-symmetric.(encrypt key)
+	Second encryption is symmetric. (encrypt message)
+
+B) RSA
+	RSA is one of the first practicable public-key cryptosystems and is widely used for secure data transmission. In such a cryptosystem, the encryption key is public and differs from the decryption key which is kept secret. In RSA, this asymmetry is based on the practical difficulty of factoring the product of two large prime numbers, the factoring problem. RSA stands for Ron Rivest, Adi Shamir and Leonard Adleman, who first publicly described the algorithm in 1977. Clifford Cocks, an English mathematician, had developed an equivalent system in 1973, but it wasn't declassified until 1997.
+
+	linkes: http://en.wikipedia.org/wiki/RSA_%28cryptosystem%29
+
+C) Easy Encryption on message
+Input:
+Key(a,b,c), Message M: 
+	foreach letter in M do {
+		M[i] += a;
+		M[i+1] += b;
+		M[i+2] += c;
+	}
+
+4. Operation Example 
+====================
+
+A:
+---------------------------
+primes (a,b):433,59
+pubkey:5,25547
+prikey:20045,25547
+Accept connection from host ip: 127.0.0.1
+Receive Key From A:7769,243,24046
+Key After Decrypt:11,3,23
+
+Begin Receive Data From A:
+Received DATA:mh}zu|
+Original DATA:before
+
+
+B:
+---------------------------
+Yield My Key:11,3,23
+Receive Pubkey from B:5,25547
+Send Key To B:7769,243,24046
+Please Input to-send Data('quit' for exit):
+before 
+After Encrypted:mh}zu|
+
+
