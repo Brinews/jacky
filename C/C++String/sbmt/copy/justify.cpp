@@ -18,8 +18,10 @@ bool do_checkparm(int argc, char **argv)
 	if (argc < 4) {
 		cout << "Usage : " << argv[0] 
 			<< " <start column> <end column> <src file> [dest file]\n";
-		return -1;
+		return false;
 	}
+
+	return true;
 }
 
 /* do justify */

@@ -14,9 +14,10 @@ int main ()
         //------------------------------------------------------
         // SETUP FIXTURE
         String  str("bob");
+		String str1("ilice");
 
         // TEST
-        str.swap("ilice");
+        str.swap(str1);
 
         // VERIFY
         assert(str == "ilice");
@@ -32,18 +33,6 @@ int main ()
 
         // VERIFY
         assert(str == "small");
-    }
-
-    {
-        //------------------------------------------------------
-        // SETUP FIXTURE
-        String  str(X);
-
-        // TEST
-        str.OP();
-
-        // VERIFY
-        assert(XXX == YYY);
     }
 
     // ADD ADDITIONAL TESTS AS NECESSARY

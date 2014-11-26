@@ -84,7 +84,7 @@ int main ()
         String result = str.insertAt("-", 2);
 
         // VERIFY
-        assert(str    == "word");
+        assert(str    == "wo-rd");
         assert(result == "wo-rd");
     }
 
