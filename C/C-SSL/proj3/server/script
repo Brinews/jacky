@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#generate rsa keys
+openssl genrsa -out $1.key 
+#generate csr
+openssl req -new -key $1.key -out $1.csr 
+#sign cert
+openssl x509 -req -days 365 -in $1.csr -CA CA.crt -CAkey CA.key -CAcreateserial -out $1.crt
+#extract public key from cert
+openssl x509 -in $1.crt -pubkey -noout > $1_pub.pem
