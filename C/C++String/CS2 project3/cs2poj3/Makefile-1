@@ -1,0 +1,115 @@
+###############################################################
+# Stack
+#
+#
+
+###############################################################
+# Variables
+CPP	 = g++ 
+OPTIONS = -g -Wall -W -Wunused -Wuninitialized -Wshadow  -Wno-non-template-friend -O
+
+# Names of your test files - add them in as you build them.
+# Names must start with "test_"
+MYTESTS = \
+test_ctor_default\
+test_ctor_copy\
+test_assign\
+test_push\
+test_peek\
+test_pop\
+test_swap\
+test_empty\
+test_size\
+test_to_string\
+test_postfix\
+test_assembler\
+
+###############################################################
+# Compile just the string
+# Compile and run all provided test oracles on string
+# Compile and run all your tests on string
+# Compile and run the project
+msg:
+	@echo 'Targets are:'
+	@echo '  tests'
+	@echo '  postfix'
+	@echo '  assembler'
+	@echo '  clean'
+
+
+###############################################################
+# Compile string 
+#
+string.o: string.hpp string.cpp
+	$(CPP) -c $(OPTIONS) string.cpp -o string.o -g
+
+string: string.o
+
+
+###############################################################
+# Compile stack 
+#
+stack: stack.hpp stack.cpp
+	
+
+###############################################################
+# Compile infix2postfix 
+#
+infix2postfix.o: string.o stack infix2postfix.hpp infix2postfix.cpp
+	$(CPP) -c $(OPTIONS) infix2postfix.cpp -o infix2postfix.o -g
+
+infix2postfix: infix2postfix.o
+
+postfix: postfix.cpp stack string.o infix2postfix.o 
+	$(CPP) $(OPTIONS) postfix.cpp infix2postfix.o string.o -o postfix
+
+###############################################################
+# Compile infix2assembler 
+#
+infix2assembler.o: string.o stack infix2assembler.hpp infix2assembler.cpp
+	$(CPP) -c $(OPTIONS) infix2assembler.cpp -o infix2assembler.o -g
+
+infix2assembler: infix2postfix.o
+
+assembler: assembler.cpp stack string.o infix2assembler.o infix2postfix.o
+	$(CPP) $(OPTIONS) assembler.cpp infix2assembler.o infix2postfix.o string.o -o assembler
+
+###############################################################
+# Run all of your tests
+# 
+# You will need to ADD your other below:
+# For example: ./test_plus
+#
+tests: $(MYTESTS)
+	./test_ctor_default
+	./test_ctor_copy
+	./test_assign
+	./test_push
+	./test_peek
+	./test_pop
+	./test_swap
+	./test_empty
+	./test_size
+	./test_to_string
+	./test_postfix
+	./test_assembler
+	
+###############################################################
+# Compile all test programs
+#
+test_%: stack test_%.o infix2postfix.o infix2assembler.o
+	$(CPP) string.o test_$*.o infix2postfix.o infix2assembler.o -o test_$* -g
+
+test_%.o: stack test_%.cpp
+	$(CPP) $(OPTIONS) -c test_$*.cpp -g
+
+
+###############################################################
+# clean 
+# Removes all .o files and all executables
+#
+clean:
+	rm -f *.o
+	rm -f $(MYTESTS)
+
+

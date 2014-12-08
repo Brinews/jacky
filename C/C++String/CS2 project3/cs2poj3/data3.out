@@ -1,0 +1,10 @@
+Infix Expression: ( AX + ( B * C ) ) ;
+Postfix Expression: AX B C * +
+Infix Expression: ( ( AX + ( B * CY ) ) / ( D - E ) ) ;
+Postfix Expression: AX B CY * + D E - /
+Infix Expression: ( ( A + B ) * ( C + E ) ) ;
+Postfix Expression: A B + C E + *
+Infix Expression: ( AX * ( BX * ( ( ( CY + AY ) + BY ) * CX ) ) ) ;
+Postfix Expression: AX BX CY AY + BY + CX * * *
+Infix Expression: ( ( H * ( ( ( ( A + ( ( B + C ) * D ) ) * F ) * G ) * E ) ) + J ) ;
+Postfix Expression: H A B C + D * + F * G * E * * J +
