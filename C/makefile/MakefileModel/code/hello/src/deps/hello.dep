@@ -1,0 +1,1 @@
+objs/hello.o deps/hello.dep: hello.c /home/qq/learning/MakefileModel/code/hello/inc/hello.h

@@ -1,0 +1,36 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: WSNTopoGen - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\cc\LOCALS~1\Temp\RSPB3.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR"Debug/" /Fp"Debug/WSNTopoGen.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Documents and Settings\cc\×ÀÃæ\uasn\uasn_simula.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\cc\LOCALS~1\Temp\RSPB3.tmp" 
+Creating temporary file "C:\DOCUME~1\cc\LOCALS~1\Temp\RSPB4.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/WSNTopoGen.pdb" /debug /machine:I386 /out:"Debug/WSNTopoGen.exe" /pdbtype:sept 
+".\Debug\StdAfx.obj"
+".\Debug\uasn_simula.obj"
+".\Debug\WSNTopoGen.obj"
+".\Debug\WSNTopoGenDlg.obj"
+".\Debug\WSNTopoGen.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\cc\LOCALS~1\Temp\RSPB4.tmp"
+<h3>Output Window</h3>
+Compiling...
+uasn_simula.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+WSNTopoGen.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

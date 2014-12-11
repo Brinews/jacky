@@ -1,0 +1,1 @@
+java -classpath ./libjar/libsql.jar;./libjar/libpdf.jar;./libjar/libmail.jar;./libjar/iTextAsian.jar;./libjar/mail.jar;./class hqzs_form

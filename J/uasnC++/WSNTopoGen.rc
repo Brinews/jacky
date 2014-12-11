@@ -1,0 +1,248 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\WSNTopoGen.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\WSNTopoGen.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于 WSNTopoGen"
+FONT 9, "宋体"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,7,7,21,21
+    LTEXT           "WSNTopoGen 1.0 版",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "版权所有 (C) 2011",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "确定",IDOK,175,7,53,17,WS_GROUP
+END
+
+IDD_WSNTOPOGEN_DIALOG DIALOGEX 0, 0, 608, 339
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "WSN拓扑形成"
+FONT 9, "宋体"
+BEGIN
+    CONTROL         "",IDC_STATIC_PLOT,"Static",SS_BLACKFRAME,7,7,510,298
+    PUSHBUTTON      "①随机节点",IDC_BTN_GENERATE,355,313,74,19
+    LTEXT           "节点数(80-120)",IDC_STATIC,527,7,57,14,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_NODE_CNT,527,22,74,14,ES_AUTOHSCROLL
+    LTEXT           "簇头侦听能耗",IDC_STATIC,527,37,49,14,SS_CENTERIMAGE | 
+                    NOT WS_VISIBLE
+    EDITTEXT        IDC_EDIT_LISTEN_COST,527,52,74,14,ES_AUTOHSCROLL | NOT 
+                    WS_VISIBLE
+    LTEXT           "算法调整周期",IDC_STATIC,527,67,49,14,SS_CENTERIMAGE | 
+                    NOT WS_VISIBLE
+    EDITTEXT        IDC_EDIT_ADJUST_TIME,527,82,74,14,ES_AUTOHSCROLL | NOT 
+                    WS_VISIBLE
+    LTEXT           "概率参数a",IDC_STATIC,527,97,49,14,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_FLOW_VELOCITY,527,112,74,14,ES_AUTOHSCROLL
+    LTEXT           "概率参数b",IDC_STATIC,527,127,49,14,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_ENERGY_CONSUM_MODEL_COEF,527,142,74,14,
+                    ES_AUTOHSCROLL
+    LTEXT           "概率参数c",IDC_STATIC,527,157,49,14,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_NODE_ENERGY,527,172,74,14,ES_AUTOHSCROLL
+    LTEXT           "通信半径",IDC_STATIC,527,187,33,14,SS_CENTERIMAGE | NOT 
+                    WS_VISIBLE
+    EDITTEXT        IDC_EDIT_RADIUS,527,202,74,14,ES_AUTOHSCROLL | NOT 
+                    WS_VISIBLE
+    LTEXT           "执行次数",IDC_STATIC,527,217,33,14,SS_CENTERIMAGE | NOT 
+                    WS_VISIBLE
+    EDITTEXT        IDC_EDIT_DO_TIME,527,232,74,14,ES_AUTOHSCROLL | NOT 
+                    WS_VISIBLE
+    CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",PBS_SMOOTH | 
+                    WS_BORDER,7,313,331,19
+    LTEXT           "平均持续周期",IDC_STATIC,527,247,52,14,SS_CENTERIMAGE | 
+                    NOT WS_VISIBLE
+    LTEXT           "平均簇头个数",IDC_STATIC,527,277,50,14,SS_CENTERIMAGE | 
+                    NOT WS_VISIBLE
+    EDITTEXT        IDC_EDIT_AVG_DURATION,527,262,74,14,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_VISIBLE
+    EDITTEXT        IDC_EDIT_AVG_HDR_CNT,527,292,74,14,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_VISIBLE
+    PUSHBUTTON      "②初始拓扑",IDC_BTN_LMST,443,313,74,19
+    PUSHBUTTON      "③拓扑进化(N)",IDC_BTN_UASN,527,313,74,19
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "WSNTopoGen Microsoft 基础类应用程序\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "WSNTopoGen\0"
+            VALUE "LegalCopyright", "版权所有 (C) 2011\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "WSNTopoGen.EXE\0"
+            VALUE "ProductName", "WSNTopoGen 应用程序\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_WSNTOPOGEN_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 601
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 332
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// 24
+//
+
+1                       24      MOVEABLE PURE   "XPStyle.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "关于 WSNTopoGen(&A)..."
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE 4, 2
+#pragma code_page(936)
+#endif //_WIN32
+#include "res\WSNTopoGen.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.chs\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

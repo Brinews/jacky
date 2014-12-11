@@ -1,0 +1,1 @@
+objs/array.o deps/array.dep: array.c /home/qq/learning/MakefileModel/code/array/inc/array.h

@@ -1,0 +1,28 @@
+This repository contains a simple DNS server and resolver. 
+
+1. Prepared Environment
+	Be Sure: LANG="zh_CN.utf8"
+
+2. About how to start
+
+   The local DNS server is "ndnsrv", other DNS server is "rootdns";
+   
+   Each DNS server shoud have a "*.conf" file to store the DNS's relationship.
+
+
+   START Steps:
+   ==================
+   Open 4 consoles, start 4 DNS server:
+
+   A. ./ndnsrv local.conf
+   B. ./rootdns 127.0.0.3 tld.conf
+   C. ./rootdns 127.0.0.4 2nd.conf
+
+   ===================
+   Begin Do DNS Query:
+   A. 
+      ./ndnscli 127.0.0.1 中国的教育的北邮的主页 0
+     OR
+	  ./ndnscli 127.0.0.1 中国的教育的北邮的邮件服务器 0
+ 
+   

@@ -1,0 +1,4 @@
+g++ -o main bigint.h bigint.cpp rational.h rational.cpp rpn.h main.cpp
+rational.h:1: fatal error: can't create precompiled header main.exe: Permission denied
+compilation terminated.
+make: *** [main] Error 1

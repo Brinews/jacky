@@ -1,0 +1,1 @@
+objs/foo.o deps/foo.dep: foo.c /home/qq/learning/MakefileModel/code/foo/inc/foo.h

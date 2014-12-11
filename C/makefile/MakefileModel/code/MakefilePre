@@ -1,0 +1,35 @@
+.PHONY:all clean
+
+RM = rm
+MKDIR = mkdir
+MKDIRFLAG = -p
+RMFLAG = -rf
+
+all:
+	$(MKDIR) $(MKDIRFLAG) array/inc array/src foo/inc foo/src hello/inc hello/src Main/inc Main/src ;\
+	mv array.c array/src/ ;\
+	mv array.h array/inc/ ;\
+	mv foo.c foo/src/ ;\
+	mv foo.h foo/inc/ ;\
+	mv hello.c hello/src/ ;\
+	mv hello.h hello/inc/ ;\
+	mv main.c Main/src/ 
+
+clean:
+	mv array/src/array.c ./ ;\
+	rm -rf array/src ;\
+	mv array/inc/array.h ./ ;\
+	rm -rf array/inc ;\
+	mv foo/src/foo.c ./ ;\
+	rm -rf foo/src ;\
+	mv foo/inc/foo.h ./ ;\
+	rm -rf foo/inc ;\
+	mv hello/src/hello.c ./ ;\
+	rm -rf hello/src ;\
+	mv hello/inc/hello.h ./ ;\
+	rm -rf hello/inc ;\
+	mv Main/src/main.c ./ ;\
+	rm -rf Main/src ;\
+	rm -rf Main/inc ;\
+	rm -rf foo hello array Main ;	
+		
