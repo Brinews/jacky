@@ -1,0 +1,1 @@
+javac -Xlint:deprecation  -d ./class ./src/Node.java ./src/ListException.java ./src/ListIndexOutOfBoundsException.java ./src/ListInterface.java ./src/ListReferenceBased.java ./src/Josephus.java ./src/QueueException.java ./src/QueueInterface.java ./src/QueueReferenceBased.java ./src/StackException.java ./src/StackInterface.java ./src/StackReferenceBased.java ./src/Calculator.java
