@@ -1,0 +1,17 @@
+/* computes the sum from 1 to 100 */
+ 
+int sumfor(int n){
+    int j ;
+    int result;
+    for(j=0, result=0; j!=100 ; j=j+1)
+      result = result +  j;
+    return result;
+}
+
+int main(void){
+  int k;
+  read(k);
+  write(sumfor(k));
+  write(sumdowhile(k));
+  return 0;
+}   

@@ -1,0 +1,175 @@
+﻿FAQ on making the parser of the C- language. 
+
+1) What are the difference between the functions, match(), match_move(), and check()? When should they be used?
+
+   *  mach_move() and math() prints an error message if the type of token node is not the same as expected, but check() does not print error messages. 
+   *  match() and check() does not move thisTokenNode, but match_move() moves thisTokenNode to its right neighbor when the token type matches. 
+   *  match() and match_move() have the meaning of "must match", and check() has the meaning of "just try". 
+   *  match() checks the type of thisTokenNode, while match_move() can check the type of any token node.
+
+
+2) What are the difference between lSibling, rSibling and child[]? 
+
+   * For a TreeNode,  lSibling and rSibling point to the left and right neighbors in a list.  child[i],  for i = 0 1 or 2, points to a sub-tree. 
+   * The following functions returns a TreeNode *, which points to the first (leftmost) TreeNode in a list. 
+     -  declaration_list()     // non-empty,  which means the list has at liast one element
+     -  param_list()           // non-empty
+     -  local_declarations()   // OK to be empty
+     -  statement_list()       // OK to be empty
+     -  arg_list()             // non-empty
+
+     The following functions makes a tree. Although an iteration is used , but in each iteration a new tree node is added as a parent, not as a sibling. 
+     -  simple_expression()
+     -  additive_expression()
+     -  term()
+
+
+3) What are the difference between INT, VOID,  and INT_TYPE, VOID_TYPE
+   
+   *  INT and VOID belong to TokenType, while INT_TYPE, and VOID_TYPE belong to ExpType.  
+   *  Why not directly use TokenType to represent the type of an expression?
+      This is not proper since it will allow PLUS, MINUS, and other token type to as the type specifier, but we only want INT and VOID
+   * So INT and INT_TYPE cannot be used interchangeably . 
+     For example, When we create a TreeNode for a declaration or parameter, we should record its expression type as follows:
+
+      //...
+      TreeNode*  someTreeNode;
+      // some code to instantiate someTreeNode...
+      TokenType tp;
+      ExpType ep;
+      tp = type_specifier();  
+      if (tp == ERROR)
+	return NULL;
+      someTreeNode ->attr.dclAttr.type = (tp == INT)? INT_TYPE:  VOID_TYPE;
+
+      Note that we should not touch someTreeNode->type in the parser, this field records the type of value of some expression, only the later stages of the compiler will handle this field. 
+    
+
+
+4) How to know if a function fails. 
+   * The function has a parameter Boolean * ok,  if it failes, *ok will be FALSE, otherwise *ok will be TRUE. 
+   * In the new design of this parser, having NULL returned does not nessarily mean failure. 
+   
+
+5) How failure is handled? 
+   When failure occurs, some error message is printed out at moment when some token does not match. The parser stops at the first error that is found. 
+
+
+6) Where is thisTokenNode before and after calling a function? 
+
+   * Before calling a function, thisTokenNode should point to the first token node of a sequence that will be parsed. 
+   * After calling a function, if the parsing task is successful, thisTokenNode should point to the token node after the last token node of the sequence. In other words, an extra token node is read in advance for later function calls. 
+   * If the parsing task is failed, the position of thisTokenNode is not defined. We can let it points to the token node where failure occured. 
+
+ 
+7) Why there are some functions that return a TokenType?
+   
+   * The functions   type_specifier(), only returns a TokenType. 
+   * These functions do to construct a tree, since the retuned information will be used to construct a TreeNode by its caller. 
+   * They still consumes a TokenNode whe thisTokenNode is a wanted one. 
+   * ERROR is returned to indicate failure. 
+
+8)  For the rule   
+    params  ===>  param-list | void
+    If the token is VOID, what should be returned by the function params()? 
+
+    A parameter node with of the kind VOID_PARAM should be returned. 
+    You can do something as follows: 
+  
+    TreeNode* t = new_param_node(VOID_PARAM)
+    //...
+    return t;
+
+    In this case t->attr.dclAttr.type should VOID_TYPE
+
+9) Why my parser cannot work? 
+   
+   * Be more careful with the code. 
+   * Does your code handle the empty case? 
+   * For a loop that builds a list or a tree, is the looping condition correct? 
+   * Did you consume every token, like ; [ , (  )   ?
+   * Forgot to call next_token_node() to consume a token? 
+   * In some cases, match() and match_move() should not be used, while check() should be used instead, since error message should not be printed.
+   * Maybe when you call a function, thisTokenNode is not pointing to the first token node of the sequence that will be parsed.  
+     
+ 10) how does the grammar change. The following are two versions of grammar. You can see that later version  handles for, do-while, and comma expression, and the logic are more clarified. Especially, how expression is constructed while the associativity and precedence of operators are handled. 
+ 
+
+
+/* old version
+1.  program  ===>  declaration-list
+2.  declaration-list  ===>  declaration-list declaration | declaration
+3.  declaration  ===>  var-declaration | fun-declaration
+4.  var-declaration  ===>  type-specifier ID ; | type-specifier ID [ NUM ] ;
+5.  type-specifier  ===>  int | void
+6.  fun-declaration  ===>  type-specifier ID ( params ) compound-stmt
+7.  params  ===>  param-list | void
+8.  param-list  ===>  param-list , param | param
+9.  param  ===>  type-specifier ID | type-specifier ID [ ]
+10. compound-stmt  ===>  { local-declarations statement-list }
+11. local-declarations  ===>  local-declarations var-declaration | empty
+12. statement-list  ===>  statement-list statement |empty
+13. statement  ===>  expression-stmt | compound-stmt | selection-stmt | iteration-stmt | return-stmt
+14. expression-stmt  ===>  expression ; | ;
+15. selection-stmt  ===>  if (expression ) statement |if (expression ) statement else statement
+16. iteration-stmt  ===>  while ( expression ) statement
+17. return-stmt  ===>  return ; | return expression ;
+18. expression  ===>  var = expression | simple-exprssion
+19. var  ===>  ID | ID [expression]
+20. simple-expression  ===>  additive-expression relop additive-expression | additive-expression
+21. relop  ===>  <= | < | > | >= | == | !=
+22. additive-expression  ===>  additive-expression addop term | term
+23. addop  ===>  + | - 
+24. term  ===>  term mulop factor | factor 
+25. mulop  ===>  * | /
+26. factor  ===>  ( expression ) | var | call | NUM
+27. call  ===>  ID ( args )
+28. args  ===>  arg-list | empty
+29. arg-list  ===>  arg-list , expression  | expression 
+
+*/
+
+
+/* new version 
+      0.  EMPTY     		===> 
+      1.  program    		===>  dcl-list
+      2.  dcl-list  		===>  dcl-list declaration | declaration
+      3.  declaration		===>  var-dcl | fun-dcl | array-dcl
+      4.  type-specifier  	===>  'int | 'void
+      5.  var-dcl 		===>  type-specifier 'ID ';
+      6.  array-dcl		===>  type-specifier 'ID  '[ 'NUM  '] ';
+      7.  fun-dcl	     	===>  type-specifier 'ID '( params ') compound-stmt
+      8.  params  		===>  param-list | 'void
+      9.  param-list 		===>  param-list ', param | param
+      10. param  		===>  type-specifier 'ID | type-specifier 'ID '[ ']
+      11. compound-stmt  	===>  '{ local-dcl-list  stmt–list '}
+      12. local-dcl-list	===>  local-dcl local-dcl-list | EMPTY
+      13. local-dcl		===>  var-dcl | array-dcl
+      14. stmt-list       	===>  stmt-list statement | EMPTY
+      15. statement 		===>  compound-stmt | selection-stmt | while-stmt | do-while-stmt | for-stmt | return-stmt | null-stmt | expr-stmt
+      16. selection-stmt  	===>  'if '( expression ') statement else-part 
+      17. else-part		===>  'else statement | EMPTY
+      18. while-stmt 		===>  'while '( expression ') statement
+      19. do-while-stmt 	===>  'do statement 'while '( expression ') ';
+      20. for-stmt		===>  'for '( expr-or-empty '; expr-or-empty '; expr-or-empty ') statement
+      21. expr-or-empty 	===>  expression | EMPTY
+      22. return-stmt   	===>  'return expr-or-empty ';
+      23. null-stmt		===>  ';
+      24. expr-stmt 		===>  expression ';
+      25  expression		===>  comma-expr
+      26. comma-expr 		===>  comma-expr ', assignment-expr  | assignment-expr
+      27. assignment-expr 	===>  equality-expr |  lhs '= assignment-expr
+      28. lhs 	           	===>  ID | array-element
+      29. array-element	   	===>  ID '[ expression ']
+      30. equality-expr	   	===>  equality-expr eqop relational-expr | relational-expr
+      31. eqop 			===>  '== | '!=
+      32. relational-expr	===>  relation-expr relop additive-expr | additive-expr
+      33. relop  	       	===>  '<= | '< | '> | '>= 
+      34. additive-expr		===>   additive-expr addop multiplicative-expr | multiplicative-expr
+      35. addop			===>  '+ | '-
+      36. multiplicative-expr	===>  multiplicative-expr mulop primary-expr | primary-expr
+      37. mulop  		===>  '* | '/
+      38. primary-expr      	===>  '( expression ') | ID | array-element | call | 'NUM
+      39. call  		===>  ID '( arg-list ')
+      40. arg-list		===>  arg-list ', assignment-expr | assignment-expr | EMPTY
+*/

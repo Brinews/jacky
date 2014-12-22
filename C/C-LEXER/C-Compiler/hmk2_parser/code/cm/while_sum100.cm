@@ -1,0 +1,43 @@
+/* computes the sum from 1 to 100 */
+
+int sumwhile(int n){
+    int j ;
+    int result;
+    j = result = 0;
+    /* result = 0; */
+    while(j!=100){
+      result = result +  j;
+      j = j+1;
+    }
+    return result;
+}
+
+int sumfor(int n){
+    int j ;
+    int result;
+    for(j=0, result=0; j!=100 ; j=j+1) {
+      result = result +  j;
+    }
+    return result;
+}
+
+int sumdowhile(int n){
+    int j ;
+    int result;
+    j = result = 0;
+    /* result = 0; */
+    do {
+      result = result + j;
+      j = j+1;
+    }while(j!=100);
+    return result;
+}
+
+int main(void){
+  int k;
+  read(k);
+  write(sumwhile(k));
+  write(sumfor(k));
+  write(sumdowhile(k));
+  return 0;
+}   

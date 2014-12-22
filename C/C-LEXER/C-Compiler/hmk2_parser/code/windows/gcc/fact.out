@@ -1,0 +1,271 @@
+
+C-Minus COMPILATION: ../../cm/fact.cm
+   1: int z;
+	1: Keyword: int
+	1: ID, name= z
+	1: ;
+   2: int m[100];
+	2: Keyword: int
+	2: ID, name= m
+	2: [
+	2: NUM, val= 100
+	2: ]
+	2: ;
+   3: 
+   4: int fact( int x[])
+	4: Keyword: int
+	4: ID, name= fact
+	4: (
+	4: Keyword: int
+	4: ID, name= x
+	4: [
+	4: ]
+	4: )
+   5: /* recursive factorial functions */
+   6: { if (x > 1)
+	6: {
+	6: Keyword: if
+	6: (
+	6: ID, name= x
+	6: >
+	6: NUM, val= 1
+	6: )
+   7: 	return x * fact(x-1);
+	7: Keyword: return
+	7: ID, name= x
+	7: *
+	7: ID, name= fact
+	7: (
+	7: ID, name= x
+	7: -
+	7: NUM, val= 1
+	7: )
+	7: ;
+   8:   else
+	8: Keyword: else
+   9:  	return 1;
+	9: Keyword: return
+	9: NUM, val= 1
+	9: ;
+  10: }
+	10: }
+  11: void main(void)
+	11: Keyword: void
+	11: ID, name= main
+	11: (
+	11: Keyword: void
+	11: )
+  12: {   int x;
+	12: {
+	12: Keyword: int
+	12: ID, name= x
+	12: ;
+  13:     x = read();
+	13: ID, name= x
+	13: =
+	13: ID, name= read
+	13: (
+	13: )
+	13: ;
+  14:     if (x >0) write (fact(x));
+	14: Keyword: if
+	14: (
+	14: ID, name= x
+	14: >
+	14: NUM, val= 0
+	14: )
+	14: ID, name= write
+	14: (
+	14: ID, name= fact
+	14: (
+	14: ID, name= x
+	14: )
+	14: )
+	14: ;
+  15: }
+	15: }
+	16: EOF!
+Scanning is successful, no error is found during scanning !!!
+
+
+ Scanning is sucessful   
+
+Function call history : 
+            function  LineNum   token
+               parse  1         Keyword: int
+             program  1         Keyword: int
+            dcl_list  1         Keyword: int
+         declaration  1         Keyword: int
+             var_dcl  1         Keyword: int
+      type_specifier  1         Keyword: int
+         declaration  2         Keyword: int
+           array_dcl  2         Keyword: int
+      type_specifier  2         Keyword: int
+         declaration  4         Keyword: int
+             fun_dcl  4         Keyword: int
+      type_specifier  4         Keyword: int
+              params  4         Keyword: int
+          param_list  4         Keyword: int
+               param  4         Keyword: int
+      type_specifier  4         Keyword: int
+       compound_stmt  6         {
+      local_dcl_list  6         Keyword: if
+           stmt_list  6         Keyword: if
+           statement  6         Keyword: if
+      selection_stmt  6         Keyword: if
+          expression  6         ID, name= x
+          comma_expr  6         ID, name= x
+     assignment_expr  6         ID, name= x
+       equality_expr  6         ID, name= x
+     relational_expr  6         ID, name= x
+       additive_expr  6         ID, name= x
+ multiplicative_expr  6         ID, name= x
+        primary_expr  6         ID, name= x
+               relop  6         >
+       additive_expr  6         NUM, val= 1
+ multiplicative_expr  6         NUM, val= 1
+        primary_expr  6         NUM, val= 1
+           statement  7         Keyword: return
+         return_stmt  7         Keyword: return
+       expr_or_empty  7         ID, name= x
+          expression  7         ID, name= x
+          comma_expr  7         ID, name= x
+     assignment_expr  7         ID, name= x
+       equality_expr  7         ID, name= x
+     relational_expr  7         ID, name= x
+       additive_expr  7         ID, name= x
+ multiplicative_expr  7         ID, name= x
+        primary_expr  7         ID, name= x
+               mulop  7         *
+        primary_expr  7         ID, name= fact
+                call  7         ID, name= fact
+            arg_list  7         ID, name= x
+     assignment_expr  7         ID, name= x
+       equality_expr  7         ID, name= x
+     relational_expr  7         ID, name= x
+       additive_expr  7         ID, name= x
+ multiplicative_expr  7         ID, name= x
+        primary_expr  7         ID, name= x
+               addop  7         -
+ multiplicative_expr  7         NUM, val= 1
+        primary_expr  7         NUM, val= 1
+           else_part  8         Keyword: else
+           statement  9         Keyword: return
+         return_stmt  9         Keyword: return
+       expr_or_empty  9         NUM, val= 1
+          expression  9         NUM, val= 1
+          comma_expr  9         NUM, val= 1
+     assignment_expr  9         NUM, val= 1
+       equality_expr  9         NUM, val= 1
+     relational_expr  9         NUM, val= 1
+       additive_expr  9         NUM, val= 1
+ multiplicative_expr  9         NUM, val= 1
+        primary_expr  9         NUM, val= 1
+         declaration  11        Keyword: void
+             fun_dcl  11        Keyword: void
+      type_specifier  11        Keyword: void
+              params  11        Keyword: void
+       compound_stmt  12        {
+      local_dcl_list  12        Keyword: int
+           local_dcl  12        Keyword: int
+             var_dcl  12        Keyword: int
+      type_specifier  12        Keyword: int
+           stmt_list  13        ID, name= x
+           statement  13        ID, name= x
+           expr_stmt  13        ID, name= x
+          expression  13        ID, name= x
+          comma_expr  13        ID, name= x
+     assignment_expr  13        ID, name= x
+                 lhs  13        ID, name= x
+     assignment_expr  13        ID, name= read
+       equality_expr  13        ID, name= read
+     relational_expr  13        ID, name= read
+       additive_expr  13        ID, name= read
+ multiplicative_expr  13        ID, name= read
+        primary_expr  13        ID, name= read
+                call  13        ID, name= read
+            arg_list  13        )
+           statement  14        Keyword: if
+      selection_stmt  14        Keyword: if
+          expression  14        ID, name= x
+          comma_expr  14        ID, name= x
+     assignment_expr  14        ID, name= x
+       equality_expr  14        ID, name= x
+     relational_expr  14        ID, name= x
+       additive_expr  14        ID, name= x
+ multiplicative_expr  14        ID, name= x
+        primary_expr  14        ID, name= x
+               relop  14        >
+       additive_expr  14        NUM, val= 0
+ multiplicative_expr  14        NUM, val= 0
+        primary_expr  14        NUM, val= 0
+           statement  14        ID, name= write
+           expr_stmt  14        ID, name= write
+          expression  14        ID, name= write
+          comma_expr  14        ID, name= write
+     assignment_expr  14        ID, name= write
+       equality_expr  14        ID, name= write
+     relational_expr  14        ID, name= write
+       additive_expr  14        ID, name= write
+ multiplicative_expr  14        ID, name= write
+        primary_expr  14        ID, name= write
+                call  14        ID, name= write
+            arg_list  14        ID, name= fact
+     assignment_expr  14        ID, name= fact
+       equality_expr  14        ID, name= fact
+     relational_expr  14        ID, name= fact
+       additive_expr  14        ID, name= fact
+ multiplicative_expr  14        ID, name= fact
+        primary_expr  14        ID, name= fact
+                call  14        ID, name= fact
+            arg_list  14        ID, name= x
+     assignment_expr  14        ID, name= x
+       equality_expr  14        ID, name= x
+     relational_expr  14        ID, name= x
+       additive_expr  14        ID, name= x
+ multiplicative_expr  14        ID, name= x
+        primary_expr  14        ID, name= x
+           else_part  15        }
+
+
+ The syntax tree: 
+
+  Declare:  int z 
+  Declare:  int m [100]
+  Declare:  int fact function with parameters :
+    Parameter: int x[ ]
+    Compound Stmt:
+      If  with ELSE 
+        Operator: >
+          ID: x
+          Const: 1
+        Return 
+          Operator: *
+            ID: x
+            Call function: fact, with arguments:
+              Operator: -
+                ID: x
+                Const: 1
+        Return 
+          Const: 1
+  Declare:  void main function with parameters :
+    Parameter: void
+    Compound Stmt:
+      Declare:  int x 
+      Expression stmt: 
+        Operator: =
+          ID: x
+          Call function: read, with arguments:
+      If  without ELSE 
+        Operator: >
+          ID: x
+          Const: 0
+        Expression stmt: 
+          Call function: write, with arguments:
+            Call function: fact, with arguments:
+              ID: x
+
+
+ Parsing is successful   
+
+Bye

@@ -1,0 +1,667 @@
+
+C-Minus COMPILATION: ../../cm/arrayMax.cm
+   1: /* return the largest item in an array, correct */
+   2: int max(int arr[], int size){
+	2: Keyword: int
+	2: ID, name= max
+	2: (
+	2: Keyword: int
+	2: ID, name= arr
+	2: [
+	2: ]
+	2: ,
+	2: Keyword: int
+	2: ID, name= size
+	2: )
+	2: {
+   3:     int j;
+	3: Keyword: int
+	3: ID, name= j
+	3: ;
+   4:     int result;
+	4: Keyword: int
+	4: ID, name= result
+	4: ;
+   5:     j = 0;
+	5: ID, name= j
+	5: =
+	5: NUM, val= 0
+	5: ;
+   6:     result = arr[j];
+	6: ID, name= result
+	6: =
+	6: ID, name= arr
+	6: [
+	6: ID, name= j
+	6: ]
+	6: ;
+   7:     while(j<=size){
+	7: Keyword: while
+	7: (
+	7: ID, name= j
+	7: <=
+	7: ID, name= size
+	7: )
+	7: {
+   8:       if(arr[j] > result){
+	8: Keyword: if
+	8: (
+	8: ID, name= arr
+	8: [
+	8: ID, name= j
+	8: ]
+	8: >
+	8: ID, name= result
+	8: )
+	8: {
+   9:         result = arr[j];
+	9: ID, name= result
+	9: =
+	9: ID, name= arr
+	9: [
+	9: ID, name= j
+	9: ]
+	9: ;
+  10: 	    j = j+1;
+	10: ID, name= j
+	10: =
+	10: ID, name= j
+	10: +
+	10: NUM, val= 1
+	10: ;
+  11:       }
+	11: }
+  12:     }
+	12: }
+  13:   return result;
+	13: Keyword: return
+	13: ID, name= result
+	13: ;
+  14: }
+	14: }
+  15: 
+  16: int main(void){
+	16: Keyword: int
+	16: ID, name= main
+	16: (
+	16: Keyword: void
+	16: )
+	16: {
+  17:     int arr[5];
+	17: Keyword: int
+	17: ID, name= arr
+	17: [
+	17: NUM, val= 5
+	17: ]
+	17: ;
+  18:     int n;
+	18: Keyword: int
+	18: ID, name= n
+	18: ;
+  19:     int s;
+	19: Keyword: int
+	19: ID, name= s
+	19: ;
+  20:     n = 0;
+	20: ID, name= n
+	20: =
+	20: NUM, val= 0
+	20: ;
+  21:     while(j<=5){
+	21: Keyword: while
+	21: (
+	21: ID, name= j
+	21: <=
+	21: NUM, val= 5
+	21: )
+	21: {
+  22:       read(arr[j]);
+	22: ID, name= read
+	22: (
+	22: ID, name= arr
+	22: [
+	22: ID, name= j
+	22: ]
+	22: )
+	22: ;
+  23:       j = j + 1;
+	23: ID, name= j
+	23: =
+	23: ID, name= j
+	23: +
+	23: NUM, val= 1
+	23: ;
+  24:     }
+	24: }
+  25:     write(max(arr, t));
+	25: ID, name= write
+	25: (
+	25: ID, name= max
+	25: (
+	25: ID, name= arr
+	25: ,
+	25: ID, name= t
+	25: )
+	25: )
+	25: ;
+  26:     s= (arr[0]+arr[1]-arr[2])*arr[3]/arr[4];
+	26: ID, name= s
+	26: =
+	26: (
+	26: ID, name= arr
+	26: [
+	26: NUM, val= 0
+	26: ]
+	26: +
+	26: ID, name= arr
+	26: [
+	26: NUM, val= 1
+	26: ]
+	26: -
+	26: ID, name= arr
+	26: [
+	26: NUM, val= 2
+	26: ]
+	26: )
+	26: *
+	26: ID, name= arr
+	26: [
+	26: NUM, val= 3
+	26: ]
+	26: /
+	26: ID, name= arr
+	26: [
+	26: NUM, val= 4
+	26: ]
+	26: ;
+  27:     write(s);
+	27: ID, name= write
+	27: (
+	27: ID, name= s
+	27: )
+	27: ;
+  28:     return 0;
+	28: Keyword: return
+	28: NUM, val= 0
+	28: ;
+  29: }
+	29: }
+	30: EOF!
+Scanning is successful, no error is found during scanning !!!
+
+
+ Scanning is sucessful   
+
+Function call history : 
+            function  LineNum   token
+               parse  2         Keyword: int
+             program  2         Keyword: int
+            dcl_list  2         Keyword: int
+         declaration  2         Keyword: int
+             fun_dcl  2         Keyword: int
+      type_specifier  2         Keyword: int
+              params  2         Keyword: int
+          param_list  2         Keyword: int
+               param  2         Keyword: int
+      type_specifier  2         Keyword: int
+               param  2         Keyword: int
+      type_specifier  2         Keyword: int
+       compound_stmt  2         {
+      local_dcl_list  3         Keyword: int
+           local_dcl  3         Keyword: int
+             var_dcl  3         Keyword: int
+      type_specifier  3         Keyword: int
+           local_dcl  4         Keyword: int
+             var_dcl  4         Keyword: int
+      type_specifier  4         Keyword: int
+           stmt_list  5         ID, name= j
+           statement  5         ID, name= j
+           expr_stmt  5         ID, name= j
+          expression  5         ID, name= j
+          comma_expr  5         ID, name= j
+     assignment_expr  5         ID, name= j
+                 lhs  5         ID, name= j
+     assignment_expr  5         NUM, val= 0
+       equality_expr  5         NUM, val= 0
+     relational_expr  5         NUM, val= 0
+       additive_expr  5         NUM, val= 0
+ multiplicative_expr  5         NUM, val= 0
+        primary_expr  5         NUM, val= 0
+           statement  6         ID, name= result
+           expr_stmt  6         ID, name= result
+          expression  6         ID, name= result
+          comma_expr  6         ID, name= result
+     assignment_expr  6         ID, name= result
+                 lhs  6         ID, name= result
+     assignment_expr  6         ID, name= arr
+       equality_expr  6         ID, name= arr
+     relational_expr  6         ID, name= arr
+       additive_expr  6         ID, name= arr
+ multiplicative_expr  6         ID, name= arr
+        primary_expr  6         ID, name= arr
+       array_element  6         ID, name= arr
+          expression  6         ID, name= j
+          comma_expr  6         ID, name= j
+     assignment_expr  6         ID, name= j
+       equality_expr  6         ID, name= j
+     relational_expr  6         ID, name= j
+       additive_expr  6         ID, name= j
+ multiplicative_expr  6         ID, name= j
+        primary_expr  6         ID, name= j
+           statement  7         Keyword: while
+          while_stmt  7         Keyword: while
+          expression  7         ID, name= j
+          comma_expr  7         ID, name= j
+     assignment_expr  7         ID, name= j
+       equality_expr  7         ID, name= j
+     relational_expr  7         ID, name= j
+       additive_expr  7         ID, name= j
+ multiplicative_expr  7         ID, name= j
+        primary_expr  7         ID, name= j
+               relop  7         <=
+       additive_expr  7         ID, name= size
+ multiplicative_expr  7         ID, name= size
+        primary_expr  7         ID, name= size
+           statement  7         {
+       compound_stmt  7         {
+      local_dcl_list  8         Keyword: if
+           stmt_list  8         Keyword: if
+           statement  8         Keyword: if
+      selection_stmt  8         Keyword: if
+          expression  8         ID, name= arr
+          comma_expr  8         ID, name= arr
+     assignment_expr  8         ID, name= arr
+       equality_expr  8         ID, name= arr
+     relational_expr  8         ID, name= arr
+       additive_expr  8         ID, name= arr
+ multiplicative_expr  8         ID, name= arr
+        primary_expr  8         ID, name= arr
+       array_element  8         ID, name= arr
+          expression  8         ID, name= j
+          comma_expr  8         ID, name= j
+     assignment_expr  8         ID, name= j
+       equality_expr  8         ID, name= j
+     relational_expr  8         ID, name= j
+       additive_expr  8         ID, name= j
+ multiplicative_expr  8         ID, name= j
+        primary_expr  8         ID, name= j
+               relop  8         >
+       additive_expr  8         ID, name= result
+ multiplicative_expr  8         ID, name= result
+        primary_expr  8         ID, name= result
+           statement  8         {
+       compound_stmt  8         {
+      local_dcl_list  9         ID, name= result
+           stmt_list  9         ID, name= result
+           statement  9         ID, name= result
+           expr_stmt  9         ID, name= result
+          expression  9         ID, name= result
+          comma_expr  9         ID, name= result
+     assignment_expr  9         ID, name= result
+                 lhs  9         ID, name= result
+     assignment_expr  9         ID, name= arr
+       equality_expr  9         ID, name= arr
+     relational_expr  9         ID, name= arr
+       additive_expr  9         ID, name= arr
+ multiplicative_expr  9         ID, name= arr
+        primary_expr  9         ID, name= arr
+       array_element  9         ID, name= arr
+          expression  9         ID, name= j
+          comma_expr  9         ID, name= j
+     assignment_expr  9         ID, name= j
+       equality_expr  9         ID, name= j
+     relational_expr  9         ID, name= j
+       additive_expr  9         ID, name= j
+ multiplicative_expr  9         ID, name= j
+        primary_expr  9         ID, name= j
+           statement  10        ID, name= j
+           expr_stmt  10        ID, name= j
+          expression  10        ID, name= j
+          comma_expr  10        ID, name= j
+     assignment_expr  10        ID, name= j
+                 lhs  10        ID, name= j
+     assignment_expr  10        ID, name= j
+       equality_expr  10        ID, name= j
+     relational_expr  10        ID, name= j
+       additive_expr  10        ID, name= j
+ multiplicative_expr  10        ID, name= j
+        primary_expr  10        ID, name= j
+               addop  10        +
+ multiplicative_expr  10        NUM, val= 1
+        primary_expr  10        NUM, val= 1
+           else_part  12        }
+           statement  13        Keyword: return
+         return_stmt  13        Keyword: return
+       expr_or_empty  13        ID, name= result
+          expression  13        ID, name= result
+          comma_expr  13        ID, name= result
+     assignment_expr  13        ID, name= result
+       equality_expr  13        ID, name= result
+     relational_expr  13        ID, name= result
+       additive_expr  13        ID, name= result
+ multiplicative_expr  13        ID, name= result
+        primary_expr  13        ID, name= result
+         declaration  16        Keyword: int
+             fun_dcl  16        Keyword: int
+      type_specifier  16        Keyword: int
+              params  16        Keyword: void
+       compound_stmt  16        {
+      local_dcl_list  17        Keyword: int
+           local_dcl  17        Keyword: int
+           array_dcl  17        Keyword: int
+      type_specifier  17        Keyword: int
+           local_dcl  18        Keyword: int
+             var_dcl  18        Keyword: int
+      type_specifier  18        Keyword: int
+           local_dcl  19        Keyword: int
+             var_dcl  19        Keyword: int
+      type_specifier  19        Keyword: int
+           stmt_list  20        ID, name= n
+           statement  20        ID, name= n
+           expr_stmt  20        ID, name= n
+          expression  20        ID, name= n
+          comma_expr  20        ID, name= n
+     assignment_expr  20        ID, name= n
+                 lhs  20        ID, name= n
+     assignment_expr  20        NUM, val= 0
+       equality_expr  20        NUM, val= 0
+     relational_expr  20        NUM, val= 0
+       additive_expr  20        NUM, val= 0
+ multiplicative_expr  20        NUM, val= 0
+        primary_expr  20        NUM, val= 0
+           statement  21        Keyword: while
+          while_stmt  21        Keyword: while
+          expression  21        ID, name= j
+          comma_expr  21        ID, name= j
+     assignment_expr  21        ID, name= j
+       equality_expr  21        ID, name= j
+     relational_expr  21        ID, name= j
+       additive_expr  21        ID, name= j
+ multiplicative_expr  21        ID, name= j
+        primary_expr  21        ID, name= j
+               relop  21        <=
+       additive_expr  21        NUM, val= 5
+ multiplicative_expr  21        NUM, val= 5
+        primary_expr  21        NUM, val= 5
+           statement  21        {
+       compound_stmt  21        {
+      local_dcl_list  22        ID, name= read
+           stmt_list  22        ID, name= read
+           statement  22        ID, name= read
+           expr_stmt  22        ID, name= read
+          expression  22        ID, name= read
+          comma_expr  22        ID, name= read
+     assignment_expr  22        ID, name= read
+       equality_expr  22        ID, name= read
+     relational_expr  22        ID, name= read
+       additive_expr  22        ID, name= read
+ multiplicative_expr  22        ID, name= read
+        primary_expr  22        ID, name= read
+                call  22        ID, name= read
+            arg_list  22        ID, name= arr
+     assignment_expr  22        ID, name= arr
+       equality_expr  22        ID, name= arr
+     relational_expr  22        ID, name= arr
+       additive_expr  22        ID, name= arr
+ multiplicative_expr  22        ID, name= arr
+        primary_expr  22        ID, name= arr
+       array_element  22        ID, name= arr
+          expression  22        ID, name= j
+          comma_expr  22        ID, name= j
+     assignment_expr  22        ID, name= j
+       equality_expr  22        ID, name= j
+     relational_expr  22        ID, name= j
+       additive_expr  22        ID, name= j
+ multiplicative_expr  22        ID, name= j
+        primary_expr  22        ID, name= j
+           statement  23        ID, name= j
+           expr_stmt  23        ID, name= j
+          expression  23        ID, name= j
+          comma_expr  23        ID, name= j
+     assignment_expr  23        ID, name= j
+                 lhs  23        ID, name= j
+     assignment_expr  23        ID, name= j
+       equality_expr  23        ID, name= j
+     relational_expr  23        ID, name= j
+       additive_expr  23        ID, name= j
+ multiplicative_expr  23        ID, name= j
+        primary_expr  23        ID, name= j
+               addop  23        +
+ multiplicative_expr  23        NUM, val= 1
+        primary_expr  23        NUM, val= 1
+           statement  25        ID, name= write
+           expr_stmt  25        ID, name= write
+          expression  25        ID, name= write
+          comma_expr  25        ID, name= write
+     assignment_expr  25        ID, name= write
+       equality_expr  25        ID, name= write
+     relational_expr  25        ID, name= write
+       additive_expr  25        ID, name= write
+ multiplicative_expr  25        ID, name= write
+        primary_expr  25        ID, name= write
+                call  25        ID, name= write
+            arg_list  25        ID, name= max
+     assignment_expr  25        ID, name= max
+       equality_expr  25        ID, name= max
+     relational_expr  25        ID, name= max
+       additive_expr  25        ID, name= max
+ multiplicative_expr  25        ID, name= max
+        primary_expr  25        ID, name= max
+                call  25        ID, name= max
+            arg_list  25        ID, name= arr
+     assignment_expr  25        ID, name= arr
+       equality_expr  25        ID, name= arr
+     relational_expr  25        ID, name= arr
+       additive_expr  25        ID, name= arr
+ multiplicative_expr  25        ID, name= arr
+        primary_expr  25        ID, name= arr
+     assignment_expr  25        ID, name= t
+       equality_expr  25        ID, name= t
+     relational_expr  25        ID, name= t
+       additive_expr  25        ID, name= t
+ multiplicative_expr  25        ID, name= t
+        primary_expr  25        ID, name= t
+           statement  26        ID, name= s
+           expr_stmt  26        ID, name= s
+          expression  26        ID, name= s
+          comma_expr  26        ID, name= s
+     assignment_expr  26        ID, name= s
+                 lhs  26        ID, name= s
+     assignment_expr  26        (
+       equality_expr  26        (
+     relational_expr  26        (
+       additive_expr  26        (
+ multiplicative_expr  26        (
+        primary_expr  26        (
+          expression  26        ID, name= arr
+          comma_expr  26        ID, name= arr
+     assignment_expr  26        ID, name= arr
+       equality_expr  26        ID, name= arr
+     relational_expr  26        ID, name= arr
+       additive_expr  26        ID, name= arr
+ multiplicative_expr  26        ID, name= arr
+        primary_expr  26        ID, name= arr
+       array_element  26        ID, name= arr
+          expression  26        NUM, val= 0
+          comma_expr  26        NUM, val= 0
+     assignment_expr  26        NUM, val= 0
+       equality_expr  26        NUM, val= 0
+     relational_expr  26        NUM, val= 0
+       additive_expr  26        NUM, val= 0
+ multiplicative_expr  26        NUM, val= 0
+        primary_expr  26        NUM, val= 0
+               addop  26        +
+ multiplicative_expr  26        ID, name= arr
+        primary_expr  26        ID, name= arr
+       array_element  26        ID, name= arr
+          expression  26        NUM, val= 1
+          comma_expr  26        NUM, val= 1
+     assignment_expr  26        NUM, val= 1
+       equality_expr  26        NUM, val= 1
+     relational_expr  26        NUM, val= 1
+       additive_expr  26        NUM, val= 1
+ multiplicative_expr  26        NUM, val= 1
+        primary_expr  26        NUM, val= 1
+               addop  26        -
+ multiplicative_expr  26        ID, name= arr
+        primary_expr  26        ID, name= arr
+       array_element  26        ID, name= arr
+          expression  26        NUM, val= 2
+          comma_expr  26        NUM, val= 2
+     assignment_expr  26        NUM, val= 2
+       equality_expr  26        NUM, val= 2
+     relational_expr  26        NUM, val= 2
+       additive_expr  26        NUM, val= 2
+ multiplicative_expr  26        NUM, val= 2
+        primary_expr  26        NUM, val= 2
+               mulop  26        *
+        primary_expr  26        ID, name= arr
+       array_element  26        ID, name= arr
+          expression  26        NUM, val= 3
+          comma_expr  26        NUM, val= 3
+     assignment_expr  26        NUM, val= 3
+       equality_expr  26        NUM, val= 3
+     relational_expr  26        NUM, val= 3
+       additive_expr  26        NUM, val= 3
+ multiplicative_expr  26        NUM, val= 3
+        primary_expr  26        NUM, val= 3
+               mulop  26        /
+        primary_expr  26        ID, name= arr
+       array_element  26        ID, name= arr
+          expression  26        NUM, val= 4
+          comma_expr  26        NUM, val= 4
+     assignment_expr  26        NUM, val= 4
+       equality_expr  26        NUM, val= 4
+     relational_expr  26        NUM, val= 4
+       additive_expr  26        NUM, val= 4
+ multiplicative_expr  26        NUM, val= 4
+        primary_expr  26        NUM, val= 4
+           statement  27        ID, name= write
+           expr_stmt  27        ID, name= write
+          expression  27        ID, name= write
+          comma_expr  27        ID, name= write
+     assignment_expr  27        ID, name= write
+       equality_expr  27        ID, name= write
+     relational_expr  27        ID, name= write
+       additive_expr  27        ID, name= write
+ multiplicative_expr  27        ID, name= write
+        primary_expr  27        ID, name= write
+                call  27        ID, name= write
+            arg_list  27        ID, name= s
+     assignment_expr  27        ID, name= s
+       equality_expr  27        ID, name= s
+     relational_expr  27        ID, name= s
+       additive_expr  27        ID, name= s
+ multiplicative_expr  27        ID, name= s
+        primary_expr  27        ID, name= s
+           statement  28        Keyword: return
+         return_stmt  28        Keyword: return
+       expr_or_empty  28        NUM, val= 0
+          expression  28        NUM, val= 0
+          comma_expr  28        NUM, val= 0
+     assignment_expr  28        NUM, val= 0
+       equality_expr  28        NUM, val= 0
+     relational_expr  28        NUM, val= 0
+       additive_expr  28        NUM, val= 0
+ multiplicative_expr  28        NUM, val= 0
+        primary_expr  28        NUM, val= 0
+
+
+ The syntax tree: 
+
+  Declare:  int max function with parameters :
+    Parameter: int arr[ ]
+    Parameter: int size
+    Compound Stmt:
+      Declare:  int j 
+      Declare:  int result 
+      Expression stmt: 
+        Operator: =
+          ID: j
+          Const: 0
+      Expression stmt: 
+        Operator: =
+          ID: result
+          Array: arr, with member index:
+            ID: j
+      while stmt: 
+        Operator: <=
+          ID: j
+          ID: size
+        Compound Stmt:
+          If  without ELSE 
+            Operator: >
+              Array: arr, with member index:
+                ID: j
+              ID: result
+            Compound Stmt:
+              Expression stmt: 
+                Operator: =
+                  ID: result
+                  Array: arr, with member index:
+                    ID: j
+              Expression stmt: 
+                Operator: =
+                  ID: j
+                  Operator: +
+                    ID: j
+                    Const: 1
+      Return 
+        ID: result
+  Declare:  int main function with parameters :
+    Parameter: void
+    Compound Stmt:
+      Declare:  int arr [5]
+      Declare:  int n 
+      Declare:  int s 
+      Expression stmt: 
+        Operator: =
+          ID: n
+          Const: 0
+      while stmt: 
+        Operator: <=
+          ID: j
+          Const: 5
+        Compound Stmt:
+          Expression stmt: 
+            Call function: read, with arguments:
+              Array: arr, with member index:
+                ID: j
+          Expression stmt: 
+            Operator: =
+              ID: j
+              Operator: +
+                ID: j
+                Const: 1
+      Expression stmt: 
+        Call function: write, with arguments:
+          Call function: max, with arguments:
+            ID: arr
+            ID: t
+      Expression stmt: 
+        Operator: =
+          ID: s
+          Operator: /
+            Operator: *
+              Operator: -
+                Operator: +
+                  Array: arr, with member index:
+                    Const: 0
+                  Array: arr, with member index:
+                    Const: 1
+                Array: arr, with member index:
+                  Const: 2
+              Array: arr, with member index:
+                Const: 3
+            Array: arr, with member index:
+              Const: 4
+      Expression stmt: 
+        Call function: write, with arguments:
+          ID: s
+      Return 
+        Const: 0
+
+
+ Parsing is successful   
+
+Bye
