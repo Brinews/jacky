@@ -1,0 +1,7 @@
+int main(void){
+  int arr[20];
+  if((arr+3) < (arr+4))
+  	(arr + ((arr+5) - (arr+2-1)))[7] = 21;
+  arr[0] = arr[2] = arr[5] = (4 <= 8);
+  return 0;
+}

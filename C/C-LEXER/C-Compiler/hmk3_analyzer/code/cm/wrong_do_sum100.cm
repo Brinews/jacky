@@ -1,0 +1,21 @@
+/* computes the sum from 1 to 100 */
+
+  /* error 19 */
+int dosum(int n){
+    int j ;
+    int result;
+    j = result = 0;
+    /* result = 0; */
+   do{
+      result = result + j;
+      j = j+1;
+    }while(j<=100);
+    return result;
+}
+
+void main(void){ 
+  int k;
+  input(k);       /* error 8 */
+  output(dosum(k));  /* error 8*/
+  return 0;
+}   

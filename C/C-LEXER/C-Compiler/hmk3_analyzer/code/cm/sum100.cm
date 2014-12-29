@@ -1,0 +1,20 @@
+/* computes the sum from 1 to 100 */
+
+int sum(int n){
+    int j ;
+    int result;
+    j = result = 0;
+    /* result = 0; */
+    while(j!=100){
+      result = result + j;
+      j = j+1;
+    }
+    return  result;
+}
+
+int main(void){
+  int k;
+  k=read();
+  write(sum(k));
+  return 0;
+}   

@@ -1,0 +1,22 @@
+void fun(void){
+     return ;
+}
+
+void fun(int x){ /* error 1 */
+     return x;
+}
+
+int foo(int a, int a[]){ /* error 1 */
+   if(a > 0)
+       return a;     
+}
+
+int main(void){
+    int we ;    
+    int z;
+    int z[3]; /* error 1 */
+    we = 7;
+    y = ok(); /* error 6 , 8 */
+    return w; /* error 6 */
+}    
+

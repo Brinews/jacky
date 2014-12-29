@@ -1,0 +1,16 @@
+int arr[10];
+
+int main(void){
+	int aaa[20];
+	int j;
+	for(j=0; j<10; j=j+1){
+		arr[j] = j;
+	}
+	j = 0;
+	while(j<20){
+		aaa[j] = (arr+(j-(j/10)*10))[0]; /* arr[j%10] */
+		write(aaa[j]);
+		j=j+1;
+	}
+	return 0;
+}

@@ -1,0 +1,26 @@
+Table Name           Kind        Dcl  Ref
+ID                               line lines
+----  ----           ----        ---- ----
+0     read           Func        0    17
+0     main           Func        15
+0     sum            Func        3    18
+0     write          Func        0    18
+1     j              Var         4    6 8 9 10 10
+1     result         Var         5    6 9 9 12
+1     n              Var_Param   3
+3     k              Var         16   17 18
+
+=======
+
+Table Name           Kind        Dcl  Ref
+ID                               line lines
+----  ----           ----        ---- ----
+0     read           Func        0    17
+0     main           Func        15
+0     sum            Func        3    18
+0     write          Func        0    18
+1     j              Var         4    6 8 9 10 10
+1     result         Var         5    6 9 9 12
+1     n              Var_Param   3
+2     k              Var         16   17 18
+

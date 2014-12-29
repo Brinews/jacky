@@ -1,0 +1,39 @@
+/* error 19 */
+int arr[3];
+
+/* error 4*/
+int facts( int x) 
+/* recursive factorial functions */
+{ if (x > 1)
+	return x * fact(x-1); /* error 8*/
+  else
+ 	return x ;   
+}
+
+int fact( int x, void y) {    /* error 3*/
+  /* recursive factorial functions */
+  int x;        /*error 1*/
+  /*int while; */   /*parsing error*/
+  /*int void;  */   /*parsing error */
+  if (x > 1){
+    y = x;    	   /* error 6 */
+    x = fact;     /* error 6*/
+    arr[1] = x[3];       /* error 7, or error 12, not detected when building symbol table.*/
+	return x * facts(x-1);  
+  }
+  else
+ 	return 1;
+}
+
+int tool(int x, int y){
+	return x+y;
+}
+
+/*error 1 */
+int write; 
+
+void main(void)
+{   int y;
+    y = readdata();   /* error 8*/
+    y = fact(2); /*error 9*/
+}

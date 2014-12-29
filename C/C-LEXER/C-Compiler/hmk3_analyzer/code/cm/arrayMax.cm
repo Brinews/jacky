@@ -1,0 +1,29 @@
+/* return the largest item in an array, correct */
+int max(int arr[], int size){
+    int j;
+    int result;
+    j = 0;
+    result = arr[j];
+    while(j<size){
+      if(arr[j] > result){
+        result = arr[j];
+	    j = j+1;
+      }
+    }
+  return result;
+}
+
+int main(void){
+    int arr[5];
+    int j;
+    int s;
+    j = 0;
+    while(j<5){
+      arr[j]=read();
+      j = j + 1;
+    }
+    write(max(arr, 5));
+    s= (arr[0]+arr[1]-arr[2])*arr[3]/arr[4];
+    write(s);
+    return 0;
+}

@@ -1,0 +1,44 @@
+
+
+void facts( int x)  /* error 5*/
+/* recursive factorial functions */
+{ if (x > 1)
+	return x * facts(x-1);  /*error 13*/
+  else
+ 	return ;  /*error 4*/
+}
+
+int factss( int x, int y)
+/* recursive factorial functions */
+{ if (x > 1)
+	return x * facts(x-1);  /*error 13*/
+  else
+ 	return x+y;   
+}
+
+int arr[5];
+
+int main(void)   /* error 4 */
+{   int x;
+    int y;
+    x = read();
+    y = x + 3;
+    arr[2] = read();
+    arr[arr] = read(); 	/*error 11*/
+    y = facts(x);   /* error 17 */
+    arr[main()] = read();  /* error 10 */
+    (arr-3)[2] = 8;
+    (x + y)[3] = 7;   /* error 12*/
+    y = factss(x, arr); 	/* error 10*/
+    y = 2 + 3 + (facts(x) / 3);  /* error 13 */
+    if( y < arr)  /* error 14 */
+       write(x);
+    x = 3 + facts(x); /* error 17 */
+    write( (arr-1) + (arr+3));  /* error 16, 10 */
+    y = arr;  	/*error 17*/
+    arr = factss(x, y); /* error 18 */
+    if (x >0) 
+       write(factss(x, y));
+    return ;
+}
+

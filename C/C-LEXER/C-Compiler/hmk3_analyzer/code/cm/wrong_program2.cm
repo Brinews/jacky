@@ -1,0 +1,34 @@
+void ff(int x){
+  return ;
+}
+
+int bb(void){
+  return ;
+}
+
+void cc(void){
+   return 3;
+}
+
+int dd(int arr[], int index){
+  return arr[index];
+}
+
+int main(void){
+    void x; /* error 3 */
+    int y;
+    int dd;
+    int aa[3];
+    y = 3 + ff(); /* error 9 */
+    aa[aa];
+    while(aa){
+       y = 3;
+       return;
+    }
+    if(ff)  /* error 6 */
+       y = 6;
+    aa = 8;
+    aa[3] =7;
+    dd(aa, 3);  /* error 8 */
+    return;
+}

@@ -1,0 +1,13 @@
+int fact( int x)
+/* recursive factorial functions */
+{ if (x > 1)
+	return x * fact(x-1);
+  else
+ 	return 1;
+}
+int main(void)
+{   int x;
+    x = read();
+    if (x >0) write(fact(x)); /*error 4, no return int */
+}
+

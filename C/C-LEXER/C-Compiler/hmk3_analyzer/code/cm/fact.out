@@ -1,0 +1,39 @@
+Table Name           Kind        Dcl  Ref
+ID                               line lines
+----  ----           ----        ---- ----
+0     fact           Func        16   19 27
+0     read           Func        0    25
+0     main           Func        23
+0     k              Var         14
+0     m              Array       3    11
+0     x              Var         2
+0     z              Var         1
+0     chg            Func        5
+0     write          Func        0    27
+1     a              Var_Param   5    9 11
+1     b              Var_Param   5    9
+1     c              Var_Param   5    9 11
+1     d              Var         7    9
+2     x              Var_Param   16   18 19 19
+3     x              Var         24   25 26 27
+
+=========
+
+Table Name           Kind        Dcl  Ref
+ID                               line lines
+----  ----           ----        ---- ----
+0     fact           Func        16   19 27
+0     read           Func        0    25
+0     main           Func        23
+0     k              Var         14
+0     m              Array       3    11
+0     x              Var         2    25 26 27
+0     z              Var         1
+0     chg            Func        5
+0     write          Func        0    27
+1     a              Var_Param   5    9 11
+1     b              Var_Param   5    9
+1     c              Var_Param   5    9 11
+1     d              Var         7    9
+2     x              Var_Param   16   18 19 19
+
