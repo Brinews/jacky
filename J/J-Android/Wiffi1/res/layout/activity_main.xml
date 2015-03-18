@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+    <EditText
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|left"
+        android:lines="10"
+        android:scrollHorizontally="true"
+        android:scrollbars="vertical"
+        android:text="@string/title" />
+
+    <EditText
+        android:id="@+id/ta_msg"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_send"
+        android:layout_below="@+id/tv_content"
+        android:ems="10"
+        android:hint="@string/message_hint" />
+    
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_send"
+        android:layout_below="@+id/ta_msg"
+        android:text="@string/sendbtn" />
+
+    <EditText
+        android:id="@+id/ta_file"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_send"
+        android:layout_below="@+id/btn_send"
+        android:ems="10"
+        android:hint="@string/share_hint" />
+    
+    <Button
+        android:id="@+id/btn_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_send"
+        android:layout_below="@+id/ta_file"
+        android:text="@string/sharebtn" />
+
+    <Button
+        android:id="@+id/btn_get"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btn_share"
+        android:layout_alignBottom="@+id/btn_share"
+        android:layout_alignRight="@+id/btn_send"
+        android:text="@string/fetch" />
+
+</RelativeLayout>

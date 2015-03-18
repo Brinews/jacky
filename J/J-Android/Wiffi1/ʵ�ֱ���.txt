@@ -1,0 +1,8 @@
+1. Android浏览本地web服务器：10.0.2.2
+
+2. 本地与手机端的socket连接
+
+	> mksdcard 128M sdcard.img
+	> adb push 1.jpg /sdcard/1.jpg
+	> emulator.exe -sdcard sdcard.img -avd chat
+	> adb forward tcp:6666 tcp:6666

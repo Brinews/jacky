@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Wiffi1</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title">Mini Message-File Sharer</string>
+    <string name="message_hint">Message Here</string>
+    <string name="sendbtn">Message Send</string>
+    <string name="share_hint">Full file path here</string>
+    <string name="sharebtn">Share</string>
+    <string name="fetch">Fetch</string>
+
+</resources>
