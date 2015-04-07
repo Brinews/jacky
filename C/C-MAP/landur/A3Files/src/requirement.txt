@@ -1,0 +1,216 @@
+Summary
+
+In this assignment you implement a lunar lander game. Unlike previous assignments (1a, 1b, 2), Assignment #3 does NOT directly build upon your code for Assignment #2. However, you will still use Sketchpad for drawing and you can re-use as much of your code as you want. This assignment is meant to be both fun and challenging. A lot of code and hints are provided to help you get started. Please also ask questions by posting to the Course Discussion forum.
+Getting Started
+
+First, download a3files.tar which contains the following files which will often be referenced in this specification and used in this assignment:
+
+    lander is our sample executable
+    landscape.txt is a sample landscape input file
+    Sketchpad.jar is a copy of the file from the sketchpad page.
+    test_curses.c is sample code demonstrating the curses package
+    timer.c is code demonstrating signals
+    java_lander.tar.gz and perl_lander.tar.gz are old Java and Perl codes with implementations of similar lunar landers, supplied without any guarantees or warranties in the hope that they might be useful for some students.
+
+Description - Part 1 - Mimic Sample Lander
+
+In Part 1, your program must mimic what the provided simple lander executable does. Download a3files.tarcontaining lander, landscape.txt and Sketchpad.jar, put all files into one directory, and, if necessary, use chmodmake lander executable.
+
+Run lander from the command line e.g. as in the following three examples.
+
+    ./lander -g 0 -t -5 -f landscape.txt
+    ./lander -g 9.8 -t -20 -f landscape.txt
+    ./lander -g 1.6 -t -5 -f landscape.txt
+
+    -g represents gravity, causing acceleration towards the moon
+    -t represents the thrust, the acceleration created by the ships thrusters when they are on.
+    -f has one argument, the name of a text file containing points that represent the landscape.
+
+Follow the brief instructions given when you start up the game. Ensure that the terminal window, not the sketchpad window, has the focus, otherwise your keystrokes will not be read. Your goal is to land the ship as follows:
+
+    Your ship must be upright.
+    It must be going sufficiently slowly.
+    It must land on a perfectly flat surface.
+
+Description - Part 2 - Individual Improvements
+
+In Part 2, you improve upon the provided lander. There are many ways of doing so.
+Approach and Hints
+
+To create the animation you need drawSegment as well as another Sketchpad instruction, eraseSegment. For example,
+
+    eraseSegment 1 2 3 4
+
+erases the segment drawn by drawSegment 1 2 3 4. To move your ship, first erase it in its old location, then draw it at the new position. After both drawing and erasing the ship, you need to call fflush on the pipe to Sketchpad. Here is a step by step outline you can follow (of course you are free to follow a different development path). We recommend doing the things towards the top of the list first:
+
+    lander must respond to key clicks. Do this by using curses.
+    You must be able to rotate your ship.
+    Your ship must fall according to gravity. You can do this using signals.
+    Handle the three command line arguments specified above.
+    You must read in a text file specified using the -f option that represents a landscape. A sample file islandscape.txt.
+    Your ship must respond to thrust.
+    lander must appropriately detect a crash or a landing by testing for line segment intersection.
+
+Responding to key clicks using curses
+
+You must use the ncurses implementation of the curses C library to listen to key clicks.
+
+Resources for information on curses include:
+
+    Lab presentation
+    Code and comments in test_curses.c
+    man 3 ncurses
+    wikipedia page on ncurses and references there
+    Register and login to Books 24x7 from the UofA library web page, search for "curses", then read Chapter 6 ofBeginning Linux Programming.
+
+When linking to create an executable, you must link in the curses library, -lcurses
+
+As an initial step to using curses we highly recommend that you start with the following exercise: write C code to move a single line around on the screen, controlled by key clicks. Send drawSegment and eraseSegment instructions to Sketchpad to achieve this.
+Drawing and rotating your ship
+
+You can store and draw your ship in similar ways as for the figures of assignments 1 and 2. When the corresponding left arrow or right arrow key is clicked, rotate the ship by 10 degrees each key click (see the instructions when the sample lander is run). The left arrow key rotates counter-clockwise, and the right arrow key clockwise. One easy way to rotate a ship is to:
+
+    First, translate the ship so that its midpoint is at coordinates (0,0).
+    Next, rotate it using the formula from Assignment 2.
+    Finally, translate it back so that its midpoint is at its original position.
+
+Erase the old ship's lines before drawing the new rotated one. Alternatively, you could store your ship's coordinates relative to your chosen mid-point, and then update only that point appropriately as your ship is moved. A different approach is to first create your ship, compute its smallest and largest x and y coordinates, then determine the centre point as follows:
+
+centre_x = (min_x + max_x) / 2.0;
+centre_y = (min_y + max_y) / 2.0;
+Having your ship fall using signals
+
+You need to make your ship fall if the gravity is greater than zero. For example, if gravity = 9.8, the ship accelerates down faster than if gravity = 1.6. Your ship must accelerate according to the (simplified) laws of physics; the longer it falls, the faster it will become.
+
+You can simulate real time by using a counter and a "tight"-loop that approximates timing. We have not tested this way, but it should work.
+
+Our sample lander instead uses signals, a concept that will be discussed in depth in CMPUT 379.
+
+    Our lander creates a timer, which sends an alarm signal every 50000 microseconds = 0.05 seconds. At every signal, the position of the ship is updated, and it is redrawn.
+    Critical code must be protected by ensuring that the signal does not interrupt. Code that updates your data structures, like your ship, and the cycle that erases your old ship and draws a new one, must not be interrupted. So, the alarm signal must be blocked for that time period.
+
+timer.c is sample code taken directly from our lander. Read it and its comments to see how to create such a timer. (If you want more of a challenge, do not look at this sample code.)
+
+You can also read Chapter 10 in "Advanced Programming in the UNIX Environment: Second Edition" by Stevens (available online through U of A Libraries, you will need to log in)
+
+You can simulate the fall with a counter, likely, but lander uses the following physics formulas 
+
+the_new_y = the_old_y + the_old_velocity * t + 1/2 * gravity * t*t
+the_new_velocity = the_old_velocity + gravity * t
+
+t is the difference in time, set to 0.05 seconds in lander. lander has a counter in seconds, which is incremented by .05 each time the alarm signal is sent.
+Landscape file
+
+The file given with the -f option (landscape.txt is a sample) is a text file containing the following information:
+
+    Each line contains exactly two whitespace-separated numbers that represent one point: first the x-coordinate, then y.
+    Each number can safely be stored in a long.
+    There will be at least 2 and at most 20 points.
+    There may be trailing or leading whitespace on a line.
+    You can assume that the file contains a usable series of points.
+
+Your program must draw the landscape as a series of line segments from the first to the second point, the second to the third, and so on.
+
+As soon as any line of your ship intersects any landscape line, your ship has either crashed or landed.
+Thrust
+
+When the space bar is pressed (use curses to recognize this event), your ship must respond to the thrust set by the -t option. Do this by calculating the y (vertical, represented as yA) and x (horizontal, represented by xA) acceleration:
+
+xA = thrust * cos(angle)
+yA = gravity + thrust * sin(angle)
+
+angle is the angle at which your ship is rotated with respect to thrust (also called your ship's attitude):
+
+    Your ship is initially upright, so the angle should initially be 90 degrees, or PI/2 radians.
+    If you rotate clockwise, increment the angle.
+    If you rotate counterclockwise, decrement the angle.
+
+Now, you need to integrate xA and yA into your formulas for calculating your ships' new position and velocity as follows:
+
+    The formula for the vertical velocity and position is given. You just need to use yA instead of gravity.
+    Also maintain a horizontal velocity and position, using the same formula, except use xA instead of gravity.
+
+Detecting line segment intersection
+
+To determine when your ship contacts the landscape, you need to determine if two line segments intersect.
+
+    Our lander uses the rotation/translation formula at the bottom of this page: http://alienryderflex.com/intersect/
+    An alternative which should work (but Stef wasn't able to get it to work): http://www.vb-helper.com/howto_segments_intersect.html
+
+Compare each line segment in your ship to each line segment in the landscape using one of the above formulas.
+
+As soon as 2 line segments intersect: if the criteria for a landing are met, then you have landed, otherwise, you have crashed.
+More Hints
+
+    Our code is based on the Java Lunar Lander and Perl Lunar Lander supplied for reference. These codes may or may not run ... they have not been tested recently.
+
+    Because curses is used, it is difficult to write debug output with printf. Instead, you can write to another terminal window as follows:
+        Open another Terminal (called the display terminal here) on the same machine.
+        Type ps at the display terminal. Record what it says under TTY. It will be something like pts/1.
+        Open a writable pipe to "dev/TTY", where TTY is something like pts/1. (e.g., "dev/pts/1").
+        Use fprintf and fflush to write your debugging output to that pipe. This output will be shown in the display terminal while your program is running.
+    Writing to a file, and of course using ddd/gdb may be useful for debugging, too. But make sure you do not write to a file in your final submission.
+
+Learning Objectives
+
+By the assignment due date, you will have used the following C and Linux concepts:
+
+    reinforce many of the concepts from Assignment 1 and 2
+    learn to use additional C libraries
+        curses - read and react to user keystrokes in real time
+        signals - repeating event handling, real-time programming
+    computations - math (trigonometry and geometry) and implementing physics formulas
+    Develop a program to closely match and improve the behavior of a given sample program
+
+Marking and Submission
+
+Create a submit.tar with all your .c and .h files and a Makefile that creates a correct executable named lander that runs on the lab machines.
+
+Before submission, unpack your tar file to a new directory and check that it compiles and runs. If you are using memwatch, then submit the memwatch files, too; unlike for Assignment 2, they will not be provided when marking. Note that using memwatch is not required.
+
+
+A Marking Guideline
+
+Roughly 80% of your mark will be for how well you mimicked the given lander executable:
+
+    10% for drawing a ship at least as good as the given one, in very close to the same starting position. Your ship must be upright, and thrust must be pointing perfectly down.
+    10% for reading in a landscape file from the -f option, and drawing the landscape.
+    15% for rotating like the given lander
+        some of this mark is given to rotating while falling
+    15% for falling like the given lander: fall slower/faster in lower/higher gravity as specified by the -g option; noticeably accelerate as the lander falls, like our sample lander; fall at an acceleration similar to the given lander.
+    15% for responding to thrust like the given lander: the higher the absolute value of the -t option, the more it accelerates; the ship can move diagonally and at any direction at higher absolute values of thrust and for low values of gravity.
+    15% for detecting both a proper landing and a crash.
+
+Some of our testing will be done at zero gravity, so make sure your lander works in that case.
+
+The other 20% will be awarded for improving upon the given lander, likely 5% for small improvements and 10% for each substantial improvement. The improvements must be simple and obvious, and concisely documented in your README.
+
+Quality and style will not be marked (i.e., the style/quality rules marked for asn1 and 2 do not apply to asn3. Still, to keep your sanity, we highly recommend following good coding practices. Some marking will be by visual inspection - your code must seem to the human eye to run similar to the given lander.
+MORE ABOUT PART 2 - IMPROVING THE GIVEN LANDER
+
+Some of your improvements may conflict with the goal of part 1, which is to mimic the behavior of our lander as closely as possible. If your improvement is in conflict, you need to deal with it as follows:
+
+    By default, your lander should behave as in part 1.
+    To activate these conflicting improvements, use a command-line option -i (for improved)
+
+For example,
+./lander -g 5 -f landscape.txt -t -5 
+would run your lander in part 1 (mimicking) mode,
+while
+./lander -g 5 -f landscape.txt -t -5 -i 
+activates your improvements.
+
+Your README file should indicate what your improvements are, and which of them are activated by the -i option.
+Some ideas for Improvements
+
+Some of the things students have implemented in the past:
+
+    "perfect" command line arg checking (man 3 getopt) (small improvement)
+    drawing a significantly better ship (adding a door is not drawing a significantly better ship)
+    causing your ship to explode when it crashes (parts flying everywhere), and putting a "crash" or "landed" on the Sketchpad window
+    zooming in when your ship gets close to the ground
+    preventing the ship from going above the window (but, unlike the online lander, ensuring it isn't stuck), and smoothly wrapping around the right and left edges
+    causing random asteroids to float by at various angles, destroying your ship if they collide (bigger job)
+    having a graphical fuel gauge (vertical bar which becomes less filled as ship runs out of fuel)
+    having multiple landing pads, where you can get different score points for landing on each one (like the sample online Java one)
+
