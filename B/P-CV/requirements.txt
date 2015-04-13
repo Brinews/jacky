@@ -1,0 +1,70 @@
+In this assignment you will be writing an object tracker using Python and OpenCV. You are provided with lab10.pywhich provides a basic framework for capturing images from a sequence, using these to initialize and update a tracker, displaying tracking results and evaluating performance in terms of both speed and accuracy. Your task is to complete the following two functions in this file:
+
+1. initTracker: This is meant for initializing your tracker with the first frame and the initial object location from the ground truth. It does not return anything.
+
+2. updateTracker:  This is meant for updating your tracker with the current frame. It must not use any information except the image that it receives as input. It returns the current location of your tracker as a 2x4 numpy array of floats where the corner coordinates are arranged as:
+
+upper left x
+	
+
+upper right x
+	
+
+lower right x
+	
+
+lower left x
+
+upper left y
+	
+
+upper right y
+	
+
+lower right y
+	
+
+lower left y
+
+ 
+
+You are allowed to add any other functions or code you need, and even additional files that you can import from lab10.py,  but you must not change the existing code in any way.
+
+Your code will be evaluated on five sequences: bookI, bookII, bookIII, bus and cereal where each sequence is a set of JPEG files. Each of these presents a different tracking challenge including object translation, rotation, scaling and view point changes. Your tracker's performance will be evaluated in terms of both accuracy and speed. Tracking accuracy is measured by the tracking error which is defined as the average Euclidean distance between the corners of your tracker's bounding box and the corresponding corners in the ground truth. Tracking speed is measured by the number of frames your tracker can process per second (fps). Both error and fps are evaluated for each frame and then a mean is taken over all frames to give a single value for each metric at the end of the sequence. Your goal should be to minimize the error while maximizing the fps.
+
+In most cases, you will find that the performance of the tracker depends on a set of parameters which can be adjusted to vary both speed and accuracy. You will also find that an inverse relation exists between these two metrics, i.e. accuracy decreases (or equivalently error increases) as the speed increases and vice versa. This creates a tradeoff between the two and it is your job to decide what parameters give the optimal combination of speed and accuracy over the given sequences and hard code these into your tracker code. Please note, however, that the same parameter values will be used for evaluating all the sequences so you cannot choose individual values for each sequence.
+
+You are also provided with the ground truth for all the sequences as ASCII text files where each line contains the corner coordinates for one frame in the sequence in the following format:
+
+ulx    uly    urx    ury    lrx    lry    llx    lly
+
+As mentioned earlier, the code for reading this data and computing the error is provided in the given python file so you do not have to write it yourself. Also note that the ground truth is provided only for evaluating the tracking error and cannot be used by your tracker in any way except during initialization.
+
+The names of all sequences are hard coded into the code and any given sequence can be chosen either by changing 'seq_id' in the code (line 66) or by providing the desired id as a command line argument. For instance, the command:
+
+python lab10.py 3
+
+will run the tracker on the fourth sequence (that has index 3) in the list ( i.e. bus).
+
+When you run the code, a window is presented that shows each frame in the chosen sequence with the ground truth location drawn as a green box and your tracker's location drawn as a red box. It also shows the current fps and error for each frame in white text at the upper left corner of the window. The program also writes the tracker locations in a text file called <seq_name>_res.txt in the same format as the ground truth file so these can be compared easily. After all the frames have been processed, the mean error and fps are displayed in the terminal. These are the two values on which your tracker will be evaluated. For the code to run successfully, you need to extract the zip file for each sequence in the same folder as the code and place the ground truth text files there too.
+
+The evaluation for this assignment will be relative, i.e. the tracker that gives the best value for a particular metric (i.e. minimum error or maximum fps) in a given sequence will receive full marks for that metric and sequence while the remaining submissions will be graded relative to it. This grading will be independent for each metric and sequence since a tracker that gives maximum accuracy in a particular sequence will not necessarily also give the best speed in that sequence. Same holds true for performance across different sequences.
+
+However, please note that, since it is possible to get very high fps if the tracker does nothing and returns arbitrary locations, only those submissions will be considered for this relative grading process where the tracker at least makes an attempt to follow the object and actually updates the location in each frame using data from that frame in a meaningful way.  It is your responsibility to ensure, through comments and clean coding practices, that the evaluating TA can reasonably be expected to figure out whether your tracker satisfies this criterion or not simply by examining your code.
+
+Similarly, a tracker that takes forever to process each frame may give arbitrarily high accuracy, so, in order to qualify, your tracker's speed must be over 10 fps when run on the lab systems. A tracker that does not satisfy either of the above criteria will be discarded and receive zero marks for both speed and accuracy. However, the speed requirement is specific to each sequence, i.e your tracker will only be disqualified for those sequences where its speed is less than 10 fps provided that the other criterion is met.
+
+Each sequence has equal weighting and is thus worth 20% of the total marks for this assignment, out of which 10% each is allotted for accuracy and speed.
+
+Following references and tutorials may help you write a suitable tracker:
+
+1. Meanshift and Camshift
+
+2. How to Detect and Track Object With OpenCV
+
+3. Motion Analysis and Object Tracking
+
+4. Optical Flow
+
+**绿色字体的地方 有附件  此外，lab10.py这个python程序里面已经有existing code了 要按照里面的写
+
