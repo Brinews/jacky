@@ -28,27 +28,34 @@ const char *COMMAND_STR[] = {
 const char *COMMAND_HELP[] = {
     "BYE clear database and exit",
     "HELP display this help message",
+    "",
     "LIST KEYS displays all keys in current state",
     "LIST ENTRIES displays all entries in current state",
     "LIST SNAPSHOTS displays all snapshots in the database",
+    "",
     "GET <key> displays entry values",
     "DEL <key> deletes entry from current state",
     "PURGE <key> deletes entry from current state and snapshots",
+    "",
     "SET <key> <value ...> sets entry values",
     "PUSH <key> <value ...> pushes each value to the front one at a time",
 
     "APPEND <key> <value ...> append each value to the back one at a time",
+    "",
     "PICK <key> <index> displays entry value at index",
     "PLUCK <key> <index> displays and removes entry value at index",
     "POP <key> displays and removes the front entry value",
+    "",
     "DROP <id> deletes snapshot",
     "ROLLBACK <id> restores to snapshot and deletes newer snapshots",
     "CHECKOUT <id> replaces current state with a copy of snapshot",
     "SNAPSHOT saves the current state as a snapshot",
+    "",
     "MIN <key> displays minimum entry value",
     "MAX <key> displays maximum entry value",
     "SUM <key> displays sum of entry values",
     "LEN <key> displays number of entry values",
+    "",
     "REV <key> reverses order of entry values",
     "UNIQ <key> removes repeated adjacent entry values",
     "SORT <key> sorts entry values in ascending order",
@@ -172,7 +179,7 @@ static entry* get_entry(char *key, entry *entry_head)
 }
 
 /* GET key */
-static void sdb_get_key(char *key, entry *entry_head)
+static void sdb_get_entry(char *key, entry *entry_head)
 {
     struct entry *ptr = get_entry(key, entry_head);
     printf("[");
@@ -244,7 +251,7 @@ static void free_entry(entry *ety)
 }
 
 /* DEL key */
-static void sdb_del_key(char *key, entry *entry_head)
+static void sdb_del_entry(char *key, entry *entry_head)
 {
     struct entry *ptr = get_entry(key, entry_head);
     if (NULL == ptr) {
@@ -272,7 +279,7 @@ static void free_snapshot(snapshot *snp)
     }
 
     free(entry_head);
-    free(snp);
+    //free(snp);
 }
 
 /* PURGE key */
@@ -463,6 +470,7 @@ static void sdb_drop_snapshot(int id, snapshot *head)
     } else {
         list_del(ptr);
         free_snapshot(ptr);
+        free(ptr);
         printf("ok\n");
     }
 }
@@ -483,6 +491,7 @@ static snapshot *sdb_rollback_snapshot(int id, snapshot *head)
 
             list_del(now);
             free_snapshot(now);
+            free(now);
         }
 
         current = ptr; // the current snapshot change
@@ -693,4 +702,228 @@ static void sdb_sort_entry(char *key, entry *head)
 
         printf("ok\n");
     }
+}
+
+/** Reads a line of arbitrary length from a file pointer, returns false if error or EOF */
+static bool read_line(char **line, FILE *fp) {
+    bool ret = true;
+    char buffer[BUFFER_SIZE];
+    size_t count = 0;
+    size_t capacity = BUFFER_SIZE;
+
+    // use a dynamic array to store the line
+    *line = check(calloc(1, BUFFER_SIZE));
+
+    for (size_t i = 0; ; ++i) {
+        if (fgets(buffer, BUFFER_SIZE, fp) != buffer) {
+            // encountered an error or EOF
+            if (i == 0) {
+                free(*line);
+                return false;
+            } else {
+                // we have a partial line already read
+                return true;
+            }
+        }
+
+        // double the buffer size if we can't fit this line in
+        size_t len = strlen(buffer);
+        if (len + count >= capacity) {
+            capacity *= 2;
+            *line = check(realloc(*line, capacity));
+        }
+
+        count += len;
+        strcat(*line, buffer);
+
+        // check if we got the entire line
+        if (len < BUFFER_SIZE - 1 || buffer[BUFFER_SIZE - 2] == '\n') {
+            // remove the newline from the output
+            (*line)[count - 1] = '\0';
+            break;
+        }
+    }
+
+    return ret;
+}
+
+int do_command(int argc, char **argv)
+{
+    int ret = 0;
+    enum COMMAND tag = find_command(argv[0]);
+    int i;
+    int n;
+    int *values = check(malloc(sizeof(int)*argc));
+
+    if (argc == 2 && strcmp(argv[0], "LIST") == 0 
+            && strcmp(argv[1], "KEYS") == 0) {
+        tag = CMD_LIST_KEYS;
+    }
+    if (argc == 2 && strcmp(argv[0], "LIST") == 0 
+            && strcmp(argv[1], "ENTRIES") == 0) {
+        tag = CMD_LIST_ENTRIES;
+    }
+    if (argc == 2 && strcmp(argv[0], "LIST") == 0 
+            && strcmp(argv[1], "SNAPSHOTS") == 0) {
+        tag = CMD_LIST_SNAPSHOTS;
+    }
+
+    switch (tag) {
+        case CMD_BYE:
+            printf("bye\n");
+            ret = 1;
+            break;
+        case CMD_HELP:
+            for (i = 0; i < sizeof(COMMAND_HELP)/sizeof(char *); i++) {
+                printf("%s\n", COMMAND_HELP[i]);
+            }
+            break;
+        case CMD_LIST_KEYS:
+            sdb_list_keys(current->entries);
+            break;
+        case CMD_LIST_ENTRIES:
+            sdb_list_entries(current->entries);
+            break;
+        case CMD_LIST_SNAPSHOTS:
+            sdb_list_snapshots(current);
+            break;
+        case CMD_GET:
+            sdb_get_entry(argv[1], current->entries);
+            break;
+        case CMD_DEL:
+            sdb_del_entry(argv[1], current->entries);
+            break;
+        case CMD_PURGE:
+            sdb_purge_entry(argv[1], current->entries);
+            break;
+        case CMD_SET:
+            n = argc - 2;
+            for (i = 0; i < n; i++) {
+                values[i] = atoi(argv[i+2]);
+            }
+            sdb_set_entry(argv[1], n, values, current);
+            break;
+        case CMD_PUSH:
+            n = argc - 2;
+            for (i = 0; i < n; i++) {
+                values[i] = atoi(argv[i+2]);
+            }
+            sdb_push_entry(argv[1], n, values, current->entries);
+            break;
+        case CMD_APPEND:
+            n = argc - 2;
+            for (i = 0; i < n; i++) {
+                values[i] = atoi(argv[i+2]);
+            }
+            sdb_append_entry(argv[1], n, values, current->entries);
+            break;
+        case CMD_PICK:
+            n = atoi(argv[2]);
+            sdb_pick_entry(argv[1], n, current->entries);
+            break;
+        case CMD_PLUCK:
+            n = atoi(argv[2]);
+            sdb_pluck_entry(argv[1], n, current->entries);
+            break;
+        case CMD_POP:
+            sdb_pop_entry(argv[1], current->entries);
+            break;
+        case CMD_DORP: // some mis-way
+            n = atoi(argv[1]);
+            sdb_drop_snapshot(n, &head);
+            break;
+        case CMD_ROLLBACK:
+            n = atoi(argv[1]);
+            current = sdb_rollback_snapshot(n, &head);
+            break;
+        case CMD_CHECKOUT:
+            n = atoi(argv[1]);
+            current = sdb_checkout_snapshot(n, &head);
+            break;
+        case CMD_SNAPSHOT:
+            sdb_do_snapshot(&head);
+            break;
+        case CMD_MIN:
+            sdb_min_entry(argv[1], current->entries);
+            break;
+        case CMD_MAX:
+            sdb_max_entry(argv[1], current->entries);
+            break;
+        case CMD_SUM:
+            sdb_sum_entry(argv[1], current->entries);
+            break;
+        case CMD_LEN:
+            sdb_len_entry(argv[1], current->entries);
+            break;
+        case CMD_REV:
+            sdb_rev_entry(argv[1], current->entries);
+            break;
+        case CMD_UNIQ:
+            sdb_uniq_entry(argv[1], current->entries);
+            break;
+        case CMD_SORT:
+            sdb_SORT_entry(argv[1], current->entries);
+            break;
+        default:
+            break;
+    }
+
+    free(values);
+
+    return ret;
+}
+
+int main()
+{
+    current->entries = new_entry("dummy");
+
+    while (true) {
+        printf("> ");
+        char *line;
+        if (!read_line(&line, stdin)) {
+            break;
+        }
+
+        int argc = 0;
+        size_t capacity = 1;
+        char **argv = check(malloc(sizeof(char *) * capacity));
+
+        char *token = strtok(line, " ");
+        while (token ) {
+            argv[argv++] = token;
+
+            if (argc == capacity) {
+                capacity *= 2;
+                argv = check(realloc(argv, sizeof(char*) * capacity));
+            }
+
+            token = strtok(NULL, " ");
+        }
+
+        int exit = 0;
+
+        if (argc != 0) {
+            exit = do_command(argc, argv);
+        }
+
+        free(argv);
+        free(line);
+
+        if (exit == 1) break;
+    }
+
+    snapshot *sptr = head.next;
+
+    while (sptr != &head) {
+        snapshot *sp = sptr;
+        sptr = sptr->next;
+
+        list_del(sp);
+        free_snapshot(sp);
+        free(sp);
+    }
+
+    free_snapshot(&head);
+
+    return 0;
 }
