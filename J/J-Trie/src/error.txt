@@ -1,0 +1,40 @@
+Trie.java:0: File does not end with a newline.
+Trie.java:8:1: Outer types defined is 3 (max allowed is 1).
+Trie.java:21: Type Javadoc comment is missing an @author tag.
+Trie.java:57:26: Variable 'ch' must be private and have accessor methods.
+Trie.java:58:23: Variable 'vt' must be private and have accessor methods.
+Trie.java:93:13: '}' should be on the same line.
+Trie.java:117:17: '(' is preceded with whitespace.
+Trie.java:118:27: '(' is preceded with whitespace.
+Trie.java:151:38: 'cast' is not followed by whitespace.
+Trie.java:228:9: '}' should be on the same line.
+Trie.java:261:9: '}' should be on the same line.
+Trie.java:334:13: '}' should be on the same line.
+Trie.java:368:13: '}' should be on the same line.
+Trie.java:400:46: 'cast' is not followed by whitespace.
+Trie.java:430:13: '}' should be on the same line.
+Trie.java:455:8: Unused @param tag for 'args[]'.
+Trie.java:457:36: Expected @param tag for 'args'.
+Trie.java:457:40: Array brackets at illegal position.
+Trie.java:474: Type Javadoc comment is missing an @author tag.
+Trie.java:475:19: Variable 'weight' must be private and have accessor methods.
+Trie.java:476:19: Variable 'word' must be private and have accessor methods.
+Trie.java:492: Type Javadoc comment is missing an @author tag.
+Trie.java:493:19: Variable 'dictSeq' must be private and have accessor methods.
+AlphabetSort.java:13:4: Unknown tag 'Author'.
+AlphabetSort.java:15: Type Javadoc comment is missing an @author tag.
+AlphabetSort.java:44:8: Unused @param tag for 'args[]'.
+AlphabetSort.java:46:38: Expected @param tag for 'args'.
+Autocomplete.java:16: Missing a Javadoc comment.
+Autocomplete.java:24: Missing a Javadoc comment.
+Autocomplete.java:58: Expected an @return tag.
+Autocomplete.java:58:35: Expected @param tag for 'term'.
+Autocomplete.java:60:24: 'cast' is not followed by whitespace.
+Autocomplete.java:74:9: '}' should be on the same line.
+Autocomplete.java:87: Expected an @return tag.
+Autocomplete.java:87:47: Expected @param tag for 'prefix'.
+Autocomplete.java:87:59: Expected @param tag for 'k'.
+Autocomplete.java:130: Line is longer than 100 characters (found 110).
+Autocomplete.java:149:17: Name 'StdIn' must match pattern '^([A-Z][0-9]*|[a-z][a-zA-Z0-9]*)$'.
+Autocomplete.java:155: 'for' construct must use '{}'s.
+

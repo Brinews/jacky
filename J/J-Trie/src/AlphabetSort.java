@@ -53,15 +53,21 @@ public class AlphabetSort {
 			String line;
 			
 			line = reader.readLine();
+
+            if (line == null) {
+                throw new IllegalArgumentException();
+            }
 			
 			// build a trie with dict
 			Trie trie = new Trie(line);
 
 			while ((line = reader.readLine()) != null) {
 
+                /*
 				if (existNonLetter(line)) {
 					throw new IllegalArgumentException();
 				}
+                */
 
 				if (trie.find(line, true)) {
 					throw new IllegalArgumentException();
@@ -69,6 +75,10 @@ public class AlphabetSort {
 
 				trie.insert(line);
 			}
+
+            if (!trie.hasWords()) {
+                throw new IllegalArgumentException();
+            }
 
 			List<String> list = trie.listAllWords();
 			Iterator iter = list.listIterator();

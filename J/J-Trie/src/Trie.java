@@ -23,9 +23,9 @@ public class Trie {
     private Vertex root;
 
     /**
-     * The Dict class
+     * The Dict string
      */
-    private Dict dict;
+    private String dict = "";
 
     /**
      * Vertex Node:
@@ -46,6 +46,25 @@ public class Trie {
             words = 0;
             prefixes = 0;
             edges = new HashMap<Character, Vertex>();
+        }
+    }
+
+    /**
+     * Node of word
+     * @author coder
+     */
+    public class Node {
+        protected double weight;
+        protected String word;
+
+        /**
+         * Node class
+         * @param wd word
+         * @param wht weight
+         */
+        Node(String wd, double wht) {
+            weight = wht;
+            word = wd;
         }
     }
 
@@ -81,7 +100,7 @@ public class Trie {
                 char c1 = n1.ch.charValue();
                 char c2 = n2.ch.charValue();
 
-                if (dict.dictSeq.equals("")) {
+                if (dict.equals("")) {
 
                     if (n1.ch > n2.ch) {
                         return 1;
@@ -91,15 +110,15 @@ public class Trie {
                         return -1;
                     }
                 } else {
-                    int p1 = dict.dictSeq.length();
+                    int p1 = dict.length();
                     int p2 = p1;
 
-                    for (int i = 0; i < dict.dictSeq.length(); i++) {
-                        if (c1 == dict.dictSeq.charAt(i)) {
+                    for (int i = 0; i < dict.length(); i++) {
+                        if (c1 == dict.charAt(i)) {
                             p1 = i;
                         }
 
-                        if (c2 == dict.dictSeq.charAt(i)) {
+                        if (c2 == dict.charAt(i)) {
                             p2 = i;
                         }
                     }
@@ -115,7 +134,7 @@ public class Trie {
      */
     public Trie(String ds) {
         root = new Vertex();
-        dict = new Dict(ds);
+        dict = ds;
     }
 
     /**
@@ -123,7 +142,7 @@ public class Trie {
      */
     public Trie() {
         root = new Vertex();
-        dict = new Dict("");
+        dict = "";
     }
 
     /** 
@@ -452,6 +471,18 @@ public class Trie {
     }
 
     /**
+     * @return true for has words in trie
+     */
+    public boolean hasWords() {
+
+        if (root.prefixes > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * main function
      * @param args parameters from command
      */
@@ -466,40 +497,5 @@ public class Trie {
         System.out.println(t.find("bye", false));
         System.out.println(t.find("heyy", false));
         System.out.println(t.find("hell", true));   
-    }
-}
-
-/**
- * Node of word
- * @author coder
- */
-class Node {
-    protected double weight;
-    protected String word;
-
-    /**
-     * Node class
-     * @param wd word
-     * @param wht weight
-     */
-    Node(String wd, double wht) {
-        weight = wht;
-        word = wd;
-    }
-}
-
-/**
- * Dict class
- * @author coder
- */
-class Dict {
-    protected String dictSeq = "";
-
-    /**
-     * Constructor
-     * @param ds dictSeq
-     */
-    Dict(String ds) {
-        dictSeq = ds;
     }
 }

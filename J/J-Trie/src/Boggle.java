@@ -18,21 +18,21 @@ import java.util.Random;
  */
 public class Boggle {
 
-	/**
-	 * variables
-	 */
+    /**
+     * variables
+     */
     private char[][] board;
     private int maxLen = 1000;
-    
+
     /**
      * constructor
      * @param M height
      * @param N width
      */
     private void newBoard(int M, int N) {
-    	board = new char[M][N];
+        board = new char[M][N];
     }
-    
+
     /**
      * board init
      * @param i row
@@ -40,31 +40,31 @@ public class Boggle {
      * @param c char
      */
     private void setBoard(int i, int j, char c) {
-    	board[i][j] = c;
+        board[i][j] = c;
     }
-    
+
     /**
      * board
      * @return char[][]
      */
     public char[][] getBoard() {
-    	return board;
+        return board;
     }
-    
+
     /**
      * set max len
      * @param l length
      */
     public void setMaxLen(int l) {
-    	maxLen = l;
+        maxLen = l;
     }
-    
+
     /**
      * get max len
      * @return length
      */
     public int getMaxLen() {
-    	return maxLen;
+        return maxLen;
     }
 
     /**
@@ -119,62 +119,62 @@ public class Boggle {
 
                 for (int j = 0; j < N; j++) {
                     //b.board[i][j] = line.charAt(j);
-                	b.setBoard(i, j, line.charAt(j));
+                    b.setBoard(i, j, line.charAt(j));
                 }
             }
         } else {
-        	Random rand = new Random();
-        	
+            Random rand = new Random();
+
             for (int i = 0; i < M; i++) {
                 for (int j = 0; j < N; j++) {
                     char c = (char) ('a' + rand.nextInt(27));
-                	b.setBoard(i, j, c);
+                    b.setBoard(i, j, c);
                 }
             }
         }
 
         Scanner fin = null;
-        
-		try {
-			fin = new Scanner(new File(dictName));
-		} catch (FileNotFoundException e) {
-			//e.printStackTrace();
-			throw new IllegalArgumentException();
-		}
-		
+
+        try {
+            fin = new Scanner(new File(dictName));
+        } catch (FileNotFoundException e) {
+            //e.printStackTrace();
+            throw new IllegalArgumentException();
+        }
+
         HashSet<String> dict = new HashSet<String>();
 
         int max = -1000;
-        
+
         while (fin.hasNextLine()) {
-        	String line = fin.nextLine();
-        	if (line.length() > max) {
-        		max = line.length();
-        	}
-        	
+            String line = fin.nextLine();
+            if (line.length() > max) {
+                max = line.length();
+            }
+
             dict.add(line);
         }
-        
+
         b.setMaxLen(max);
 
         HashMap<Integer, ArrayList<String>> ret = b.boggleWithTrie(b.getBoard(), dict, max);
 
         Iterator itr = ret.values().iterator();
-        
+
         ArrayList all = new ArrayList();
 
         while (itr.hasNext()) {
             ArrayList<String> list = (ArrayList<String>) itr.next();
 
             for (int p = 0; p < list.size(); p++) {
-            	all.add(list.get(p));
+                all.add(list.get(p));
             }
         }
-        
+
         int i = 0;
         while (i < K && i < all.size()) {
-        	System.out.println(all.get(all.size()-i-1));
-        	i++;
+            System.out.println(all.get(all.size()-i-1));
+            i++;
         }
     }
 
@@ -228,7 +228,7 @@ public class Boggle {
             }
         }
         return words;
-    }
+            }
 
     /**
      * get next char
@@ -248,7 +248,7 @@ public class Boggle {
         if (i < 0 || j < 0 || i >= board.length || j >= board.length
                 || visited[i][j] || cur.length() > max || trie.getIndexes(cur) == null) {
             return;
-        }
+                }
         cur = cur + board[i][j];
         if (cur.length() >= 1 && dict.contains(cur)) {
             ArrayList<String> arr = words.get(cur.length());
@@ -256,8 +256,8 @@ public class Boggle {
                 arr = new ArrayList<String>();
             }
             if (!arr.contains(cur)) {
-            	arr.add(cur);
-            	words.put(cur.length(), arr);
+                arr.add(cur);
+                words.put(cur.length(), arr);
             }
         }
         visited[i][j] = true;
@@ -280,7 +280,7 @@ public class Boggle {
      */
     public HashMap<Integer, ArrayList<String>> boggle(char[][] board,
             HashSet<String> dict) {
-    	// General solution without trie. Exponential time complexity.
+        // General solution without trie. Exponential time complexity.
         int i, j, n = board.length;
         boolean[][] visited;
         HashMap<Integer, ArrayList<String>> words = new HashMap<Integer, ArrayList<String>>();

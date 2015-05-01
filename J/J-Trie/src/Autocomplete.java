@@ -33,8 +33,8 @@ public class Autocomplete {
     protected class SortByWeight implements Comparator<Object> {
         @Override
             public int compare(Object o1, Object o2) {
-                Node n1 = (Node) o1;
-                Node n2 = (Node) o2;
+                Trie.Node n1 = (Trie.Node) o1;
+                Trie.Node n2 = (Trie.Node) o2;
 
                 if (n1.weight < n2.weight) {
                     return 1;
@@ -54,7 +54,16 @@ public class Autocomplete {
     public Autocomplete(String[] terms, double[] weights) {
         int i;
 
+        if (terms.length != weights.length) {
+            throw new IllegalArgumentException();
+        }
+
         for (i = 0; i < terms.length; i++) {
+
+            if (weights[i] <= 0) {
+                throw new IllegalArgumentException();
+            }
+
             trie.addWord(terms[i], weights[i]);
         }
     }
@@ -65,7 +74,10 @@ public class Autocomplete {
      * @return weight double
      */
     public double weightOf(String term) {
-        //return trie.getWeight(term);
+        if (matchesMap == null || matchesMap.size() == 0) {
+            return trie.getWeight(term);
+        }
+
         return (Double) matchesMap.get(term);
     }
 
@@ -75,6 +87,10 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
+        if (null == prefix || "".equals(prefix)) {
+            throw new IllegalArgumentException();
+        }
+
         Iterable<String> s = topMatches(prefix, 1);
         Iterator<String> a = s.iterator();
 
@@ -93,23 +109,27 @@ public class Autocomplete {
      * @return string list
      */
     public Iterable<String> topMatches(String prefix, int k) {
-        SortedSet<Node> ssn = new TreeSet<Node>(new SortByWeight());
+        if (k < 0 || null == prefix || "".equals(prefix)) {
+            throw new IllegalArgumentException();
+        }
 
-        List<Node> retList = trie.getPrefixList(prefix);
+        SortedSet<Trie.Node> ssn = new TreeSet<Trie.Node>(new SortByWeight());
 
-        Iterator<Node> itr = retList.iterator();
+        List<Trie.Node> retList = trie.getPrefixList(prefix);
+
+        Iterator<Trie.Node> itr = retList.iterator();
         while (itr.hasNext()) {
             ssn.add(itr.next());
         }
 
         int i = 0;
 
-        Iterator<Node> it = ssn.iterator();
+        Iterator<Trie.Node> it = ssn.iterator();
         List<String> ret = new ArrayList<String>();
         matchesMap.clear();
 
         while (it.hasNext() && i < k) {
-            Node n = it.next();
+            Trie.Node n = it.next();
 
             ret.add(n.word);
             matchesMap.put(n.word, n.weight);

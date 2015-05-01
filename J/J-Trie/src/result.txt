@@ -1,0 +1,837 @@
+Submission Details
+===================================================
+Commit Time:  Mon Apr 27, 11:56:44 PM, 2015 (-0800)
+Branch:       ag/proj3
+Commit URL:   https://github.com/Berkeley-CS61B/acd/tree/aa6aa358a950bb25eb56d006d92e1bcfecb08721
+
+
+Assessment Summary
+====================================================
+Compilation:  FAILED
+Style:        FAILED
+Correctness:  8/31 tests passed
+Timing:       1/14 tests passed
+
+Breakdown:    [Correctness: 60.0%, Timing: 30.0%, Style: 10.0%]
+Raw Score:    0.18 / 1.00
+Scale Factor: min(raw_score / 1.00, 1.00)
+
+Final Score:  0.18 / 1.00
+
+
+Assessment Details
+====================================================
+
+==== COMPILATION TEST ====
+Compiling ./Trie.java
+Success!
+
+Compiling ./AlphabetSort.java
+Success!
+
+Compiling ./Autocomplete.java
+Success!
+
+Compiling ./Boggle.java
+Picked up _JAVA_OPTIONS: -Xmx1g
+javac: file not found: ./Boggle.java
+Usage: javac <options> <source files>
+use -help for a list of possible options
+
+Compiling ./AGTestAlphabetSort.java
+Success!
+
+Compiling ./AGTestTrie.java
+Success!
+
+Compiling ./AGTestAutocomplete.java
+Success!
+
+Compiling ./AGTestBoggle.java
+Picked up _JAVA_OPTIONS: -Xmx1g
+./AGTestBoggle.java:72: error: cannot find symbol
+            Boggle.main(args);
+            ^
+  symbol:   variable Boggle
+  location: class AGTestBoggle
+1 error
+
+Compiling ./AGTestSpellCheck.java
+Success!
+
+Compiling ./AGTimeAlphabetSort.java
+Success!
+
+Compiling ./AGTimeAutocomplete.java
+Success!
+
+Compiling ./AGTimeBoggle.java
+Picked up _JAVA_OPTIONS: -Xmx1g
+./AGTimeBoggle.java:104: error: cannot find symbol
+                Boggle.main(args);
+                ^
+  symbol:   variable Boggle
+  location: class AGTimeBoggle
+./AGTimeBoggle.java:133: error: cannot find symbol
+                Boggle.main(args);
+                ^
+  symbol:   variable Boggle
+  location: class AGTimeBoggle
+2 errors
+
+
+====== STYLE CHECK =======
+Trie.java:5:1: Outer types defined is 3 (max allowed is 1).
+Boggle.java:0: File not found!
+
+
+=== CORRECTNESS TESTS ====
+Picked up _JAVA_OPTIONS: -Xmx1g
+AGTestAlphabetSort: 1 out of 7 tests passed.
+
+Test 1: Basic AlphabetSort test.
+
+==> PASSED
+
+Test 2: Deep alphabet test (words of length 3000)
+     java.lang.IllegalArgumentException
+     AlphabetSort.main(AlphabetSort.java:63)
+     AGTestAlphabetSort.call(AGTestAlphabetSort.java:100)
+     AGTestAlphabetSort.validate(AGTestAlphabetSort.java:78)
+     AGTestAlphabetSort.testDepth(AGTestAlphabetSort.java:53)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+
+==> FAILED
+
+Test 3: Sparse alphabet test.
+     java.lang.AssertionError: array lengths differed, expected.length=3 actual.length=8
+     org.junit.Assert.fail(Assert.java:88)
+     org.junit.internal.ComparisonCriteria.assertArraysAreSameLength(ComparisonCriteria.java:76)
+     org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:37)
+     org.junit.Assert.internalArrayEquals(Assert.java:532)
+     org.junit.Assert.assertArrayEquals(Assert.java:283)
+
+
+==> FAILED
+
+Test 4: Medium alphabet test
+     java.lang.IllegalArgumentException
+     AlphabetSort.main(AlphabetSort.java:63)
+     AGTestAlphabetSort.call(AGTestAlphabetSort.java:100)
+     AGTestAlphabetSort.validate(AGTestAlphabetSort.java:78)
+     AGTestAlphabetSort.testMed(AGTestAlphabetSort.java:43)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+
+==> FAILED
+
+Test 5: Short alphabet test
+     java.lang.AssertionError: Didn't throw exception on no words/alphabet
+     org.junit.Assert.fail(Assert.java:88)
+     AGTestAlphabetSort.testShort(AGTestAlphabetSort.java:63)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+
+
+==> FAILED
+
+Test 6: Large alphabet test
+     java.lang.IllegalArgumentException
+     AlphabetSort.main(AlphabetSort.java:63)
+     AGTestAlphabetSort.call(AGTestAlphabetSort.java:100)
+     AGTestAlphabetSort.validate(AGTestAlphabetSort.java:78)
+     AGTestAlphabetSort.testLarge(AGTestAlphabetSort.java:48)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+
+==> FAILED
+
+Test 7: Duplicate alphabet chars test
+     java.lang.AssertionError: Didn't throw exception on duplicate chars
+     org.junit.Assert.fail(Assert.java:88)
+     AGTestAlphabetSort.testDups(AGTestAlphabetSort.java:73)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+
+
+==> FAILED
+
+Picked up _JAVA_OPTIONS: -Xmx1g
+AGTestTrie: 2 out of 3 tests passed.
+
+Test 1: Partial word Trie test.
+     java.lang.AssertionError
+     org.junit.Assert.fail(Assert.java:86)
+     org.junit.Assert.assertTrue(Assert.java:41)
+     org.junit.Assert.assertTrue(Assert.java:52)
+     AGTestTrie.testPartialTree(AGTestTrie.java:46)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+
+==> FAILED
+
+Test 2: Adding empty String test
+
+==> PASSED
+
+Test 3: Basic Trie test.
+
+==> PASSED
+
+Picked up _JAVA_OPTIONS: -Xmx1g
+     java.lang.NullPointerException
+     Autocomplete.weightOf(Autocomplete.java:69)
+     AGTestAutocomplete.testWeightOf(AGTestAutocomplete.java:462)
+     AGTestAutocomplete.test0(AGTestAutocomplete.java:621)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.NullPointerException
+     Autocomplete.weightOf(Autocomplete.java:69)
+     AGTestAutocomplete.testWeightOf(AGTestAutocomplete.java:462)
+     AGTestAutocomplete.test0(AGTestAutocomplete.java:622)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.NullPointerException
+     Autocomplete.weightOf(Autocomplete.java:69)
+     AGTestAutocomplete.testWeightOf(AGTestAutocomplete.java:462)
+     AGTestAutocomplete.test0(AGTestAutocomplete.java:623)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.ThreadDeath
+     java.lang.Thread.stop(Thread.java:836)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:285)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHitSingle(AGTestAutocomplete.java:152)
+     AGTestAutocomplete.test1a(AGTestAutocomplete.java:491)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHitSingle(AGTestAutocomplete.java:152)
+     AGTestAutocomplete.test1a(AGTestAutocomplete.java:492)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHitSingle(AGTestAutocomplete.java:152)
+     AGTestAutocomplete.test1a(AGTestAutocomplete.java:493)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHitSingle(AGTestAutocomplete.java:152)
+     AGTestAutocomplete.test1a(AGTestAutocomplete.java:494)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.ThreadDeath
+     java.lang.Thread.stop(Thread.java:836)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:285)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHit(AGTestAutocomplete.java:119)
+     AGTestAutocomplete.test1b(AGTestAutocomplete.java:504)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHit(AGTestAutocomplete.java:119)
+     AGTestAutocomplete.test1b(AGTestAutocomplete.java:505)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHit(AGTestAutocomplete.java:119)
+     AGTestAutocomplete.test1b(AGTestAutocomplete.java:506)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHit(AGTestAutocomplete.java:119)
+     AGTestAutocomplete.test1b(AGTestAutocomplete.java:507)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.ThreadDeath
+     java.lang.Thread.stop(Thread.java:836)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:285)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+     java.lang.ThreadDeath
+     java.lang.Thread.stop(Thread.java:836)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:285)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+     java.lang.ThreadDeath
+     java.lang.Thread.stop(Thread.java:836)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:285)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHitSingle(AGTestAutocomplete.java:152)
+     AGTestAutocomplete.test3a(AGTestAutocomplete.java:536)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHitSingle(AGTestAutocomplete.java:152)
+     AGTestAutocomplete.test3a(AGTestAutocomplete.java:537)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+     java.lang.NumberFormatException: null
+     java.lang.Integer.parseInt(Integer.java:454)
+     java.lang.Integer.parseInt(Integer.java:527)
+     AGTestAutocomplete.testSearchHitSingle(AGTestAutocomplete.java:152)
+     AGTestAutocomplete.test3a(AGTestAutocomplete.java:538)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+AGTestAutocomplete: 5 out of 14 tests passed.
+
+Test 1: test 0
+Test 0: test weightOf() method
+  *  file = cities.txt
+  *  file = wiktionary.txt
+  *  file = baby-names.txt
+     java.lang.AssertionError
+     org.junit.Assert.fail(Assert.java:86)
+     org.junit.Assert.assertTrue(Assert.java:41)
+     org.junit.Assert.assertTrue(Assert.java:52)
+     AGTestAutocomplete.test0(AGTestAutocomplete.java:624)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+
+==> FAILED
+
+Test 2: test 10
+Test 10: test that methods throws appropriate exceptions
+     - IllegalArgumentException NOT thrown by topMatches() for negative k.
+     java.lang.AssertionError
+     org.junit.Assert.fail(Assert.java:86)
+     org.junit.Assert.assertTrue(Assert.java:41)
+     org.junit.Assert.assertTrue(Assert.java:52)
+     AGTestAutocomplete.test10(AGTestAutocomplete.java:614)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+
+==> FAILED
+
+Test 3: test 1a
+test topMatch() on search hits
+  *  file = tiny.txt
+  *  file = cities.txt
+     java.util.concurrent.TimeoutException
+     java.util.concurrent.FutureTask.get(FutureTask.java:201)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:273)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+
+==> FAILED
+
+Test 4: test 1b
+Test 1b: test topMatches() on search hits
+  *  file = cities.txt, k = 10
+  *  file = cities.txt
+  *  file = cities.txt
+  *  file = wiktionary.txt
+  *  file = fortune1000-randomly-ordered.txt
+     java.util.concurrent.TimeoutException
+     java.util.concurrent.FutureTask.get(FutureTask.java:201)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:273)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+
+==> FAILED
+
+Test 5: test 2a
+Test 2a: test topMatch() on search hits
+  *  file = baby-names.txt
+  *  file = cities.txt, k = 2
+  *  file = cities.txt, k = 25
+  *  file = wiktionary.txt, k = 10
+  *  file = fortune1000-randomly-ordered.txt, k = 10
+  *  file = cities.txt
+     java.util.concurrent.TimeoutException
+     java.util.concurrent.FutureTask.get(FutureTask.java:201)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:273)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+
+==> FAILED
+
+Test 6: test 6
+Test 6: test that implementation doesn't mutate terms[] or weights[]
+
+==> PASSED
+
+Test 7: test 7
+Test 7: test what happens when client mutates terms[] and weights[] after construction
+
+==> PASSED
+
+Test 8: test 8
+Test 8: test that multiple Autocomplete objects can be created at the same time
+     java.util.concurrent.TimeoutException
+     java.util.concurrent.FutureTask.get(FutureTask.java:201)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:273)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+
+==> FAILED
+
+Test 9: test 3b
+Test 3b: test topMatches() with empty prefix
+  *  file = cities.txt, k = 20
+  *  file = wiktionary.txt, k = 20
+  *  file = baby-names.txt, k = 20
+  *  file = fortune1000-randomly-ordered.txt, k = 20
+
+==> PASSED
+
+Test 10: test 2b
+Test 2b: test topMatches() on search hits
+  *  file = baby-names.txt, k = 10
+      -  reference entry 9 = "Marai" has weight 8.0
+
+      -  student   entry 9 = "Marabelle" has weight 6.0
+
+      -  failed on trial 17 of 2000
+         prefix = "Mara"
+
+  *  file = cities.txt, k = 10
+      -  reference entry 5 = "San Vicente de Moravia, Costa Rica" has weight 34447.0
+
+      -  student   entry 5 = "San Vicente de Ca?ete, Peru" has weight 25517.0
+
+      -  failed on trial 205 of 1000
+         prefix = "San Vice"
+
+     java.lang.AssertionError
+     org.junit.Assert.fail(Assert.java:86)
+     org.junit.Assert.assertTrue(Assert.java:41)
+     org.junit.Assert.assertTrue(Assert.java:52)
+     AGTestAutocomplete.test2b(AGTestAutocomplete.java:528)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+
+==> FAILED
+
+Test 11: test 9
+Test 9: test that constructor throws appropriate exceptions
+     - IllegalArgumentException NOT thrown for terms and weights arrays with different lengths.
+     java.util.concurrent.TimeoutException
+     java.util.concurrent.FutureTask.get(FutureTask.java:201)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:273)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+
+==> FAILED
+
+Test 12: test 3a
+Test 3a: test topMatch() with empty prefix
+  *  file = cities.txt
+xception NOT thrown for weights array containing at least one value of 0 or less.
+     - IllegalArgumentException NOT thrown for terms array containing duplicate terms.
+     java.util.concurrent.TimeoutException
+     java.util.concurrent.FutureTask.get(FutureTask.java:201)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:273)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTestAutocomplete.main(AGTestAutocomplete.java:628)
+
+
+==> FAILED
+
+Test 13: test 4
+  *  file = wiktionary.txt
+  *  file = baby-names.txt
+  *  file = fortune1000-randomly-ordered.txt
+Test 4: test topMatches() on input that contains an empty term
+  *  file = empty-string.txt, k = 50
+  *  file = empty-string.txt, k = 50
+
+==> PASSED
+
+Test 14: test 5
+Test 5: test topMatches() on search misses
+  *  file = cities.txt, k = 20
+  *  file = wiktionary.txt, k = 20
+  *  file = baby-names.txt, k = 20
+  *  file = fortune1000-randomly-ordered.txt, k = 20
+
+==> PASSED
+
+Picked up _JAVA_OPTIONS: -Xmx1g
+Error: Could not find or load main class AGTestBoggle
+Picked up _JAVA_OPTIONS: -Xmx1g
+AGTestSpellCheck: 0 out of 2 tests passed.
+
+Test 1: Test various wiktionary prefixes
+Checking corrections for whut with distance, k = 1, 5
+      -  student solution is missing an entry or entries, including "what"
+     java.lang.AssertionError
+     org.junit.Assert.fail(Assert.java:86)
+     org.junit.Assert.assertTrue(Assert.java:41)
+     org.junit.Assert.assertTrue(Assert.java:52)
+     AGTestSpellCheck.checkMatches(AGTestSpellCheck.java:78)
+     AGTestSpellCheck.testWiktionary(AGTestSpellCheck.java:84)
+
+
+==> FAILED
+
+Test 2: Test various name prefixes
+Checking corrections for kraleb with distance, k = 1, 5
+Checking corrections for kraleb with distance, k = 2, 5
+      -  student solution is missing an entry or entries, including "Caleb"
+     java.lang.AssertionError
+     org.junit.Assert.fail(Assert.java:86)
+     org.junit.Assert.assertTrue(Assert.java:41)
+     org.junit.Assert.assertTrue(Assert.java:52)
+     AGTestSpellCheck.checkMatches(AGTestSpellCheck.java:78)
+     AGTestSpellCheck.testNames(AGTestSpellCheck.java:98)
+
+
+==> FAILED
+
+
+====== TIMING TESTS ======
+Picked up _JAVA_OPTIONS: -Xmx1g
+AGTimeAlphabetSort: 0 out of 4 tests passed.
+
+Test 1: Test arbitrary large size dictionary runtime ratio
+Testing that student to staff runtime ratio is less than 3.0
+Timing call to testAlphaLarge1
+     java.lang.IllegalArgumentException
+     AlphabetSort.main(AlphabetSort.java:63)
+     AGTimeAlphabetSort.call(AGTimeAlphabetSort.java:95)
+     AGTimeAlphabetSort.timeCall(AGTimeAlphabetSort.java:72)
+     AGTimeAlphabetSort.checkRatio(AGTimeAlphabetSort.java:57)
+     AGTimeAlphabetSort.testLarge1(AGTimeAlphabetSort.java:41)
+
+
+==> FAILED
+
+Test 2: Test arbitrary large size dictionary runtime ratio 2
+Testing that student to staff runtime ratio is less than 3.0
+Timing call to testAlphaLarge2
+     java.lang.IllegalArgumentException
+     AlphabetSort.main(AlphabetSort.java:63)
+     AGTimeAlphabetSort.call(AGTimeAlphabetSort.java:95)
+     AGTimeAlphabetSort.timeCall(AGTimeAlphabetSort.java:72)
+     AGTimeAlphabetSort.checkRatio(AGTimeAlphabetSort.java:57)
+     AGTimeAlphabetSort.testLarge2(AGTimeAlphabetSort.java:50)
+
+
+==> FAILED
+
+Test 3: Test arbitrary medium size dictionary runtime ratio
+Testing that student to staff runtime ratio is less than 3.0
+Timing call to testAlphaMed
+     java.lang.IllegalArgumentException
+     AlphabetSort.main(AlphabetSort.java:63)
+     AGTimeAlphabetSort.call(AGTimeAlphabetSort.java:95)
+     AGTimeAlphabetSort.timeCall(AGTimeAlphabetSort.java:72)
+     AGTimeAlphabetSort.checkRatio(AGTimeAlphabetSort.java:57)
+     AGTimeAlphabetSort.testMedium(AGTimeAlphabetSort.java:32)
+
+
+==> FAILED
+
+Test 4: Test lowercase medium size
+     java.lang.IllegalArgumentException
+     AlphabetSort.main(AlphabetSort.java:63)
+     AGTimeAlphabetSort.call(AGTimeAlphabetSort.java:95)
+     AGTimeAlphabetSort.timeCall(AGTimeAlphabetSort.java:72)
+     AGTimeAlphabetSort.testBasic(AGTimeAlphabetSort.java:21)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+
+==> FAILED
+
+Picked up _JAVA_OPTIONS: -Xmx1g
+Calling topMatches() with k = 5 and random 2-letter queries using cities.txt
+     java.lang.ThreadDeath
+     java.lang.Thread.stop(Thread.java:836)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:285)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTimeAutocomplete.main(AGTimeAutocomplete.java:386)
+
+  *  timing for 5.0 seconds (must be <= 4x reference solution).
+Calling topMatches() with k = 10 and random 6-letter queries using cities.txt
+     java.lang.ThreadDeath
+     java.lang.Thread.stop(Thread.java:836)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:285)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTimeAutocomplete.main(AGTimeAutocomplete.java:386)
+
+  *  timing for 5.0 seconds (must be <= 4x reference solution).
+     java.lang.NullPointerException
+     AGTimeAutocomplete.randomPrefix(AGTimeAutocomplete.java:70)
+     AGTimeAutocomplete.callsPerSecond(AGTimeAutocomplete.java:80)
+     AGTimeAutocomplete.testMethods(AGTimeAutocomplete.java:283)
+     AGTimeAutocomplete.test2(AGTimeAutocomplete.java:321)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+  *  timing for 10.0 seconds (must be <= 4x reference solution).
+     java.lang.NullPointerException
+     AGTimeAutocomplete.randomPrefix(AGTimeAutocomplete.java:70)
+     AGTimeAutocomplete.callsPerSecond(AGTimeAutocomplete.java:80)
+     AGTimeAutocomplete.testMethods(AGTimeAutocomplete.java:283)
+     AGTimeAutocomplete.test2(AGTimeAutocomplete.java:322)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     ...
+     sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     java.lang.reflect.Method.invoke(Method.java:606)
+     jh61b.grader.Autograder$MethodCallable.call(Autograder.java:335)
+     java.util.concurrent.FutureTask.run(FutureTask.java:262)
+     java.lang.Thread.run(Thread.java:745)
+
+Calling topMatches() with k = 10 and random 3-letter queries using baby-names.txt
+  *  timing for 1.0 seconds (must be <= 4x reference solution).
+      - reference solution calls per second: 100.00
+      - student   solution calls per second: 100.00
+      - reference / student ratio:           1.00
+  *  timing for 1.0 seconds (must be <= 4x reference solution).
+      - reference solution calls per second: 100.00
+      - student   solution calls per second: 100.00
+      - reference / student ratio:           1.00
+  *  timing for 2.0 seconds (must be <= 4x reference solution).
+      - reference solution calls per second: 50.00
+      - student   solution calls per second: 50.00
+      - reference / student ratio:           1.00
+  *  timing for 2.0 seconds (must be <= 4x reference solution).
+      - reference solution calls per second: 50.00
+      - student   solution calls per second: 50.00
+      - reference / student ratio:           1.00
+  *  timing for 1.0 seconds (must be <= 4x reference solution).
+      - reference solution calls per second: 100.00
+      - student   solution calls per second: 100.00
+      - reference / student ratio:           1.00
+Calling topMatches() with k = 3 and random 2-letter queries using baby-names.txt
+  *  timing for 4.0 seconds (must be <= 3x reference solution).
+      - reference solution calls per second: 125.00
+      - student   solution calls per second: 25.00
+      - reference / student ratio:           5.00
+  *  timing for 4.0 seconds (must be <= 3x reference solution).
+      - reference solution calls per second: 125.00
+      - student   solution calls per second: 25.00
+      - reference / student ratio:           5.00
+  *  timing for 4.0 seconds (must be <= 3x reference solution).
+      - reference solution calls per second: 100.00
+      - student   solution calls per second: 25.00
+      - reference / student ratio:           4.00
+AGTimeAutocomplete: 1 out of 5 tests passed.
+
+Test 1: Test 1: Constructor
+Test 1: timing constructor (must be <= 3x reference solution).
+ *  cities.txt
+     java.util.concurrent.TimeoutException
+     java.util.concurrent.FutureTask.get(FutureTask.java:201)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:273)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTimeAutocomplete.main(AGTimeAutocomplete.java:386)
+
+
+==> FAILED
+
+Test 2: Test 2
+ *  baby-names.txt
+     java.util.concurrent.TimeoutException
+     java.util.concurrent.FutureTask.get(FutureTask.java:201)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:273)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTimeAutocomplete.main(AGTimeAutocomplete.java:386)
+
+
+==> FAILED
+
+Test 3: Test 3
+     java.util.concurrent.TimeoutException
+     java.util.concurrent.FutureTask.get(FutureTask.java:201)
+     jh61b.grader.Autograder.runTestMethod(Autograder.java:273)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:208)
+     jh61b.grader.Autograder.runStaticTests(Autograder.java:189)
+     AGTimeAutocomplete.main(AGTimeAutocomplete.java:386)
+
+
+==> FAILED
+
+Test 4: Test 4
+Now testing with prefix length 1
+Now testing with prefix length 0
+
+==> PASSED
+
+Test 5: Test 5
+     java.lang.AssertionError
+     org.junit.Assert.fail(Assert.java:86)
+     org.junit.Assert.assertTrue(Assert.java:41)
+     org.junit.Assert.assertTrue(Assert.java:52)
+     AGTimeAutocomplete.test5(AGTimeAutocomplete.java:380)
+     sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+
+==> FAILED
+
+Picked up _JAVA_OPTIONS: -Xmx1g
+Error: Could not find or load main class AGTimeBoggle
+
+On Tue, Apr 28, 2015 at 12:00 AM, MAI HUA <huamai@berkeley.edu> wrote:
+前面的ok啦 您弄后面的那几个就好啦！
+
+
+Submission Details
+===================================================
+Commit Time:  Mon Apr 27, 10:58:33 PM, 2015 (-0800)
+Branch:       ag/proj3
+Commit URL:   https://github.com/Berkeley-CS61B/acd/tree/5c7692acfc437c1069c7966c34b749eea2c08036
+
+
+Assessment Summary
+====================================================
+Compilation:  Passed!
+Style:        FAILED
+Correctness:  4/6 tests passed
+
+Breakdown:    [Correctness: 90.0%, Style: 10.0%]
+Raw Score:    0.60 / 1.00
+Scale Factor: min(raw_score / 0.50, 1.00)
+
+Final Score:  1.00 / 1.00
+
+
+Assessment Details
+
