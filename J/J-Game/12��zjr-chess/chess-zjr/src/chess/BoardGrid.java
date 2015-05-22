@@ -68,8 +68,10 @@ public class BoardGrid extends JPanel
 		image = piece.getImage();
 		this.setVisible(true);
 		
+		/*
 		Resources.trace(piece.getPlayer() + piece.getName()
 				+ "(" + location.getX() + "," + location.getY() + ")");
+		 */
 	}
 	
 	public void setEmpty()

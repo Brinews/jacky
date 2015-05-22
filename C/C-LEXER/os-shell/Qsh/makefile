@@ -1,7 +1,7 @@
 all: qsh
 
 qsh: qsh.h qsh.c
-	gcc -o $@ $^
+	gcc -g -o $@ $^
 
 clean:
 	rm *.o qsh

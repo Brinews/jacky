@@ -55,14 +55,28 @@ public class ChessBoard extends JPanel implements BoardInterface
 		}
 	}
 
-	public void moveLocation(BoardLocation from, BoardLocation to)
+	public Piece moveLocation(BoardLocation from, BoardLocation to, Player p)
 	{
+		Piece capturedPiece = null;
+		
+		BoardLocation mid = new BoardLocation((from.getX()+to.getX())/2, (from.getY()+to.getY())/2);
+		
+		if (isEnemy(mid, p)) {
+			capturedPiece = getPiece(mid);
+			grids[mid.getX()][mid.getY()].setEmpty();
+		}
+		
+		if (grids[from.getX()][from.getY()].getPiece() == null) {
+			System.out.println("exception here..");
+		}
+		
 		grids[to.getX()][to.getY()].setPiece(grids[from.getX()][from.getY()].getPiece());
-
 		grids[from.getX()][from.getY()].setEmpty();
 
 		flushLocation(from);
 		flushLocation(to);
+		
+		return capturedPiece;
 	}
 	
 	public void setLocationSelected(BoardLocation location)
@@ -176,12 +190,80 @@ public class ChessBoard extends JPanel implements BoardInterface
 
 		return false;
 	}
+	
+	/**
+	 * continue jumping
+	 * @param p player
+	 * @param from previous location
+	 * @return next location
+	 */
+	public BoardLocation getNextCaptured(Player p, BoardLocation from) {
+		BoardLocation next = null;
+		
+		int eight_direction[][] = {{1,0}, {1,-1}, {0,-1},{-1,-1},
+				{-1,0}, {-1, 1}, {0, 1}, {1, 1}};
+		
+		int i = from.getX();
+		int j = from.getY();
+		
+		// jumping moves
+		for (int k = 0; k < eight_direction.length; k++) {
+			BoardLocation n1 = new BoardLocation(
+					i+eight_direction[k][0],
+					j+eight_direction[k][1]);
+			BoardLocation n2 = new BoardLocation(
+					i+2*eight_direction[k][0],
+					j+2*eight_direction[k][1]);
+
+			if (isWithinBoard(n1) && isWithinBoard(n2)) {
+				if (isEmpty(n2) && isEnemy(n1, p)) {
+					return n2;
+				}
+			}
+		} // 
+		
+		return next;
+	}
 
 	public void getAvailableMoves(List<BoardLocation> fromList,
 			List<BoardLocation> toList, Player p) 
 	{
 		int eight_direction[][] = {{1,0}, {1,-1}, {0,-1},{-1,-1},
 				{-1,0}, {-1, 1}, {0, 1}, {1, 1}};
+		
+		boolean capturedAvaiable = false;
+		
+		for (int i = 0; i < Resources.BOARD_HEIGHT; i++) {
+			for (int j = 0; j < Resources.BOARD_WIDTH; j++) {
+				BoardLocation from = new BoardLocation(i, j);
+				Piece pie = grids[i][j].getPiece();
+
+				if (isWithinBoard(from) && pie != null 
+						&& pie.getPlayer() == p ) {
+
+					// jumping moves
+					for (int k = 0; k < eight_direction.length; k++) {
+						BoardLocation n1 = new BoardLocation(
+								i+eight_direction[k][0],
+								j+eight_direction[k][1]);
+						BoardLocation n2 = new BoardLocation(
+								i+2*eight_direction[k][0],
+								j+2*eight_direction[k][1]);
+
+						if (isWithinBoard(n1) && isWithinBoard(n2)) {
+							if (isEmpty(n2) && isEnemy(n1, p)) {
+								fromList.add(from);
+								toList.add(n2);
+								capturedAvaiable = true;
+							}
+						}
+					} // end for
+				}
+			}
+		}
+		
+		if (capturedAvaiable == true)
+			return ;
 
 		for (int i = 0; i < Resources.BOARD_HEIGHT; i++) {
 			for (int j = 0; j < Resources.BOARD_WIDTH; j++) {
@@ -240,7 +322,7 @@ public class ChessBoard extends JPanel implements BoardInterface
 	}
 
 	public ChessBoard getMovedBoard(BoardLocation from, 
-										BoardLocation to) {
+										BoardLocation to, Player p) {
 		MouseListener ml = null;
 		ChessBoard newBoard = new ChessBoard(ml);
 
@@ -252,7 +334,7 @@ public class ChessBoard extends JPanel implements BoardInterface
 								i, j)));
 			}
 
-		newBoard.moveLocation(from, to);
+		newBoard.moveLocation(from, to, p);
 
 		return newBoard;
 	}
@@ -280,10 +362,10 @@ public class ChessBoard extends JPanel implements BoardInterface
 						&& grids[i][j].getPiece().getPlayer() == p) {
 					int d = 0;
 					if (p == Player.WHITE) {
-						d = i + Math.abs(j-3);
+						d = i;
 					}
 					else {
-						d = 13 - i + Math.abs(j-3);
+						d = 13 - i;
 					}
 
 					if (d < dist)

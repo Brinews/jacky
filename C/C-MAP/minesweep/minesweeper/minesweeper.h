@@ -38,12 +38,16 @@ public:
 	int getMinesNum();                              //Return total # of mines on game board
         int endGame();                                  //Return current end game status
 	void initialMineField(int fpX, int fpY);        //Initialize game board given first revealed tile
+        void initialMineField(string path, int flag);             //Initialize game board given file path of initial mine placement w/o checking for 1st turn game over
         void initialMineField(string path);             //Initialize game board given file path of initial mine placement w/o checking for 1st turn game over
 		void initialMineField(std::vector<std::vector<int> > input);
         bool isRevealed(int x, int y);                  //Checks if tile has been already revealed
 	void revealLocation(int x, int y);              //Reveals selected tile. Selected tile should return true on subsequent isRevealed calls, the left click action
         void markLocation(int x, int y);                  // mark a cell as potential mine, the right click action
         int valueOf(int x, int y);                      //Returns tile value (# of surrounding mines if not mine)
+
+        void selectFirstDig(int, int);
+        void boardInit();
 
 		void debug() {
 			for (int i = 0; i < mineField.size(); i++) {

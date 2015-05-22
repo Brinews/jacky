@@ -9,8 +9,10 @@ using namespace std;
 void displayMine(bonus& play);
 void playTime(bonus& play);
 void viewStatistics(bonus &play);
+int parseInt(const string &buf);
+void selectPosition(bonus &play, int pos[]);
 
-char *prompt = "Game Options:\n-----------\n1. Start Game\n2. View Stats\n3. Quit program\n>>>";
+string prompt = "Game Options:\n-----------\n1. Start Game\n2. View Stats\n3. Quit program\nOptions:[1/2/3] >>>";
 
 struct minescale {
 	int col;
@@ -23,6 +25,35 @@ struct minescale {
 	{16, 30, 99}
 };
 
+string digitToStr(int a)
+{
+    string s = "";
+
+    while (a > 0) {
+        int left = a%10;
+        a /= 10;
+        string t = "";
+        t += (char) ('0'+left);
+        s = t + s;
+    }
+
+    if (s == "") s = "0";
+
+    return s;
+}
+
+int parseInt(const string &buf)
+{
+    int ret = 0;
+
+    for (int i = 0; i < buf.length(); i++) {
+        if (buf[i] < '0' || buf[i] > '9') return -1;
+        ret = ret*10 + (buf[i] - '0');
+    }
+
+    return ret;
+}
+
 /*
  * contruct option string
  */
@@ -32,27 +63,51 @@ string options()
 	char buf[16];
 
 	for (int i = 0; i < sizeof(scales)/sizeof(struct minescale); i++) {
-		s += itoa(i, buf, 10);
+		s += digitToStr(i);
 		s += ". ";
-		s += itoa(scales[i].col, buf, 10);
+		s += digitToStr(scales[i].col);
 		s += "x";
-		s += itoa(scales[i].row, buf, 10);
+		s += digitToStr(scales[i].row);
 		s += ":";
-		s += itoa(scales[i].numOfMines, buf, 10);
+		s += digitToStr(scales[i].numOfMines);
 		s += "; ";
 	}
 
 	return s;
 }
+
+void selectPosition(bonus &play, int pos[2])
+{
+    int x,y;
+    string buf;
+    do {
+        printf("Please input location x[0, %d]:", play.getRowNum()-1);
+        cin >> buf;
+        x = parseInt(buf);
+        printf("Please input location y[0, %d]:", play.getColNum()-1);
+        cin >> buf;
+        y = parseInt(buf);
+    } while (x < 0 || x > play.getRowNum()-1 || 
+            y < 0 || y > play.getColNum()-1);
+
+
+    printf("Your select position(%d,%d).\n", x, y);
+
+    pos[0] = x;
+    pos[1] = y;
+}
+
 /*
  * 
  */
 int main() {
 
+    string buf;
+    string fileName;
 	int opt;
 	int level; /* 9x9:10, 16x16:40, 16x30:99 */
 	bonus *mine = NULL;
-
+    int pos[2];
     
      /* This will be your main GUI loop. You should query the user for actions such 
      * as starting a game, viewing statistics, or quitting the program. You should
@@ -73,8 +128,11 @@ int main() {
 
 		do {
 			cout << prompt;
-			cin >> opt;
-		} while (opt < 1 || opt > 3);
+            cin >> buf;
+			//cin >> opt;
+		} while (buf[0] < '1' || buf[0] > '3');
+
+        opt = buf[0] - '0';
 		
 		switch (opt) {
 			case 1:
@@ -82,25 +140,48 @@ int main() {
 					delete mine;
 				}
 
-				do {
-					cout << options();
-					cout << "\n>>>";
-					cin >> level;
-				} while (level < 0 || 
-						level > sizeof(scales)/sizeof(struct minescale));
+                do {
+                    printf("Start from load-file or new game?(Y/N)");
+                    cin >> buf;
+                } while (buf[0] != 'Y' && buf[0] != 'N');
 
-				mine = new bonus(scales[level].col, 
-						scales[level].row, scales[level].numOfMines);
+                if (buf[0] == 'Y') {
+                    mine = new bonus();
+                    cout << "Input Load-file Name:";
+                    cin >> fileName;
+                    mine->loadGame(fileName);
+                }
+                else {
 
-				playTime(*mine);
+                    do {
+                        cout << options();
+                        cout << "\n[0/1/2/3]>>>";
+                        cin >> buf;
+                        level = parseInt(buf);
+                    } while (level < 0 || level > sizeof(scales)/
+                            sizeof(struct minescale));
 
-				break;
-			case 2:
-				viewStatistics(*mine);
-				break;
-		}
+                    mine = new bonus(scales[level].col, 
+                            scales[level].row, 
+                            scales[level].numOfMines);
 
-		if (opt == 3) break; //exit loop
+                    /* first dig */
+                    displayMine(*mine);
+                    selectPosition(*mine, pos);
+                    mine->selectFirstDig(pos[0], pos[1]);
+                }
+
+                playTime(*mine);
+
+                break;
+            case 2:
+                if (mine != NULL) {
+                    viewStatistics(*mine);
+                }
+                break;
+        }
+
+        if (opt == 3) break; //exit loop
     }
 
 	delete mine;
@@ -117,6 +198,7 @@ void playTime(bonus& play) {
 //TODO - Begin the minesweeper game function; should interact with minesweeper class/object here
 
 	int x, y;
+    int pos[2];
 	string buf;
 	int endFlag = 0;
 	string fileName;
@@ -125,16 +207,12 @@ void playTime(bonus& play) {
 		
 		displayMine(play);
 
-		play.debug();
+		//play.debug();
 
-		do {
-			printf("Please input location x[0, %d]:", play.getRowNum());
-			cin >> x;
-			printf("Please input location y[0, %d]:", play.getColNum());
-			cin >> y;
-		} while (x < 0 || x > play.getRowNum() || 
-				y < 0 || y > play.getColNum());
-
+        selectPosition(play, pos);
+        x = pos[0];
+        y = pos[1];
+		
 		printf("(D - Dig, S - Sign, R - Restart, W - Save Game, E - Exit Game)\n");
 		printf("Please input:");
 		cin >> buf;
@@ -210,9 +288,15 @@ void playTime(bonus& play) {
 					cin >> fileName;
 					play.loadGame(fileName);
 				}
-				else 
-					play.initialMineField(rand()%play.getRowNum(),
+				else {
+                    displayMine(play);
+                    selectPosition(play, pos);
+                    play.selectFirstDig(pos[0], pos[1]);
+                    /*
+                    play.initialMineField(rand()%play.getRowNum(),
 						rand()%play.getColNum());
+                     */
+                }
 			}
 		}
 	}

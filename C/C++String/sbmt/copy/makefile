@@ -8,8 +8,13 @@
 #
 
 ###############################################################
+
+GCCINC=-I "C:\Program Files\DEV-CPP\Include"
+CPPINC=-I "C:\Program Files\DEV-CPP\Include\c++\3.4.2"
+CXXINC=-I "C:\Program Files\DEV-CPP\Include\c++\3.4.2\mingw32"
+
 # Variables
-CPP     = clang++ 
+CPP     = clang++ $(GCCINC) $(CPPINC)
 OPTIONS = -g -Wall -W -Wunused -Wuninitialized -Wshadow 
 #CPP     = g++
 

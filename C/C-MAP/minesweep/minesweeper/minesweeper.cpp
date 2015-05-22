@@ -5,30 +5,55 @@ using namespace std;
 
 minesweeper::minesweeper() {
 	// TODO - default two dimension array is 9 X 9 with 10 mines
-	cout << "there...\n";
+    //
 	colNum = 9;
 	rowNum = 9;
 	minesNum = 10;
 	end = 0;
 
-	srand(time(NULL)); // setting random seed
+	//srand(time(NULL)); // setting random seed
+	//initialMineField(randomPick(rowNum), randomPick(colNum));
 
-	initialMineField(randomPick(rowNum), randomPick(colNum));
+    boardInit();
 }
 
 minesweeper::minesweeper(int col, int row, int numOfMines) {
 	// TODO Auto-generated constructor stub
 	// TODO - two dimension gameboard size col x num with numOfMines mines
 
-	cout << "here...\n";
 	colNum = col;
 	rowNum = row;
 	minesNum = numOfMines;
 	end = 0;
 
-	srand(time(NULL));
+	//srand(time(NULL));
+	//initialMineField(randomPick(rowNum), randomPick(colNum));
 
-	initialMineField(randomPick(rowNum), randomPick(colNum));
+    boardInit();
+}
+
+void minesweeper::boardInit()
+{
+    mineField.clear();
+	bitField.clear();
+
+	for (int i = 0; i < rowNum; i++) {
+		vector<int> minei;
+		vector<bool> biti;
+
+		for (int j = 0; j < colNum; j++) {
+			minei.push_back(0);
+			biti.push_back(true);
+		}
+
+		mineField.push_back(minei);
+		bitField.push_back(biti);
+	}
+}
+
+void minesweeper::selectFirstDig(int x, int y)
+{
+    initialMineField(x, y);
 }
 
 minesweeper::~minesweeper() {
@@ -77,6 +102,13 @@ int minesweeper::randomPick(int num)
 	return rand()%num;
 }
 
+/**
+ * another load-method
+ * file-format:
+ *   rowNum colNum mineNum
+ *   minePosX minePosY
+ * @param path string
+ */
 void minesweeper::initialMineField(string path)
 {
 	int x, y;
@@ -86,8 +118,43 @@ void minesweeper::initialMineField(string path)
 	ifstream fin(path.c_str());
 
 	fin >> rowNum >> colNum >> minesNum;
+
+    // 0. base board initialization
+    boardInit();
+		
+	// 1. place mines
+	for (int i = 0; i < minesNum; i++) {
+		int x, y;
+
+        fin >> x >> y;
+
+		mineField[x][y] = -1;
+	}
+
+	// 2. update game board representation
+	for (int i = 0; i < rowNum; i++)
+		for (int j = 0; j < colNum; j++)
+			calculateSurrounding(i, j);
+
+	fin.close();
+
+    end = 0;
+}
+
+void minesweeper::initialMineField(string path, int flag)
+{
+	int x, y;
+	int data;
+	bool state;
+
+	ifstream fin(path.c_str());
+
+	fin >> rowNum >> colNum >> minesNum;
+
+    // 0. base board initialization
+    boardInit();
 	
-	//1. save board
+	//1. load board
 	for (int i = 0; i < rowNum; i++) {
 		for (int j = 0; j < colNum; j++) {
 			fin >> data;
@@ -95,7 +162,7 @@ void minesweeper::initialMineField(string path)
 		}
 	}
 
-	//2. save mask
+	//2. load mask
 	for (int i = 0; i < rowNum; i++) {
 		for (int j = 0; j < colNum; j++) {
 			fin >> state;
@@ -104,12 +171,6 @@ void minesweeper::initialMineField(string path)
 	}
 
 	fin.close();
-
-	// get the first tile
-	do {
-		x = rand()%rowNum;
-		y = rand()%colNum;
-	} while (mineField[x][y] == -1);
 
 	end = 0;
 }
@@ -154,21 +215,7 @@ void minesweeper::initialMineField(int fpX, int fpY) {
 	//surrounding tile values should be updated to reflect presence of adjacent mine
 	//
 	// 0. base board initialization
-	mineField.clear();
-	bitField.clear();
-
-	for (int i = 0; i < rowNum; i++) {
-		vector<int> minei;
-		vector<bool> biti;
-
-		for (int j = 0; j < colNum; j++) {
-			minei.push_back(0);
-			biti.push_back(true);
-		}
-
-		mineField.push_back(minei);
-		bitField.push_back(biti);
-	}
+	boardInit();
 	
 	// 1. place mines randomly 
 	for (int i = 0; i < minesNum; i++) {
@@ -400,7 +447,12 @@ void minesweeper::unmask(int px, int py) {
 			py < 0 || py >= colNum)
 		return;
 
-	if (mineField[px][py] != 0) return;
+	if (mineField[px][py] != 0) {
+        if (mineField[px][py] != -1) {
+            bitField[px][py] = false;
+        }
+        return;
+    }
 	if (bitField[px][py] == false) return;
 
 	bitField[px][py] = false;

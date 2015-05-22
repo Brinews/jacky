@@ -14,85 +14,105 @@ import java.util.Iterator;
  */
 public class AlphabetSort {
 
-	/**
-	 * function to judge line
-	 * @param line input string
-	 * @return valid or not
-	 */
-	public static boolean existNonLetter(String line) {
-		boolean ret = false;
+    /**
+     * function to judge line
+     * @param line input string
+     * @return valid or not
+     */
+    public static boolean existNonLetter(String line) {
+        boolean ret = false;
 
-		if (null == line || line.equals("")) {
-			ret = true;
-		}
+        if (null == line || line.equals("")) {
+            ret = true;
+        }
 
-		char[] w = line.toCharArray();
+        char[] w = line.toCharArray();
 
-		for (int i = 0; i < w.length; i++) {
-			if (!((w[i] >= 'A' && w[i] <= 'Z')
-						|| (w[i] >= 'a' && w[i] <= 'z'))) {
-				ret = true;
-				break;
-			}
-		}
+        for (int i = 0; i < w.length; i++) {
+            if (!((w[i] >= 'A' && w[i] <= 'Z')
+                        || (w[i] >= 'a' && w[i] <= 'z'))) {
+                ret = true;
+                break;
+            }
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 
-	/**
-	 * main function
-	 * @param args parameters
-	 */
-	public static void main(String[] args) {
+    /**
+     * main function
+     * @param args parameters
+     */
+    public static void main(String[] args) {
 
-		try {
+        try {
 
-			BufferedReader reader = 
-				new BufferedReader(new InputStreamReader(System.in));
+            BufferedReader reader = 
+                new BufferedReader(new InputStreamReader(System.in));
 
-			String line;
-			
-			line = reader.readLine();
+            String line;
+
+            line = reader.readLine();
 
             if (line == null) {
                 throw new IllegalArgumentException();
             }
-			
-			// build a trie with dict
-			Trie trie = new Trie(line);
 
-			while ((line = reader.readLine()) != null) {
+            // build a trie with dict
+            String dic = line;
+            Trie trie = new Trie(line);
+
+            while ((line = reader.readLine()) != null) {
 
                 /*
-				if (existNonLetter(line)) {
-					throw new IllegalArgumentException();
-				}
-                */
+                   if (existNonLetter(line)) {
+                   throw new IllegalArgumentException();
+                   }
+                   */
 
-				if (trie.find(line, true)) {
-					throw new IllegalArgumentException();
-				}
+                if (trie.find(line, true)) {
+                    throw new IllegalArgumentException();
+                }
 
-				trie.insert(line);
-			}
+                boolean flag = false, omit = false;
+
+                for (int i = 0; i < line.length(); i++) {
+                    char c = line.charAt(i);
+                    flag = false;
+                    for (int j = 0; j < dic.length(); j++) {
+                        if (c == dic.charAt(j)) {
+                            flag = true;
+                            break;
+                        }
+                    }
+
+                    if (flag == false) {
+                        omit = true;
+                        break;
+                    }
+                }
+
+                if (!omit) {
+                    trie.insert(line);
+                }
+            }
 
             if (!trie.hasWords()) {
                 throw new IllegalArgumentException();
             }
 
-			List<String> list = trie.listAllWords();
-			Iterator iter = list.listIterator();
+            List<String> list = trie.listAllWords();
+            Iterator iter = list.listIterator();
 
-			while (iter.hasNext()) {
-				String s = (String) iter.next();
-				System.out.println(s);
-			}
+            while (iter.hasNext()) {
+                String s = (String) iter.next();
+                System.out.println(s);
+            }
 
-			reader.close();
+            reader.close();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -122,6 +122,8 @@ public class ExtendedAVLTree<K, V> extends AVLTree<K, V>
         printTree(tf, (AVLNode<K,V>)tree.root(), 0, 0);
     }
 
+    static int py = 0;
+
     /**
      * printTree
      * @param tf TreeFrame
@@ -145,6 +147,7 @@ public class ExtendedAVLTree<K, V> extends AVLTree<K, V>
             else
                 tf.doshape((String)(node.element().getKey().toString()), 
                         0, x*28, y*28);
+            //y++;
 
             if (node.getLeft() != null 
                     && node.getLeft().element() != null) {
@@ -155,8 +158,8 @@ public class ExtendedAVLTree<K, V> extends AVLTree<K, V>
                 tf.doline(x*28+13, y*28+13, (x+1)*28, (y+2)*28);
             }
 
-            printTree(tf, (AVLNode<K,V>)(node.getRight()), x+1, y+2);
             printTree(tf, (AVLNode<K,V>)(node.getLeft()), x+1, y+1);
+            printTree(tf, (AVLNode<K,V>)(node.getRight()), x+1, y+2);
         }
     }
 

@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include <fstream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -39,13 +40,13 @@ void word_count_I(strClass str)
 		myStrMap.insert(pair<strClass, int>(str, 1));
 }
 
-void dump_I() /* display result */
+void dump_I(ofstream &fcout) /* display result */
 {
 	map<strClass, int>::iterator itr;
 
 	for (itr = myStrMap.begin(); itr != myStrMap.end(); itr++)
 	{
-		cout << itr->first.word << " : " << itr->second << endl;
+		fcout << itr->first.word << " : " << itr->second << endl;
 	}
 }
 
@@ -65,13 +66,13 @@ void word_count_II(string str)
 		stringMap.insert(pair<string, int>(str, 1)); // add when no found
 }
 
-void dump_II()
+void dump_II(ofstream &fcout)
 {
 	map<string, int>::iterator itr;
 
 	for (itr = stringMap.begin(); itr != stringMap.end(); itr++)
 	{
-		cout << itr->first << " = " << itr->second << endl;
+		fcout << itr->first << " = " << itr->second << endl;
 	}
 }
 
@@ -85,7 +86,7 @@ void word_count_III(const char *str)
 {
 	int tmp = 0;
 
-	for (int i = 0; i < strlen(str); i++)
+	for (unsigned int i = 0; i < strlen(str); i++)
 	{
 		tmp = tmp * 10 + (str[i] - 'A');
 	}
@@ -106,14 +107,14 @@ string word_i(int i)
 	return str;
 }
 
-void dump_III()
+void dump_III(ofstream &fcout)
 {
 	int cnt = 0;
 
 	for (int i = 0; i < MAX; i++)
 	{
 		if (hash_map[i] != 0) {
-			cout << word_i(i).substr(1) << " # " << hash_map[i] << endl;
+			fcout << word_i(i).substr(1) << " # " << hash_map[i] << endl;
 			cnt ++;
 		}
 	}
@@ -144,9 +145,17 @@ int main(int argc, char **argv)
 
 	fin.close();
 
-	dump_I();
-	dump_II();
-	dump_III();
+	ofstream fout1("result1.txt");
+	ofstream fout2("result2.txt");
+	ofstream fout3("result3.txt");
+
+	dump_I(fout1);
+	dump_II(fout2);
+	dump_III(fout3);
+
+	fout1.close();
+	fout2.close();
+	fout3.close();
 
 	return 0;
 }

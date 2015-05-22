@@ -101,7 +101,7 @@ public class GaussCaves extends Canvas {
 	/* set the brush color */
 	public void setColor(int i) {
 		
-		if (i < 0 || i > 2) return;
+		if (i < 0 || i > 3) return;
 		
 		nowColor = myColor[i];
 	}

@@ -68,8 +68,12 @@ public class Chess
 				buttonPanel.add(btnRestart, BorderLayout.CENTER);
 				buttonPanel.add(btnQuit, BorderLayout.CENTER);
 				
+				whitePlayer.addMouseListener(listener);
+				blackPlayer.addMouseListener(listener);
+				
 				listener.setRestartButton(btnRestart);
 				listener.setQuitButton(btnQuit);
+				listener.setLabel(whitePlayer, blackPlayer);
 				
 				playerPanel.setBounds(0, 0, 800, 50);
 				tracePanel.setBounds(0, 50, 800, 150);

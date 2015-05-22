@@ -5,7 +5,7 @@ import numpy as np
 import math
 import time
 
-lk_params = dict( winSize  = (15, 15),
+lk_params = dict( winSize  = (25, 25),
                   maxLevel = 2,
                   criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
@@ -54,33 +54,49 @@ def initTracker(img, corners):
     # initialize your tracker with the first frame from the sequence and
     # the corresponding corners from the ground truth
     # this function does not return anything
-    pass
+
+    x1 = corners[0][0]
+    y1 = corners[1][0]
+    x2 = corners[0][1]
+    y2 = corners[1][1]
+    x3 = corners[0][2]
+    y3 = corners[1][2]
+    x4 = corners[0][3]
+    y4 = corners[1][3]
+
+    global p0
+	
+    p0 = np.array([[[x1, y1]], [[x2, y2]], [[x3, y3]], [[x4, y4]]]).astype(np.float32)
+    #pass
 
 
-def updateTracker(init_img, img, init_corners):
+def updateTracker(img):
     # update your tracker with the current image and return the current corners
     # at present it simply returns the actual corners with an offset so that
     # a valid value is returned for the code to run without errors
     # this is only for demonstration purpose and your code must NOT use actual corners in any way
-    prevgray = cv2.cvtColor(init_img, cv2.COLOR_BGR2GRAY)
+
+    global prevgray
+    global p0
+
+    #prevgray = cv2.cvtColor(init_img, cv2.COLOR_BGR2GRAY)
     nextgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    flow = cv2.calcOpticalFlowFarneback(prevgray, nextgray, 0.5, 3, 15, 3, 5, 1.2, 0)
+    #flow = cv2.calcOpticalFlowFarneback(prevgray, nextgray, 0.5, 3, 15, 3, 5, 1.2, 0)
     #print flow
-    #actual_corners, st, err = cv2.calcOpticalFlowPyrLK(prevgray, nextgray, init_corners.T, None, **lk_params)
 
-    x = init_corners[0]
-    y = init_corners[1]
+    p1, st, err = cv2.calcOpticalFlowPyrLK(prevgray, nextgray, p0, None, **lk_params)
 
-    x = np.int32(x + 0.5)
-    y = np.int32(y + 0.5)
+    ar = p1[st==1]
+    detect_corners = ar[0:4,0:2]
+    detect_corners = detect_corners.T
 
-    fx , fy = flow[y, x].T
+    detect_corners
 
-    init_corners[0] = init_corners[0] + fx
-    init_corners[1] = init_corners[1] + fy
+    prevgray = nextgray
+    p0 = p1
 
-    return init_corners, init_corners, img
+    return detect_corners;
 
 
 if __name__ == '__main__':
@@ -141,6 +157,9 @@ if __name__ == '__main__':
     # initialize tracker with the first frame and the initial corners
     initTracker(init_img, init_corners)
 
+    global prevgray
+    prevgray = cv2.cvtColor(init_img, cv2.COLOR_BGR2GRAY)
+
     # window for displaying the tracking result
     window_name = 'Tracking Result'
     cv2.namedWindow(window_name)
@@ -162,7 +181,7 @@ if __name__ == '__main__':
 
         start_time = time.clock()
         # update the tracker with the current frame
-        tracker_corners, init_corners, init_img = updateTracker(init_img, src_img, init_corners)
+        tracker_corners = updateTracker(src_img)
 
         end_time = time.clock()
 

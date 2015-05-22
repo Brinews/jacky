@@ -28,6 +28,8 @@ public class feedBack
 	
 	public void trace(Player player, Piece piece, BoardLocation origin, BoardLocation destination)
 	{
+		if (piece == null) return;
+		
 		if (player == Player.WHITE)
 		{
 			step ++;
