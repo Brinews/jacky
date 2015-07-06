@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <FxCompile Include="shadowEffect.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Environment.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="ShadowEffect.cpp" />
+    <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="PlayerCamera.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="Score.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuImages.cpp" />
+    <ClCompile Include="MenuSprites.cpp" />
+    <ClCompile Include="EndHighscores.cpp" />
+    <ClCompile Include="TimeCounter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowEffect.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCamera.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Score.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuImages.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuSprites.h" />
+    <ClInclude Include="EndHighscores.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeCounter.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{48141a28-b05e-4ef0-b814-434609ccf32c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
