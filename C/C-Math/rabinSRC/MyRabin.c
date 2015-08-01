@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
 
 /**
  * int - 4byte long 
@@ -93,9 +94,11 @@ int Deciphering(int b1,int b2,int m1,int m2)
  */
 int sameByte(int val)
 {
+	int L, H;
+
 	if (val <= 0xFFFF) {
-		int L = (val&0xFF);
-		int H = ((val>>8)&0xFF);
+		L = (val&0xFF);
+		H = ((val>>8)&0xFF);
 
 		if (L == H && L >= 0 && L <= 0xFF)
 			return 1;
@@ -154,15 +157,16 @@ void Encrypt(unsigned int n, const char *src, const char *dst)
 {
 	FILE *infile, *outfile;
 	unsigned char byte[1];
+	int twoByte, encrytext;
 
 	infile = fopen(src, "rb");
 	outfile = fopen(dst, "wb");
 
 	/* 按字节读文件 */
 	while (fread(byte, sizeof(unsigned char), 1, infile) > 0) {
-		int twoByte = (byte[0] << 8) + byte[0];
+		twoByte = (byte[0] << 8) + byte[0];
 
-		int encrytext = (twoByte*twoByte)%n;
+		encrytext = (twoByte*twoByte)%n;
 
 		/* 写文件 */
 		fwrite(&encrytext, sizeof(int), 1, outfile);
@@ -182,6 +186,9 @@ void Decrypt(int p, int q, const char *src, const char *dst)
 	FILE *infile, *outfile;
 	int *dword;
 	unsigned char fourbyte[4];
+	int text;
+	int ret;
+	unsigned char byte;
 
 	infile = fopen(src, "rb");
 	outfile = fopen(dst, "wb");
@@ -196,16 +203,16 @@ void Decrypt(int p, int q, const char *src, const char *dst)
 	/* 按字节读文件 */
 	while (!feof(infile)) {
 
-		int ret = 0;
+		ret = 0;
 		ret = fread(fourbyte, 4*sizeof(unsigned char), 1, infile);
 
 		dword = (int *) fourbyte;
 
-		int text = Solution(*dword, p, q);
+		text = Solution(*dword, p, q);
 
 		if (text != -1) {
 			text = text & 0xFF;
-			unsigned char byte = (unsigned char) text;
+			byte = (unsigned char) text;
 			//printf("dword=%d,text=%x\n", *dword,byte);
 			/* 写文件 */
 			fwrite(&byte, sizeof(unsigned char), 1, outfile);
@@ -220,26 +227,40 @@ void Decrypt(int p, int q, const char *src, const char *dst)
 
 int main(int argc, char **argv)
 {
+	int min, max;
+	int p, q, n;
+	char fileName[1024];
+	char outFile[1024];
+	char origFile[1024];
+
 	printf("输入素数区间：(100-2000):");
 
-	int min, max;
 	scanf("%d", &min);
 	scanf("%d", &max);
 
 	srand(time(NULL));
 
-	int p = randPrime(max, min);
-	int q = randPrime(max, min);
+	p = randPrime(max, min);
+	q = randPrime(max, min);
 
 	while (p == q) q = randPrime(max, min);
 
-	int n = p * q;
+	n = p * q;
 
 	printf("公钥：%d\n", n);
 	printf("私钥：%d, %d\n", p, q);
 
-	Encrypt(n, "test.en", "test.de");
-	Decrypt(p, q, "test.de", "test.txt");
+	printf("请输入待加密文件:(如c:/test/test.in):");
+	scanf("%s", fileName);
+
+	strcpy(outFile, fileName);
+	strcat(outFile, ".out");
+	
+	strcpy(origFile, fileName);
+	strcat(origFile, ".bak");
+
+	Encrypt(n, fileName, outFile);
+	Decrypt(p, q, outFile, origFile);
 
 	return 0;
 }

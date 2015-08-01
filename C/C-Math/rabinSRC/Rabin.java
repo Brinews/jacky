@@ -267,7 +267,6 @@ public class Rabin {
 		int min=input.nextInt();/* be sure 100<p,q<1000 */
 		int max=input.nextInt();
 
-		input.close();
 
 		int p=PrimeNumberTest(max,min);
 		//int p=7;
@@ -277,11 +276,20 @@ public class Rabin {
 		System.out.println("私钥:p="+p+",q="+q);
 		int n=p*q;
 
-		System.out.println("加密文件test.in成功, 加密后文件为test.out");
-		Encrypt(n, "test.in", "test.out");
+		System.out.println("请指定加密文件(如C:/test/test.in):");
+		input.nextLine();
+		String inFile = input.nextLine();
 
-		System.out.println("解密文件test.out成功, 解密后文件为test1.out");
-		Decrypt(p, q, "test.out", "test1.out");
+		input.close();
+
+		String enFile = inFile + ".out";
+		String deFile = inFile + ".old";
+
+		System.out.println("加密文件"+inFile+"成功, 加密后文件为"+enFile);
+		Encrypt(n, inFile, enFile);
+
+		System.out.println("解密文件"+enFile+"成功, 解密后文件为"+deFile);
+		Decrypt(p, q, enFile, deFile);
 
 	}
 }

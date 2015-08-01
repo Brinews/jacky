@@ -117,12 +117,12 @@ int Input::IsSPressed()
 
 int Input::IsAPressed()
 {
-	return KEYDOWN(_keyBuffer, DIK_A);
+	return KEYDOWN(_keyBuffer, DIK_A) || KEYDOWN(_keyBuffer, DIK_LEFT);
 }
 
 int Input::IsDPressed()
 {
-	return KEYDOWN(_keyBuffer, DIK_D);
+	return KEYDOWN(_keyBuffer, DIK_D) || KEYDOWN(_keyBuffer, DIK_RIGHT);
 }
 
 int Input::IsEscapePressed()

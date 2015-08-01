@@ -3,9 +3,13 @@
 #include <vector>
 #include <string>
 #include <limits.h>
+#include <time.h>
 
 using namespace std;
 
+/*
+ * 实现大数运算
+ */
 class BigInt
 {
   private:
@@ -13,18 +17,19 @@ class BigInt
     // unsigned char stores the numeric value of 1 digit. The digits are
     // stored in reverse order so that e.g.
     //  BigInt(1234) -> {4, 3, 2, 1}
+	//  数字用字符来表示
     std::vector<unsigned char> digits;
 
     // Need to keep the sign bit separate
     // false indicates positive and true indicates negative
-    bool _sign;
+    bool _sign; //正负号
 
     // elementary methods that are used as part of arithmetic
-    void add_at_digit(unsigned char carry, unsigned long dig);
-    void sub_at_digit(unsigned char carry, unsigned long dig);
+    void add_at_digit(unsigned char carry, unsigned long dig); //按位加
+    void sub_at_digit(unsigned char carry, unsigned long dig); //按位减
     void update_sign();
-    void mul10();
-    void div10();
+    void mul10(); //乘10
+    void div10(); //除10
 
   public:
     // Constructors
@@ -38,6 +43,7 @@ class BigInt
     unsigned long size() const { return digits.size(); }
     bool sign() const { return _sign; }
 
+	//实现基本的加、减、乘、除、求模、取负
     // Arithmetic methods in BigInt
     BigInt negate() const;                      // -x
     BigInt add(const BigInt& other) const;      // x + y
@@ -47,10 +53,11 @@ class BigInt
     BigInt divide(const BigInt& other) const; // x * y
 
 
+	//取的最后一个数字
 	unsigned char getLastDigit() const;
 
     // compare is -1 if x>y, 0 if x==y, and 1 if x<y
-    int compare(const BigInt& other) const;
+    int compare(const BigInt& other) const; //比较大小
     // as for compare but compares magnitudes
     int compare_magnitude(const BigInt& other) const;
 	std::string tostring()const;
@@ -60,6 +67,7 @@ class BigInt
 std::ostream& operator<<(std::ostream& out, BigInt bi);
 
 // Overloaded arithmetic operations
+// 实现加、减、乘、除、求模等基本运算
 BigInt operator+ (const BigInt& lhs, const BigInt& rhs);
 BigInt operator- (const BigInt& lhs, const BigInt& rhs);
 BigInt operator* (const BigInt& lhs, const BigInt& rhs);
@@ -484,6 +492,7 @@ std::string BigInt::tostring() const
 	return ret;
 }
 
+//取最后一个数字
 unsigned char BigInt::getLastDigit() const
 {
 	unsigned char c = 0;
@@ -503,6 +512,7 @@ struct RSA {
 typedef struct RSA Rsa;
 
 /* keep a > b */
+//欧几里德求最大公约数
 BigInt gcd(BigInt a, BigInt b)
 {
 	if (a < b) { BigInt tmp = a; a = b; b = tmp; }
@@ -511,6 +521,7 @@ BigInt gcd(BigInt a, BigInt b)
 	return gcd(b, a%b);
 }
 
+//判断是否为素数
 int isPrime(BigInt number)
 {
 	BigInt i = 2;
@@ -527,6 +538,7 @@ int isPrime(BigInt number)
 	return 1;
 }
 
+//随机生成素数
 BigInt randPrime(BigInt max, BigInt min)
 {
 	BigInt prime = 4;
@@ -538,6 +550,7 @@ BigInt randPrime(BigInt max, BigInt min)
 	return prime;
 }
 
+//求逆，(a*x)%b=1, 计算x
 BigInt inverse(BigInt a, BigInt b)
 {
 	BigInt i = 1;
@@ -626,7 +639,7 @@ void GenerateRsa(Rsa &rsa, const BigInt &max, const BigInt &min)
 
 	BigInt fn = (rsa.p - 1) * (rsa.q - 1);
 
-	/* find e */
+	/* find e 公钥 */
 	BigInt e = rand() % fn;
 	while (!(gcd(fn, e) == 1)) {
 		e = e + 1;
@@ -634,12 +647,12 @@ void GenerateRsa(Rsa &rsa, const BigInt &max, const BigInt &min)
 	}
 	rsa.e = e;
 
-	/* get d */
+	/* get d 私钥 */
 	rsa.d = Euclid(e, fn);
 }
 
 /*
- * 1.1 RSA加密, 求C
+ * 1.1 RSA加密, 求加密后的消息C
  */
 BigInt RsaEncrypt(const Rsa &r, const BigInt &M)
 {
@@ -647,7 +660,7 @@ BigInt RsaEncrypt(const Rsa &r, const BigInt &M)
 }
 
 /*
- * 1.2 RSA解密,求M
+ * 1.2 RSA解密,求加密前的消息M
  */
 BigInt RsaDecrypt(const Rsa &r, const BigInt &C)
 {
@@ -655,7 +668,7 @@ BigInt RsaDecrypt(const Rsa &r, const BigInt &C)
 }
 
 /*
- * 2. 盲化,消息M，求t
+ * 2. 盲化,消息M，将消息M盲化为t
  */
 BigInt mBlind(const BigInt &M, const BigInt &e, const BigInt &n, 
 		BigInt &k)
@@ -670,7 +683,7 @@ BigInt mBlind(const BigInt &M, const BigInt &e, const BigInt &n,
 }
 
 /*
- * 3. 签名,求s
+ * 3. 签名,对加密消息t签名为s
  */
 BigInt mSign(const BigInt& t, const BigInt &d, const BigInt &n)
 {
@@ -678,7 +691,7 @@ BigInt mSign(const BigInt& t, const BigInt &d, const BigInt &n)
 }
 
 /*
- * 4. 解盲,求S
+ * 4. 解盲, 对签名消息t求解S
  */
 BigInt mUnsign(const BigInt& s, const BigInt &k, const BigInt &n)
 {
@@ -695,7 +708,7 @@ BigInt mUnsign(const BigInt& s, const BigInt &k, const BigInt &n)
 }
 
 /*
- * 5.验证
+ * 5.验证,签名与消息是否一致
  */
 int mVerify(const BigInt& S, const BigInt &e, const BigInt &n, 
 		const BigInt &t)
@@ -714,28 +727,31 @@ int main(int argc, char **argv)
 	srand(time(NULL));
 
 	Rsa rsa;
-	GenerateRsa(rsa, 10000, 1);
+	GenerateRsa(rsa, 10000, 1); // 准备RSA
 
 	cout << "RSA公钥:(e,n)" << rsa.e << "," << rsa.n << endl ;
 	cout << "RSA私钥:(d,n)" << rsa.d << "," << rsa.n << endl ;
 
 	BigInt M, k;
 	//M = rand(); /* M可以是字符串计算出来的数值 */
-	string msg("324234289347982374982374923476893245834758983274982372");
+	string msg;//("324234289347982374982374923476893245834758983274982372");
+	cout << "请输入M:";
+	cin >> msg;
+
 	M = msg;
 
 	cout << "A:消息M＝" << M << endl;
 
-	BigInt t = mBlind(M, rsa.e, rsa.n, k);
+	BigInt t = mBlind(M, rsa.e, rsa.n, k); //盲化
 	cout << "A:选取k=" << k << ", 盲化后t=" << t << endl;
 	
-	BigInt s = mSign(t, rsa.d, rsa.n);
+	BigInt s = mSign(t, rsa.d, rsa.n); //签名
 	cout << "B:签名后s=" << s << endl;
 
-	BigInt S = mUnsign(s, k, rsa.n);
+	BigInt S = mUnsign(s, k, rsa.n); //解签
 	cout << "A:解盲后S=" << S << endl;
 
-	int ret = mVerify(S, rsa.e, rsa.n, M);
+	int ret = mVerify(S, rsa.e, rsa.n, M); //验证
 	if (ret == 1) {
 		cout << "A:验证签名通过" << endl;
 	} else {
@@ -749,6 +765,8 @@ int main(int argc, char **argv)
 		cout << C << " after Decrypt " << RsaDecrypt(rsa, C) << endl;
 	}
 	*/
+
+	system("pause");
 
 	return 0;
 }

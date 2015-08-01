@@ -22,8 +22,8 @@ Environment::Environment(Input* input)
 	_pGround = NULL;
 	_pBackWall = NULL;
 
-	_lightMoveSpeed = 0.28f;
-	_lightYMoveSpeed = 0.25f;
+	_lightMoveSpeed = 0.48f;
+	_lightYMoveSpeed = 0.45f;
 	_font = NULL;
 	_fontDesc = D3DXFONT_DESC();
 
@@ -208,6 +208,13 @@ void Environment::OnFrameMove(DWORD inTimeDelta)
 {
 	_pInput->GetInputData();
 	_pMainCamera->UpdateCamera((float)(inTimeDelta / 1000.0f));
+
+	if( _pInput->IsAPressed() ) {
+		AdjustSpeed(0);
+	}
+	else if (_pInput->IsDPressed()) {
+		AdjustSpeed(1);
+	}
 
 	/* 碰到墙反向 */
 	if (_pTeapot->GetPosition().x > 90 || _pTeapot->GetPosition().x < -90)
@@ -466,6 +473,31 @@ void Environment::Render(DWORD inTimeDelta, std::string fps,std::string countDow
 char* Environment::getScore()
 {
 	return _score->GetScore();
+}
+
+void Environment::AdjustSpeed(int type)
+{
+	if (type == 0) {
+		if (_lightMoveSpeed < 0)
+			_lightMoveSpeed -= 0.1;
+		else
+			_lightMoveSpeed += 0.1;
+
+		if (_lightYMoveSpeed < 0)
+			_lightYMoveSpeed -= 0.1;
+		else
+			_lightYMoveSpeed += 0.1;
+	} else {
+		if (_lightMoveSpeed > 0)
+			_lightMoveSpeed -= 0.1;
+		else
+			_lightMoveSpeed += 0.1;
+
+		if (_lightYMoveSpeed > 0)
+			_lightYMoveSpeed -= 0.1;
+		else
+			_lightYMoveSpeed += 0.1;
+	}
 }
 
 /* 清理 */

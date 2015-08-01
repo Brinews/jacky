@@ -218,3 +218,6 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+/J/J-ConThread/pojs/ajp.middleware/nbproject/private/
+/J/J-ConThread/pojs/ajp.middleware2/nbproject/private/
+/J/J-ConThread/asgn-3/CiwsPoj/nbproject/private/

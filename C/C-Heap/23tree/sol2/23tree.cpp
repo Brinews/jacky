@@ -1177,7 +1177,8 @@ int main(int argc, char **argv)
 			tree23_insert(t23, &(v[v.size()-1]));
 			tree23_update_count(t23->root);
 			int seq = tree23_get_seq(t23->root, &key, keyComp);
-			printf("After the insertion, %d is the %dth element of the the list\n", key, seq);
+			printf("%s:After the insertion, %d is the %dth element of the the list\n", 
+					buf, key, seq);
 		}
 
 		if (strcasecmp(command, "delete") == 0) {

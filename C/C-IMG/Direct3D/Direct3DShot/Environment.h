@@ -68,4 +68,6 @@ public:
 	void CleanUp();
 	char* getScore();
 
+	void AdjustSpeed(int type);
+
 };
