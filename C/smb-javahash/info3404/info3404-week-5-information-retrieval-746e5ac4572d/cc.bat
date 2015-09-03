@@ -1,0 +1,3 @@
+javac -d ./class src/core/Constants.java src/core/Matrix.java src/core/Text.java src/core/Vector.java src/core/DTMatrix.java src/engines/Engine.java src/engines/IRBooleanEngine.java src/tokeniser/Tokenizer.java src/tokeniser/SimpleTokenizer.java src/engines/IRBooleanWithCosineEngine.java src/stemmer/PorterStemmer.java
+
+javac  -classpath ./lib/junit.jar;./class -d ./class test/core/DTMatrixTest.java test/tokeniser/SimpleTokenizerTest.java test/engines/IRBooleanEngineTest.java test/engines/IRBooleanWithCosineEngineTest.java test/engines/StemmingWordsTest.java test/engines/IRBooleanWithCosineEngineStemmerTest.java
