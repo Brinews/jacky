@@ -52,7 +52,9 @@ public class ExtendibleHashTable extends HashTable {
 
 		if (!bkt.isFull()) {
 			bkt.add(entry);
-		} else if (bkt.get(entry.getKey()) != null) {
+		} else if (bkt.get(entry.getKey()) != null && 
+				(!bkt.hasNextBucket() || 
+			(bkt.hasNextBucket() && !bkt.getNextBucket().isFull()))) {
 			/* duplicate key insert into overflow bucket */
 			if (!bkt.hasNextBucket()) {
 				bkt.setNextBucket(new Bucket());
@@ -65,16 +67,11 @@ public class ExtendibleHashTable extends HashTable {
 		} else {
 			/* need split */
 			int orgHash = entry.getKeyHash()%(1<<(globalLevel+1));
-			int orgLevel = globalLevel;
 			int level = bkt.getLocalLevel();
-
-			bkt.setLocalLevel(bkt.getLocalLevel() + 1);
-			Bucket nBkt = new Bucket();
-			nBkt.setLocalLevel(bkt.getLocalLevel());
 
 			List<Tuple> allTuple = bkt.getAllElements();
 
-			if (globalLevel < bkt.getLocalLevel()) {
+			if (globalLevel < level+1) {
 				/* double directory */
 				globalLevel = globalLevel + 1;
 
@@ -98,30 +95,18 @@ public class ExtendibleHashTable extends HashTable {
 			else
 				newNo = orgHash - (1<<globalLevel);
 
-			//System.out.println(orgHash + " + " + newNo);
-
 			buckets[newNo] = new Bucket();
-			buckets[orgHash] = new Bucket();
+			buckets[orgHash].clear();
 
 			buckets[newNo].setLocalLevel(level);
 			buckets[orgHash].setLocalLevel(level);
 
 			/* reorgnize */
-			bkt.clear();
+			allTuple.add(entry);
 			for (Tuple t : allTuple) {
 				Bucket pbkt = getBucket(t.getKeyHash());
-
-				if (pbkt == null) {
-					pbkt = new Bucket();
-					buckets[newNo] = pbkt;
-				}
-
 				pbkt.add(t);
 			}
-
-			/* add new */
-			Bucket mbkt = getBucket(entry.getKeyHash());
-			mbkt.add(entry);
 		}
     }
 }
