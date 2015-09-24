@@ -1,0 +1,21 @@
+BC001,Fresh toast bread white (700g),3.99,20
+BC002,Low-fat milk (2 liter),4.80,10
+BC003,V-energy drink,2.75,10
+BC004,Fresh garlic (450g),1.98,0
+BC005,Coca-Cola (300 ml),2.50,10
+BC006,Pineapple,3.60,6
+BC007,Mango,1.89,4
+BC008,Snickers chocolate bar,1.80,20
+BC009,Broccoli,1.47,11
+BC010,Washed Potato (2.5kg),2.98,7
+BC011,Good-morning cereal,5.60,10
+BC012,Rose apple (1.5kg bag),4.98,5
+BC013,Avocado (4pk),4.99,5
+BC014,Bananas (850g bag),2.96,4
+BC015,Kiwi fruit green (1kg),2.45,10
+BC016,Rock melon,7.98,2
+BC017,Lettuce,2.99,12
+BC018,Chocolate block (200g),3.59,10
+BC019,Watermelon,8.99,0
+BC020,Parsley curly,1.99,6
+BC021,Grapefruit 1kg,3.99,7
