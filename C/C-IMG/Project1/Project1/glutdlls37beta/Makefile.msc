@@ -1,0 +1,57 @@
+# optional build flags
+LOC =
+
+# variables
+
+CC = cl
+AS = ml
+LD = link
+AR = lib
+RC = rc
+CFLAGS  = -nologo -MD -W3 -O2 -Oy- -Zi -Fd"polyline" $(LOC) /I"."
+WFLAGS  = -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE
+ASFLAGS = -coff -Zi $(LOC)
+LDFLAGS = -nologo -debug -incremental:no -opt:ref /libpath:"."
+ARFLAGS = -nologo
+RCFLAGS = /dWIN32 /r
+
+
+TARGET = MousePolyline.exe paintboard.exe polyeditor.exe PolyLine2.exe PolyLine3.exe PolyLine4.exe PolyLine5.exe PolyLine6.exe PolyLine7.exe
+
+# targets
+all: $(TARGET)
+
+.cpp.obj:
+	$(CC) -c $(WFLAGS) $(CFLAGS) $<
+
+PolyLine2.exe :  PolyLine2.obj
+	$(LD) $(LDFLAGS) -out:$@ PolyLine2.obj glut32.lib
+
+PolyLine3.exe :  PolyLine3.obj
+	$(LD) $(LDFLAGS) -out:$@ PolyLine3.obj glut32.lib
+
+PolyLine4.exe :  PolyLine4.obj
+	$(LD) $(LDFLAGS) -out:$@ PolyLine4.obj glut32.lib
+
+PolyLine5.exe :  PolyLine5.obj
+	$(LD) $(LDFLAGS) -out:$@ PolyLine5.obj glut32.lib
+
+PolyLine6.exe :  PolyLine6.obj
+	$(LD) $(LDFLAGS) -out:$@ PolyLine6.obj glut32.lib
+
+PolyLine7.exe :  PolyLine7.obj
+	$(LD) $(LDFLAGS) -out:$@ PolyLine7.obj glut32.lib
+
+MousePolyline.exe :  MousePolyline.obj
+	$(LD) $(LDFLAGS) -out:$@ MousePolyline.obj glut32.lib
+
+paintboard.exe :  paintboard.obj
+	$(LD) $(LDFLAGS) -out:$@ paintboard.obj glut32.lib
+
+polyeditor.exe :  polyeditor.obj
+	$(LD) $(LDFLAGS) -out:$@ polyeditor.obj glut32.lib
+# cleanup
+clean:
+	-del *.obj
+	-del *.exe
+	-del *.pdb
