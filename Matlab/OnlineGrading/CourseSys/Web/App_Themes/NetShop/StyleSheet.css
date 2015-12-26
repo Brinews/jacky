@@ -1,0 +1,24 @@
+﻿body { font: 12px/1.5 Tahoma,Helvetica,'SimSun',sans-serif; color: #444444; }
+
+a { color: #333333; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.wp { margin: 0px auto; width: 960px; background-image:url(Images/bg.png)}
+
+#hd { border-bottom: 0px solid #C2D5E3; }
+#hd .wp { padding: 10px 0px 0px; }
+
+
+#nv { overflow: hidden; height: 33px; background: url(Images/nv.png) no-repeat scroll 0px 0px #2B7ACD; }
+
+#nv li { float: left; padding-right: 1px; height: 33px; line-height: 33px; background: url(Images/nv_a.png) no-repeat 100% 0; font-weight: 700; font-size: 14px; }
+.ie_all #nv li { line-height: 36px; }
+.ie6 #nv li { line-height: 33px; }
+
+#nv li a { float: left; padding: 0 15px; height: 33px; }
+#nv li a { color: #FFFFFF; }
+
+#nv li a.a { margin-left: -1px; background: url(Images/nv_a.png) no-repeat scroll 50% -33px rgb(0, 90, 180); }
+#nv li a.a { color: #00FF00; }
+
+#nv li a:hover { background: url(Images/nv_a.png) no-repeat 50% -66px; }
