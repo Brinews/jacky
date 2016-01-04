@@ -1,0 +1,34 @@
+# optional build flags
+LOC =
+
+# variables
+
+CC = cl
+AS = ml
+LD = link
+AR = lib
+RC = rc
+CFLAGS  = -nologo -MD -W3 -O2 -Oy- -Zi -Fd"project2" $(LOC) /I"."
+WFLAGS  = -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE
+ASFLAGS = -coff -Zi $(LOC)
+LDFLAGS = -nologo -debug -incremental:no -opt:ref /libpath:"."
+ARFLAGS = -nologo
+RCFLAGS = /dWIN32 /r
+
+
+TARGET = Project2.exe
+
+# targets
+all: $(TARGET)
+
+.cpp.obj:
+	$(CC) -c $(WFLAGS) $(CFLAGS) $<
+
+Project2.exe :  Project2.obj bitmap.obj
+	$(LD) $(LDFLAGS) -out:$@ Project2.obj bitmap.obj glut32.lib gdi32.lib comdlg32.lib user32.lib
+
+# cleanup
+clean:
+	-del *.obj
+	-del *.exe
+	-del *.pdb
