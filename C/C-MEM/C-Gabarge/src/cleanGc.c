@@ -1,402 +1,261 @@
-#ifndef _CLGC_
-#define _CLGC_
+/*
+ * Good code help good man.
+ * Date: 2015-05-12
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <sys/mman.h>
+//#include <sys/mman.h>
 
-typedef enum
+#define HEAPSIZE	(2<<16)
+#define ALIGNMASK 7
+
+typedef struct Block_t *Block_t;
+
+struct Block_t
 {
-  TYPE_OBJECT,
-  TYPE_ARRAY
-}OBJECT_TYPE;
-
-typedef struct Object_t *Object_t;
-
-/*    
-      ----------------
-      | vptr         |
-      |--------------|
-      | isObjOrArray |
-      |--------------|
-      | length       |
-      |--------------|
-      | request      |
-      |--------------|
-      | isValid      |
-      |--------------|
-      | forwarding   |
-      |--------------|\
-      p---->| e_0    | \
-      |--------------|  s
-      | ...          |  i
-      |--------------|  z
-      | e_{length-1} | /e
-      ----------------/
-      */
-struct Object_t
-{
-  void* vptr;
-  OBJECT_TYPE objType;
-  int length; // actual malloced
-  int request; // actual request
-  int isValid; //0:invalid, 1:valid
-  void* forwarding;
+	void* data_addr;
+	int length; // block size + request size 
+	int request; // request size
+	int is_valid; 
+	void* ref_addr;
 };
 
-#define MAXSIZE	(2<<17)
-
-#define ALIGNMASK 7
 #define ALIGN(s) (((s) + ALIGNMASK) & ~ALIGNMASK)
-#define POFF ALIGN(sizeof(struct Object_t))
-#define C2P(c) ((char *)(c) + POFF)
-#define P2C(p) ((struct Object_t *)((char *)(p) - POFF))
 
-#define GET_OBJECT_FIELD_ADDR(obj, index)   \
-  (((char*)(obj + 1)) + index * (CHAR_SIZE))
+#define HEADEROFF ALIGN(sizeof(struct Block_t))
+#define ADDOFFSET(c) ((char *)(c) + HEADEROFF)
+#define SUBOFFSET(p) ((struct Block_t *)((char *)(p) - HEADEROFF))
+#define BLOCKSIZE(x) (x->length)
 
-#define GET_OBJECT(addr)    (*(Object_t*)addr)
+#define NEED_GC(remains, need)      \
+	((remains)<(need))
 
-#define NO_ENOUGH_SPACE(remains, need)      \
-  ((remains)<(need))
+#define ADDR_CMP(add1, op, add2)     \
+	((int*)(add1)op(int*)(add2))
 
-#define ADDRESS_COMPARE(add1, op, add2)     \
-  ((int*)(add1)op(int*)(add2))
-
-#define IN_TO_SPACE(addr)                                \
-  (ADDRESS_COMPARE(addr, <, heap.toStart+heap.size)&&    \
-   ADDRESS_COMPARE(addr, >=, heap.toStart))
-
-#define IN_FROM_SPACE(addr)                              \
-  (ADDRESS_COMPARE(addr, <, heap.from+heap.size)&&       \
-   ADDRESS_COMPARE(addr, >=, heap.from))
+#define IN_FROM_HEAP(addr)                              \
+	(ADDR_CMP(addr, <, heap.from+heap.size)&&       \
+	 ADDR_CMP(addr, >=, heap.from))
 
 
+
+static const int CHAR_SIZE = sizeof(char);
+static const int OBJECT_HEADER_SIZE = HEADEROFF;
+
+struct mem_heap
+{
+	int size;     
+
+	char *from;   
+	char *from_free;
+	char *to;      
+
+	char *to_start;
+	char *to_free; 
+};
+
+struct mem_heap heap = {0, NULL, NULL, NULL, NULL, NULL};
 
 /**
- * The "prev" pointer, pointing to the top frame on the GC stack.
+ * allocate a heap
  */
-void *previous = 0;
-static int copyCount;
-static const int WORLD = sizeof(int*);
-static const int CHAR_SIZE = sizeof(char);
-static const int OBJECT_HEADER_SIZE = POFF;
+void sgc_heap_init (int heapSize)
+{
+	char* iheap, *jheap; 
+	iheap = (char*)malloc(heapSize);
+	//iheap = mmap(NULL, HEAPSIZE, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
+	memset(iheap, 0, heapSize);
 
-//===============================================================//
-// Heap data structure.
+	heap.size=heapSize;
+	heap.from=(char*)iheap;
+	heap.from_free=heap.from;
+
+	heap.to=heap.from_free+heap.size;
+
+	jheap = (char*)malloc(heapSize);
+	//jheap = mmap(NULL, HEAPSIZE, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
+	heap.to_free = jheap;
+	heap.to_start = jheap;
+
+	return;
+}
+
+// A copying collector based-on Cheney's algorithm.
+static int swap_heap()
+{
+	char* swap;
+
+	swap = heap.from;
+	heap.from = heap.to_start;
+	heap.to = (char*)heap.from+heap.size;
+
+	heap.from_free = heap.to_free;
+	heap.to_start = swap;
+	heap.to_free = swap;
+
+	memset(heap.to_start, 0, heap.size);
+
+	return 0;
+}
 
 /*
-   ----------------------------------------------------
-   |From Space              |To Space                 |
-   ----------------------------------------------------
-   ^\                      /^
-   | \<~~~~~~~ size ~~~~~>/ |
-   from                       to
-   */
-struct MyHeap
-{
-  int size;         // in bytes, note that this is for semi-heap size
-  char *from;       // the "from" space pointer
-  char *fromFree;   // the next "free" space in the from space
-  char *to;         // the "to" space pointer
-  char *toStart;    // "start" address in the "to" space
-  char *toNext;     // "next" free space pointer in the to space
-};
-
-/**
- * The heap, which is initialized by the following
- * "heap_init" function.
+ * block copy by memcpy
  */
-struct MyHeap heap = {0, NULL, NULL, NULL, NULL, NULL};
-
-/**
- * Given the heap size (in bytes), allocate a heap
- * in the C heap, initialize the relevant fields.
- */
-void CLGC_heap_init (int heapSize)
+static int copy_block(Block_t org_obj, Block_t upd_obj)
 {
-  // #1: allocate a chunk of memory of size "heapSize"
-  char* jheap; 
-  //jheap = (char*)malloc(heapSize);
-  jheap = mmap(NULL, MAXSIZE, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
-  memset(jheap, 0, heapSize);
+	int size = BLOCKSIZE(org_obj);
+	char *ref_addr = heap.to_start;
+	Block_t ref_blk;
+	int *addrvalue;
+	int i, number;
 
-  // #2: initialize the "size" field, note that "size" field
-  // is for semi-heap, but "heapSize" is for the whole heap.
-  heap.size=heapSize/2;
-  // #3: initialize the "from" field.
-  heap.from=(char*)jheap;
-  // #4: initialize the "fromFree" field.
-  heap.fromFree=heap.from;
-  // #5: initialize the "to" field.
-  heap.to=heap.fromFree+heap.size;
-  // #6: initizlize the "toStart" field. 
-  heap.toNext=(char*)heap.to+1;
-  // #7: initialize the "toNext" field.
-  heap.toStart=(char*)heap.to+1;
-
-  return;
-}
-
-//===============================================================//
-// A copying collector based-on Cheney's algorithm.
-
-static int swapAndCleanUp()
-{
-  char* swap;
-
-  swap = heap.from;
-  heap.from = heap.toStart;
-  heap.to = (char*)heap.from+heap.size;
-  heap.fromFree = heap.toNext;
-  heap.toStart = swap;
-  heap.toNext = swap;
-  memset(heap.toStart, 0, heap.size);
-
-  return 0;
-}
-
-static int objectSize(Object_t obj)
-{
-  int size;
-
-  size = 0;
-  switch (obj->objType)
-  {
-    case TYPE_OBJECT:
-      size = obj->length;
-      break;
-    case TYPE_ARRAY:
-      size = obj->length * CHAR_SIZE + OBJECT_HEADER_SIZE;
-      break;
-  }
-
-  return size;
-}
-
-
-static int copyCollection(Object_t old_obj, Object_t new_obj)
-{
-  int size = objectSize(old_obj);
-  char *refAddr = heap.toStart;
-  Object_t refObj;
-  int *content;
-  int i, number;
-
-  if (!IN_FROM_SPACE(old_obj)) {
-    return 0;
-  }
-
-  memcpy(new_obj, old_obj, size);
-  heap.toNext += size;
-
-  old_obj->forwarding = new_obj;
-  new_obj->vptr = C2P(new_obj);
-
-  // copy reference address
-
-  while (refAddr != (char*) new_obj) {
-
-	  refObj = (Object_t) refAddr;
-
-	  content = (int *)C2P(refObj);
-	  number = refObj->request/sizeof(*content);
-
-	  for (i = 0; i < number; i++) {
-		  if (*content == (int)old_obj->vptr) {
-			  *content = (int)new_obj->vptr;
-		  }
-		  content++;
-	  }
-
-	  refAddr += objectSize(refObj);
-  }
-
-  return 0;
-}
-
-static int collectedField()
-{
-  char* to_ptr, *from_ptr;
-  Object_t fromObj = (Object_t)(heap.from);
-  Object_t toObj = (Object_t)(heap.toStart);
-
-  to_ptr = heap.toStart;
-  from_ptr = heap.from;
-
-  while (fromObj->length > 0) {
-
-	if (fromObj->isValid == 0) {
-		from_ptr = (char *)from_ptr + objectSize(fromObj);
-		fromObj = (Object_t)from_ptr;
-		continue;
+	if (!IN_FROM_HEAP(org_obj)) {
+		return 0;
 	}
 
-    toObj = (Object_t)to_ptr;
+	memcpy(upd_obj, org_obj, size);
+	heap.to_free += size;
+	upd_obj->data_addr = ADDOFFSET(upd_obj);
 
-    switch (fromObj->objType) {
-      case TYPE_OBJECT:
-        copyCollection(fromObj, toObj);
-        break;
-      case TYPE_ARRAY:
-		// no need now
-        break;
-    }
+	while (ref_addr != (char*) upd_obj) {
 
-    to_ptr = (char*)to_ptr + objectSize(toObj);
+		ref_blk = (Block_t) ref_addr;
 
-	from_ptr = (char *)from_ptr + objectSize(fromObj);
-	fromObj = (Object_t)from_ptr;
-  }
+		addrvalue = (int *)ADDOFFSET(ref_blk);
+		number = ref_blk->request/sizeof(*addrvalue);
 
-  return 0;
-}
-
-static int Verbose_CLGC_gc()
-{
-
-  int r;
-
-  r = collectedField();
-  r = swapAndCleanUp();
-
-  return 0;
-}
-
-static int CLGC_gc ()
-{
-  int before_gc;
-  int gcByte;
-  int r;
-
-  before_gc = heap.to-heap.fromFree;
-
-  r = Verbose_CLGC_gc();
-
-  gcByte = heap.to-heap.fromFree-before_gc;
-
-  return gcByte;
-}
-
-
-//===============================================================//
-// Object Model And allocation
-
-
-// "new" a new object, do necessary initializations, and
-// return the pointer (reference).
-/*    ----------------
-      | vptr      ---|----> (points to the virtual method table)
-      |--------------|
-      | isObjOrArray | (0: for normal objects)
-      |--------------|
-      | length       | (this field should be empty for normal objects)
-      |--------------|
-      | request      |
-      |--------------|
-      | isValid      |
-      |--------------|
-      | forwarding   |
-      |--------------|\
-      p---->| v_0    | \
-      |--------------|  s
-      | ...          |  i
-      |--------------|  z
-      | v_{size-1}   | /e
-      ----------------/
-      */
-/**
- * Try to allocate an object in the "from" space of the
- * heap. Read CLGC book chapter 13.3 for details on the
- * allocation.
- * There are two cases to consider:
- *   1. If the "from" space has enough space to hold this object, then
- *      allocation succeeds, return the apropriate address (look at
- *      the above figure, be careful);
- *   2. if there is no enough space left in the "from" space, then
- *      you should call the function "CLGC_gc()" to collect garbages.
- *      and after the collection, there are still two sub-cases:
- *        a: if there is enough space, you can do allocations just as case 1;
- *        b: if there is still no enough space, you can just issue
- *           an error message ("OutOfMemory") and exit.
- *           (However, a production compiler will try to expand
- *           the heap.)
- */
-
-static void* new_block(int size, int request)
-{
-  Object_t obj;
-
-  obj  = (Object_t)heap.fromFree;
-  memset(obj, 0, size * CHAR_SIZE + OBJECT_HEADER_SIZE);
-
-  obj->vptr = 0;
-  obj->objType = TYPE_OBJECT;
-  obj->length = size * CHAR_SIZE + OBJECT_HEADER_SIZE;
-  obj->request = request;
-  obj->isValid = 1;
-  obj->forwarding = 0;
-
-  heap.fromFree += (size * CHAR_SIZE + OBJECT_HEADER_SIZE);
-
-  return obj;
-}
-
-/***************************************************************
- * Added API
- */
-
-void *allocate(size_t request, size_t *collected)
-{
-	int size, gcByte;
-	Object_t obj;
-
-	size = ALIGN(request); // keep align
-
-	if (heap.size == 0) { // first init
-		CLGC_heap_init(MAXSIZE);
-	}
-
-	if(NO_ENOUGH_SPACE(heap.to-heap.fromFree, size)){
-		gcByte = CLGC_gc();
-
-		if(NO_ENOUGH_SPACE(heap.to-heap.fromFree, size)){
-			*collected = 0;
-			return NULL;
+		for (i = 0; i < number; i++) {
+			/* if exist reference address */
+			if (*addrvalue == (int)org_obj->data_addr) {
+				*addrvalue = (int)upd_obj->data_addr;
+			}
+			addrvalue++;
 		}
 
-		*collected = gcByte;
-	} else {
-		*collected = 0; // needn't GC
+		ref_addr += BLOCKSIZE(ref_blk);
 	}
 
-	obj = new_block(size, request);
-
-	// update vptr
-	obj->vptr = C2P(obj);
-
-	return C2P(obj);
+	return 0;
 }
 
-
-Object_t find_root(void *addr)
+static int copy_heap()
 {
-	Object_t ptr = (Object_t)heap.from;
+	char* to_ptr, *from_ptr;
+	Block_t from_obj = (Block_t)(heap.from);
+	Block_t to_obj = (Block_t)(heap.to_start);
+
+	to_ptr = heap.to_start;
+	from_ptr = heap.from;
+
+	while (from_obj->length > 0) {
+
+		if (from_obj->is_valid == 0) {
+			from_ptr = (char *)from_ptr + BLOCKSIZE(from_obj);
+			from_obj = (Block_t)from_ptr;
+			continue;
+		}
+
+		to_obj = (Block_t)to_ptr;
+		copy_block(from_obj, to_obj);
+		to_ptr = (char*)to_ptr + BLOCKSIZE(to_obj);
+
+		from_ptr = (char *)from_ptr + BLOCKSIZE(from_obj);
+		from_obj = (Block_t)from_ptr;
+	}
+
+	return swap_heap();
+}
+
+static int sgc_gc ()
+{
+	int before_gc;
+	int gc_byte;
+	int r;
+
+	before_gc = heap.to-heap.from_free;
+	r = copy_heap();
+	gc_byte = heap.to-heap.from_free-before_gc;
+
+	return gc_byte;
+}
+
+// Object Model And allocation
+static void* new_block(int size, int request)
+{
+	Block_t obj;
+
+	obj  = (Block_t)heap.from_free;
+	memset(obj, 0, size * CHAR_SIZE + OBJECT_HEADER_SIZE);
+
+	obj->data_addr = 0;
+	obj->length = size * CHAR_SIZE + OBJECT_HEADER_SIZE;
+	obj->request = request;
+	obj->is_valid = 1;
+	obj->ref_addr = 0;
+
+	heap.from_free += (size * CHAR_SIZE + OBJECT_HEADER_SIZE);
+
+	return obj;
+}
+
+Block_t find_root(void *addr)
+{
+	int *paddr;
+	int i;
+	Block_t ptr = (Block_t)heap.from;
 
 	while (ptr != NULL && ptr->length != 0) {
-		if (ptr->forwarding == addr) return ptr;
 
-		ptr = (Object_t) (((char*)ptr) + ptr->length);
+		if ((int *)ptr->ref_addr == (int *)addr) return ptr;
+
+		ptr = (Block_t) (((char*)ptr) + ptr->length);
 	}
 
 	return NULL;
 }
 
+/*
+ * function to use
+ */
+
+void *allocate(size_t request, size_t *collected)
+{
+	int size, gc_byte;
+	Block_t obj;
+
+	size = ALIGN(request);
+
+	if (heap.size == 0) {
+		sgc_heap_init(HEAPSIZE);
+	}
+
+	if(NEED_GC(heap.to-heap.from_free, size)){
+		gc_byte = sgc_gc();
+
+		if(NEED_GC(heap.to-heap.from_free, size)){
+			*collected = 0;
+			return NULL;
+		}
+		*collected = gc_byte;
+	} else {
+		*collected = 0; 
+	}
+
+	obj = new_block(size, request);
+
+	// update data_addr
+	obj->data_addr = ADDOFFSET(obj);
+
+	return ADDOFFSET(obj);
+}
+
+
 void add_root(void *addr, size_t len)
 {
-	Object_t toAdd = NULL;
+	Block_t toAdd = NULL;
 	size_t collected;
 	int i;
 	char *p;
@@ -405,14 +264,15 @@ void add_root(void *addr, size_t len)
 	toAdd = find_root(addr);
 
 	if (toAdd != NULL) {
-		toAdd->isValid = 1;
-		return; /* already exist */
+		toAdd->is_valid = 1;
+		return; /* already exist, no need add */
 	}
 
-	/* allocate a new obj */
+	/* allocate */
 	p = (char *)allocate(len, &collected);
-	toAdd = P2C(p);
+	toAdd = SUBOFFSET(p);
 
+	//toAdd->ref_addr = addr;
 	paddr = (int *)p;
 	for (i = 0; i < len/sizeof(void*); i++) {
 		*paddr = (int)(((int *)addr)+i);
@@ -422,18 +282,16 @@ void add_root(void *addr, size_t len)
 
 void del_root(void *addr)
 {
-	Object_t toDel = NULL;
+	Block_t needRemove = NULL;
+	needRemove = find_root(addr);
 
-	toDel = find_root(addr);
-
-	if (toDel != NULL) {
-		toDel->isValid = 0;
+	if (needRemove != NULL) {
+		needRemove->is_valid = 0;
 	}
 }
 
 size_t heap_max()
 {
-	return heap.to - heap.fromFree;
+	return heap.to - heap.from_free;
 }
 
-#endif
