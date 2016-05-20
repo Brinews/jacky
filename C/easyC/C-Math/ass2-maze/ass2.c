@@ -7,8 +7,8 @@
 #include <math.h>
 #include <assert.h>
 
-#define MAX_ROWS 100		/* maximum number of maze row */
-#define MAX_COLS 100		/* maximum number of maze col */
+#define MAX_ROWS 200		/* maximum number of maze row */
+#define MAX_COLS 200		/* maximum number of maze col */
 #define DIR_NUM	 4			/* total directions */
 #define NO_COST	 -1			/* no cost */
 
@@ -70,11 +70,9 @@ struct maze_copy {
 /* function prototypes */
 void read_maze(maze_t root);				/* read maze from stdin */
 void print_stage1_maze(maze_t root);		/* print out maze */
-void print_stage2_maze(maze_t root);		/* print out maze */
-void find_reachable_cells(maze_t root);		/* mark all reachable cell */
+void print_stage2_maze(maze_t root, copy_t copy); /* print out maze */
 /* judge the cell around(x,y) is reachable or not */
-int  around_cell_reachable(maze_t root, int x, int y);
-int  maze_has_solution(maze_t root);		/* judge the maze solution */
+int  maze_has_solution(copy_t copy);	/* judge the maze solution */
 void update_maze_cost(maze_t root, copy_t copy);	/* update maze cost cycle */
 void maze_cycle_cost(copy_t root, int x, int y);
 void print_stage3_maze(maze_t root, copy_t copy);	/* print out maze */
@@ -92,14 +90,19 @@ void read_maze(maze_t root)
 	while (scanf("%s", buf) > 0) {
 
 		/* one maze row */
-		for (i = 0; i < strlen(buf); i++) {
-			root->cells[root->maze_row][i].type = buf[i];
+		for (i = 0; i < 2*strlen(buf); i+=2) {
+			root->cells[root->maze_row][i].type = buf[i/2];
 			root->cells[root->maze_row][i].doubled = NONREACH;
 			root->cells[root->maze_row][i].cost = NO_COST;
 			root->cells[root->maze_row][i].path = NONREACH;
+
+			root->cells[root->maze_row][i+1].type = buf[i/2];
+			root->cells[root->maze_row][i+1].doubled = NONREACH;
+			root->cells[root->maze_row][i+1].cost = NO_COST;
+			root->cells[root->maze_row][i+1].path = NONREACH;
 		}
 
-		root->maze_col = strlen(buf);
+		root->maze_col = 2*strlen(buf);
 		root->maze_row ++; /* accmulate row number */
 	}
 }
@@ -115,7 +118,7 @@ void print_stage1_maze(maze_t root)
 	printf(NEWLINE);
 
 	printf("maze has %d rows and %d columns", 
-			root->maze_row, root->maze_col);
+			root->maze_row, root->maze_col/2);
 	printf(NEWLINE);
 
 	for (i = 0; i < root->maze_row; i++) {
@@ -124,78 +127,20 @@ void print_stage1_maze(maze_t root)
 		}
 		printf(NEWLINE);
 	}
-}
-
-int around_cell_reachable(maze_t root, int x, int y)
-{
-	/* directions */
-	int dir_x[] = {-1, 1, 0, 0};
-	int dir_y[] = {0, 0, -1, 1};
-
-	int i;
-	int pos_x, pos_y;
-
-	for (i = 0; i < DIR_NUM; i++) {
-		pos_x = x + dir_x[i];
-		pos_y = y + dir_y[i];
-
-		if (pos_x < 0 || pos_x >= root->maze_row
-			|| pos_y < 0 || pos_y >= root->maze_col)
-			continue;
-
-		if (root->cells[pos_x][pos_y].type == PASS
-				&& root->cells[pos_x][pos_y].doubled == REACHABLE)
-			return 1;
-	}
-
-	return 0;
-}
-
-void find_reachable_cells(maze_t root)
-{
-	int i,j;
-
-	/* the entry row should all be reachable */
-	i = 0;
-	for (j = 0; j < root->maze_col; j++) {
-		if (root->cells[i][j].type == PASS) {
-			root->cells[i][j].doubled = REACHABLE;
-		}
-	}
-
-	/* mark the left cells line by line */
-	for (i = 1; i < root->maze_row; i++) {
-		for (j = 0; j < root->maze_col; j++) {
-			if (root->cells[i][j].type == PASS) {
-				if (around_cell_reachable(root, i, j)) {
-					root->cells[i][j].doubled = REACHABLE;
-				} else
-					root->cells[i][j].doubled = NONREACH;
-			}
-		}
-
-		for (j = root->maze_col-1; j >= 0; j--) {
-			if (root->cells[i][j].type == PASS) {
-				if (around_cell_reachable(root, i, j)) {
-					root->cells[i][j].doubled = REACHABLE;
-				} else
-					root->cells[i][j].doubled = NONREACH;
-			}
-		}
-	}
+	printf(NEWLINE);
 }
 
 /*
  * if the exit cell is reachable then has solution
  */
-int maze_has_solution(maze_t root)
+int maze_has_solution(copy_t copy)
 {
 	int i, j;
-	i = root->maze_row-1;
+	i = copy->m_row-1;
 
-	for (j = 0; j < root->maze_col; j++) {
-		if (root->cells[i][j].type == PASS
-				&& root->cells[i][j].doubled == REACHABLE)
+	for (j = 0; j < copy->m_col; j++) {
+		if (copy->cells[i][j].type == PASS
+				&& copy->cells[i][j].doubled == REACHABLE)
 			return 1;
 	}
 
@@ -205,7 +150,7 @@ int maze_has_solution(maze_t root)
 /*
  * print doubled-marked maze
  */
-void print_stage2_maze(maze_t root)
+void print_stage2_maze(maze_t root, copy_t copy)
 {
 	int i, j;
 
@@ -215,7 +160,7 @@ void print_stage2_maze(maze_t root)
 	printf(LINES);
 	printf(NEWLINE);
 
-	if (maze_has_solution(root))
+	if (maze_has_solution(copy))
 		printf("maze has a solution");
 	else 
 		printf("maze does not have a solution");
@@ -224,6 +169,9 @@ void print_stage2_maze(maze_t root)
 
 	for (i = 0; i < root->maze_row; i++) {
 		for (j = 0; j < root->maze_col; j++) {
+
+			root->cells[i][j].doubled = copy->cells[i][j/2].doubled;
+
 			if (root->cells[i][j].type == WALL)
 				printf("%c", root->cells[i][j].type);
 			else {
@@ -232,6 +180,7 @@ void print_stage2_maze(maze_t root)
 		}
 		printf(NEWLINE);
 	}
+	printf(NEWLINE);
 }
 
 /*
@@ -241,11 +190,11 @@ void print_stage2_maze(maze_t root)
 void maze_cycle_cost(copy_t root, int x, int y)
 {
 	/* directions */
-	int dir_x[] = {-1, 1, 0, 0};
-	int dir_y[] = {0, 0, -1, 1};
+	int dir_x[] = {0, -1, 0, 1};
+	int dir_y[] = {1, 0, -1, 0};
 
-	int queue_x[MAX_ROWS]; /* queue structure */
-	int queue_y[MAX_COLS];
+	int queue_x[MAX_ROWS*MAX_COLS/4]; /* queue structure */
+	int queue_y[MAX_COLS*MAX_COLS/4];
 
 	int q_head = 0, q_tail = 0;
 	int cost = 0;
@@ -275,7 +224,6 @@ void maze_cycle_cost(copy_t root, int x, int y)
 			}
 
 			if (root->cells[x][y].type == PASS
-					&& root->cells[x][y].doubled == REACHABLE
 					&& root->cells[x][y].visited == NONVISITED) {
 				/* enqueue to visit */
 				queue_x[q_tail] = x;
@@ -288,6 +236,7 @@ void maze_cycle_cost(copy_t root, int x, int y)
 					/* record the path */
 					root->cells[x][y].from_which_dir = i;
 					root->cells[x][y].cost = cost+1;
+					root->cells[x][y].doubled = REACHABLE;
 				}
 			}
 		}
@@ -316,6 +265,7 @@ void update_maze_cost(maze_t root, copy_t copy)
 		if (copy->cells[i][j].type == PASS) {
 			copy->cells[i][j].cost = 0;
 			copy->cells[i][j].visited = VISITED;
+			copy->cells[i][j].doubled = REACHABLE;
 		}
 	}
 
@@ -351,13 +301,13 @@ void print_stage3_maze(maze_t root, copy_t copy)
 	i = copy->m_row-1;
 	for (j = 0; j < copy->m_col; j++) {
 		if (copy->cells[i][j].type == PASS
-				&& copy->cells[i][j].doubled == REACHABLE
+				&& copy->cells[i][j].cost != NO_COST
 				&& cost > copy->cells[i][j].cost) {
 			cost = copy->cells[i][j].cost;
 		}
 	}
 
-	if (maze_has_solution(root))
+	if (maze_has_solution(copy))
 		printf("maze has a solution with cost %d", cost);
 	else 
 		printf("maze does not have a solution");
@@ -386,6 +336,7 @@ void print_stage3_maze(maze_t root, copy_t copy)
 		}
 		printf(NEWLINE);
 	}
+	printf(NEWLINE);
 }
 
 void update_maze_path(maze_t root, copy_t copy)
@@ -396,8 +347,8 @@ void update_maze_path(maze_t root, copy_t copy)
 	int toprint_cost;
 
 	int dir;
-	int dir_x[] = {1,-1,0,0};
-	int dir_y[] = {0,0,1,-1};
+	int dir_x[] = {0, 1,0,-1};
+	int dir_y[] = {-1,0,1,0};
 
 	i = copy->m_row-1;
 	px = i;
@@ -463,6 +414,7 @@ void print_stage4_maze(maze_t root)
 		}
 		printf(NEWLINE);
 	}
+	printf(NEWLINE);
 }
 
 int main(int argc, char **argv)
@@ -473,13 +425,12 @@ int main(int argc, char **argv)
 	read_maze(&my_maze);
 	print_stage1_maze(&my_maze);
 
-	find_reachable_cells(&my_maze);
-	print_stage2_maze(&my_maze);
-
 	update_maze_cost(&my_maze, &m_copy);
+
+	print_stage2_maze(&my_maze, &m_copy);
 	print_stage3_maze(&my_maze, &m_copy);
 
-	if (maze_has_solution(&my_maze)) {
+	if (maze_has_solution(&m_copy)) {
 		update_maze_path(&my_maze, &m_copy);
 		print_stage4_maze(&my_maze);
 	}
