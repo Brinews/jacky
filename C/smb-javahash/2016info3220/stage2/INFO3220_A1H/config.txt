@@ -1,0 +1,109 @@
+body {
+    name: Sun;
+    colour: #ffff00;
+    radius: 10;
+    mass: 1.988544e+30;
+    xPosition: 0;
+    yPosition: 0;
+    xVelocity: 0;
+    yVelocity: 0;
+}
+
+body {
+    name: Mercury;
+    colour: #a52a2a;
+    radius: 3;
+    mass: 3.302e+23;
+    xPosition: -6.98632e+10;
+    yPosition: 0;
+    xVelocity: 0;
+    yVelocity: 47.362e+03;
+}
+
+body {
+    name: Venus;
+    colour: #808080;
+    radius: 5;
+    mass: 48.685e+23;
+    xPosition: 1.0816e+11;
+    yPosition: 0;
+    xVelocity: 0;
+    yVelocity: -35.02e+03;
+}
+
+body {
+    name: Earth;
+    colour: #008000;
+    radius: 5;
+    mass: 5.97219e+24;
+    xPosition: -1.5214e+11;
+    yPosition: 0;
+    xVelocity: 0;
+    yVelocity: 29.78e+03;
+}
+
+body {
+    name: Moon;
+    colour: #ffffff;
+    radius: 2;
+    mass: 734.9e+20;
+    xPosition: -1.52470e+11;
+    yPosition: 0;
+    xVelocity: 0;
+    yVelocity: 30.802e+03;
+}
+
+body {
+    name: Mars;
+    colour: #ff0000;
+    radius: 4;
+    mass: 6.4185e+23;
+    xPosition: 2.4923e+11;
+    yPosition: 0;
+    xVelocity: 0;
+    yVelocity: -24.077e+03;
+}
+
+body {
+    name: Jupiter;
+    colour: #ffa500;
+    radius: 8;
+    mass: 1898.13e+24;
+    xPosition: -8.16068e+11;
+    yPosition: 0;
+    xVelocity: 0;
+    yVelocity: 13.07e+03;
+}
+
+body {
+    name: Saturn;
+    colour: #a52a2a;
+    radius: 7;
+    mass: 5.68319e+26;
+    xPosition: 1.50887e+12;
+    yPosition: 0;
+    xVelocity: 0;
+    yVelocity: -9.69e+03;
+}
+
+body {
+    name: Uranus;
+    colour: #008080;
+    radius: 6;
+    mass: 86.8103e+24;
+    xPosition: -3.008456e+12;
+    yPosition: 0;
+    xVelocity: 0;
+    yVelocity: 6.8e+03;
+}
+
+body {
+    name: Neptune;
+    colour: #0000ff;
+    radius: 6;
+    mass: 102.41e+24;
+    xPosition: 4.537368e+12;
+    yPosition: 0;
+    xVelocity: 0;
+    yVelocity: -5.43e+03;
+}

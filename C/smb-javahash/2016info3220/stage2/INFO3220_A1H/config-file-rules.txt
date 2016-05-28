@@ -1,0 +1,23 @@
+========================
+Configuration File Rules
+========================
+
+======
+Syntax
+======
+className {                     <-- The type of object to be stored
+    key: value;                 <-- A single value for the key (field)
+    key: value;                 <-- Another field
+    ...                         <-- More fields go here!
+}
+
+========
+Examples
+========
+body {                          <-- className = 'body'
+    name: Meow;                 <-- key = 'name', value = 'Meow'
+    colour: #A1A1A1;            <-- key = 'colour', value = '#A1A1A1'
+    radius: 10.5;               <-- key = 'radius', value = '10.5'
+    xPosition: 50.1;            <-- key = 'xPosition', value = '50.1'
+    yPosition: 5.3;             <-- key = 'yPosition', value = '5.3'
+}
