@@ -1,0 +1,95 @@
+/* CSS Document */
+
+/******************Start wrapper***************/
+.wrapper{
+    width:100%;
+    background:#CEE3F8;
+}
+header{
+    position:relative;
+    color:#372525;
+    width:100%;
+    height:138px;
+    margin:0 auto;
+    line-hight:10px;
+}
+img{
+    width:100%;
+}
+.logo {
+    position:absolute;
+    top:0%;
+    left:10%;
+    width:300px;
+}
+ul{
+    margin:20px;
+    padding:10px;
+    list-style:none;
+    float:left;
+}
+.nav{
+    position:absolute;
+    width:98%;
+    height:130px;
+    left:30%;
+    padding:50px 0;
+    margin:0 auto;
+}
+.nav-menu{
+    display:block;
+    margin:0 auto;
+}
+
+.nav-menu > li {
+    display:inline;
+    float:left;
+}
+.nav-menu li a {
+    float:left;
+    color:#023D84;
+    display:block;
+    font:"微软雅黑";
+    text-decoration:none;
+    overflow:hidden;
+    line-height:30px;
+    font-size:25px;
+    padding:15px 50px;
+    -webkit-transition: all 0.3s ease-in;
+    -moz-transition: all 0.3s ease-in;
+    -o-transition: all 0.3s ease-in;
+    transition: all 0.3s ease-in;
+    transform:translate3d(-5px,0,0);/*3d转换*/
+}
+.nav-menu li a:hover{
+    color:#023D84;
+    display:block;
+    font:"微软雅黑";
+    text-decoration:none;
+    overflow:hidden;
+    line-height:30px;
+    font-size:25px;
+    padding:15px 50px;
+    text-shadow:5px 5px 5px #D36F71;/*文本设置阴影*/
+    color:#229FBF;
+    transform:translate3d(0,0,0);/*3d转换*/
+}
+
+/********************Footer*************************/
+.Footer{
+    clear:both;
+    height:50px;
+    margin:0;
+    width:100%;
+    background-color:#CEE3F8;
+}
+.wenzi{
+    display:block;
+    left:35%;
+}
+.wenzi p{
+    font:"微软雅黑";
+    font-size:1.5em;
+    text-align:center;
+    color:#0F4387;
+}
