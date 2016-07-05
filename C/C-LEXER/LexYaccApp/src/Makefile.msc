@@ -1,0 +1,34 @@
+# optional build flags
+LOC =
+
+# variables
+
+CC = cl
+AS = ml
+LD = link
+AR = lib
+RC = rc
+CFLAGS  = -nologo /MT  -W3 -O2 -Oy- -Zi -Fd"project2" $(LOC) /I"C:/usr/WareHouse/ParserGenerator2/Cpp/Include"
+WFLAGS  = -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE
+ASFLAGS = -coff -Zi $(LOC)
+LDFLAGS = -nologo -debug -incremental:no -opt:ref /libpath:"C:/usr/WareHouse/ParserGenerator2/Cpp/Lib/msvc32"
+ARFLAGS = -nologo
+RCFLAGS = /dWIN32 /r
+
+
+TARGET = my_sql.exe
+
+# targets
+all: $(TARGET)
+
+.c.obj:
+	$(CC) -c $(WFLAGS) $(CFLAGS) $<
+
+my_sql.exe :  mylexer.obj myparser.obj compiler.obj
+	$(LD) $(LDFLAGS) -out:$@ mylexer.obj myparser.obj compiler.obj yl.lib yld.lib 
+
+# cleanup
+clean:
+	-del *.obj
+	-del *.exe
+	-del *.pdb
