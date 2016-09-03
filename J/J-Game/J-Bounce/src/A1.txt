@@ -1,0 +1,17 @@
+1) Your name, login name and ID number 
+
+2) How much time did the assignment take overall? 
+One week.
+
+3) What areas of the assignment did you find easy? 
+set/get methods.
+
+4) What areas of the assignment did you find difficult? 
+abstract class inheritance
+
+5) Which topics of the course did the assignment most help you understand? 
+polymorphism of Java object language
+
+6) Any other comments you would like to make. 
+Sample is so useful for us, it help a lot for our language using.
+
