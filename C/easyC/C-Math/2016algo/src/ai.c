@@ -45,7 +45,7 @@ static void copy_board(uint8_t dst[SIZE][SIZE], uint8_t src[SIZE][SIZE])
 static node_t* apply_action(node_t *node, move_t action)
 {
     node_t *newnode = (node_t *) malloc(sizeof(node_t));
-    uint32_t score;
+    uint32_t score = 0;
 
     copy_board(newnode->board, node->board);
 
@@ -144,8 +144,11 @@ move_t get_next_move( uint8_t board[SIZE][SIZE], int max_depth, propagation_t pr
                 generateNum++;
 
                 if (not_equal(newnode->board, node->board)) {
+					addRandom(newnode->board);
                     heap_push(&h, newnode);
-                    propagate_back_score(firstActionScore, newnode, propagation);
+					if (newnode->depth == max_depth) {
+						propagate_back_score(firstActionScore, newnode, propagation);
+					}
                 } else {
                     free(newnode);
                 }
@@ -155,6 +158,7 @@ move_t get_next_move( uint8_t board[SIZE][SIZE], int max_depth, propagation_t pr
 
     free_memory(explored, arrayIndex);
 
+	best_score = firstActionScore[0];
     for (i = 0; i < 4; i++) {
         if (firstActionScore[i] > best_score
                 || (firstActionScore[i] == best_score && rand()%2 == 0)) {
