@@ -1,0 +1,15 @@
+insert www.google.com 283983 active
+insert www.yahoo.com 191333 active
+insert www.eecg.utoronto.ca 179333 inactive
+insert www.altera.com 283299 active
+find www.google.com
+updatestatus www.google.com inactive
+printall
+printprobes www.altera.com
+remove www.eecg.utoronto.ca
+printprobes www.altera.com
+countactive
+printall
+removeall
+find www.google.com
+printall
