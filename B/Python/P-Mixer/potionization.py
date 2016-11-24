@@ -57,13 +57,13 @@ def make_felix_felicis():
     ingredients = get_ingredients("Felix Felicis")
     # add the first ingredient into the cauldron
 
-    cauldron = add(cauldron, ingredients[6])
+    cauldron = add(cauldron, ingredients[0])
 
     # add the second ingredient into the cauldron
-    cauldron = add(cauldron, ingredients[5])
+    cauldron = add(cauldron, ingredients[1])
 
     # add the third ingredient into the cauldron
-    cauldron = add(cauldron, ingredients[4])
+    cauldron = add(cauldron, ingredients[2])
 
     # stir 10 times
     cauldron = stir(cauldron, 10)
@@ -72,19 +72,19 @@ def make_felix_felicis():
     cauldron = add(cauldron, ingredients[3])
 
     # add the fifth ingredient into the cauldron
-    cauldron = add(cauldron, ingredients[2])
+    cauldron = add(cauldron, ingredients[4])
 
     # stir once
     cauldron = stir(cauldron, 1)
 
     # add the sixth ingredient into the cauldron
-    cauldron = add(cauldron, ingredients[1])
+    cauldron = add(cauldron, ingredients[5])
 
     # stir once
     cauldron = stir(cauldron, 1)
 
     # add the seventh ingredient into the cauldron
-    cauldron = add(cauldron, ingredients[0])
+    cauldron = add(cauldron, ingredients[6])
 
     # stir 10 times
     cauldron = stir(cauldron, 10)
