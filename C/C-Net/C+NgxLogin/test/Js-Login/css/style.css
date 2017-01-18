@@ -1,0 +1,129 @@
+::-webkit-input-placeholder {
+    color: black;
+}
+
+:-moz-placeholder {
+    color: black;
+}
+
+::-moz-placeholder {
+    color: black;
+}
+
+:-ms-input-placeholder {
+    color: black;
+}
+
+a:link {
+    color: #00479f;
+    text-decoration: none;
+}
+
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 60px;
+}
+
+.profilepic--center{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profilepic--topright {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.navbar__1 {
+    position: absolute;
+    top: 31px;
+    right: 75px;
+}
+
+.navbar__2 {
+    position: absolute;
+    top: 31px;
+    right: 109px;
+}
+
+.navbar__3 {
+    position: absolute;
+    top: 31px;
+    right: 143px;
+}
+
+.appspanel--bottom {
+    display: block;
+    margin-top: 70px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.appspanel--large {
+    border-collapse: separate;
+    border-spacing: 50px 50px;
+}
+
+.appspanel__app {
+    border: 1px #f5f5f5 solid;
+    padding: 25px 35px 25px 35px;
+}
+
+.form--login {
+    margin-top: 160px;
+}
+
+.form--login2 {
+    margin-top: 5%;
+}
+
+input {
+    outline: none;
+    width: 300px;
+    height: 55px;
+    border-radius: 100px;
+    border: solid 1px #00479f;
+    text-indent: 13%;
+}
+
+input[type=email], textarea {
+    background: url(https://d2yvv6a7kcdl71.cloudfront.net/56d0cdac085677b4173a8df1/assets/5003DC5C-D93C-4C6C-9EB4-83A567E2E972.png) no-repeat 5% center;
+    background-size: 20px 20px;
+    padding-left:10px;
+ }
+
+input[type=password], textarea {
+    background: url(https://d2yvv6a7kcdl71.cloudfront.net/56d0cdac085677b4173a8df1/assets/F6A4478D-69FB-404F-B0B6-88874D4210EF.png) no-repeat 5% center;
+    background-size: 20px 20px;
+    padding-left:10px;
+}
+
+button {
+    outline: none;
+    width: 300px;
+    height: 55px;
+}
+
+#btn{
+    color: white;
+    font-size: 15px;
+    border-radius: 100px;
+    border: solid 1px #00479f;
+    background-color: #00479f;
+}
+
+.mainpage {
+    height: 700px;
+    text-align: center;
+}
+
+.unserinfo{
+    font-size: 20px;
+}
+
+
+

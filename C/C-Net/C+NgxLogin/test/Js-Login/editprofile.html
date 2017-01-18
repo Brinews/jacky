@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="edit_profile.js"></script>
+	<script type="text/javascript" src="upload.js"></script>
+  </head>
+  <body>
+    <div id="editContent" class="container">
+        <div id="editResult" style="display:none;">
+        </div>
+		<FORM id="uploadForm" ENCTYPE="multipart/form-data" ACTION="" METHOD="POST">
+		<p>
+		HeaderImage: <BR> 
+		<INPUT TYPE="FILE" NAME="file" id="localpic">
+		<p>
+		<INPUT TYPE="submit" value="Upload Picture"></INPUT>
+		</FORM>
+
+        <form id="editForm" name="editForm" method="post" action="">
+        <fieldset>
+            <legend>Your information</legend>
+            <p>
+            <label for="username">Username</label>
+            <br />
+            <input type="text" id="username" name="username" class="text" size="20" disabled />
+            </p>
+            <p>
+            <label for="password">Password</label>
+            <br />
+			<table><tr><td id="test"></td></tr></table>
+            <input type="password" id="password" name="password" class="text" size="20" />
+            </p>
+            <p>
+            <label for="nickname">NickName</label>
+            <br />
+            <input type="text" id="nickname" name="nickname" class="text" size="20" />
+            </p>
+            <p>
+            <label for="picname">Picture</label>
+            <br />
+            <input type="text" id="picname" name="picname" class="text" size="20" />
+            </p>
+
+            <p>
+            <button type="submit" class="button positive">
+             Update
+            </button>
+            </p>
+        </fieldset>
+        </form>
+    </div>
+  </body>
+</html>
+
