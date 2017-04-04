@@ -35,8 +35,11 @@ void Swap(struct queue *loadqueue, struct queue *rr, struct pool *pol,
         temp.memaddr = addr;
         temp.starttime =  ticker; // update loaded time
         enqueue(rr, &temp);
+
         if (expired != NULL) {
-            enqueue(rr, expired);
+            struct pcb t = dequeue(rr);
+            t.timeslice = quant;
+            enqueue(rr, &t);
         }
 
         //printf("$$\n");
@@ -49,8 +52,10 @@ void Swap(struct queue *loadqueue, struct queue *rr, struct pool *pol,
         //printf("^^\n");
         //print_queue(rr);
 
+        int pid = -1;
         if (expired != NULL) {
-            enqueue(rr, expired);
+            pid = expired->pid;
+            //enqueue(rr, expired);
         }
 
         do {
@@ -66,7 +71,6 @@ void Swap(struct queue *loadqueue, struct queue *rr, struct pool *pol,
             queue_insert(loadqueue, temp);
         } while ((addr = pool_alloc(pol, pc->memsize, opt)) == -1);
 
-
         // swap in
         temp = dequeue(loadqueue);
 
@@ -74,7 +78,15 @@ void Swap(struct queue *loadqueue, struct queue *rr, struct pool *pol,
         temp.memaddr = addr;
         temp.starttime =  ticker; // update loaded time
 
-        enqueue(rr, &temp);
+        struct pcb *pt = queue_front(rr);
+        if (pid != -1 && pt != NULL && pt->pid == pid) {
+            enqueue(rr, &temp);
+            struct pcb nt = dequeue(rr);
+            nt.timeslice = quant;
+            enqueue(rr, &nt);
+        } else {
+            enqueue(rr, &temp);
+        }
 
         //pool_print_available(pol);
         //pool_print_active(pol);
@@ -164,9 +176,9 @@ int main(int argc, char **argv)
         cur = queue_front(rr);
         
         /*
-        printf("***\n");
+        printf(">>>\n");
         print_queue(rr);
-        printf("***\n");
+        printf(" <<<\n");
         */
 
         // update time
@@ -176,25 +188,6 @@ int main(int argc, char **argv)
 
         //printf("&&& %d: ", ticker);
         //print_pcb(cur);
-
-        if (cur->timeslice <= 0) {
-            // E2: time slice expired
-            if (!isempty(loadqueue)) {
-                // swap in
-                temp = dequeue(rr);
-                temp.timeslice = quant;
-                Swap(loadqueue, rr, pol, ticker, quant, &temp, opt);
-                //enqueue(rr, &temp);
-            } else {
-                // Schedule():
-                if (cur->jobtime > 0) {
-                    temp = dequeue(rr);
-                    temp.timeslice = quant;
-                    enqueue(rr, &temp);
-                }
-            }
-        }
-
         if (cur->jobtime <= 0) {
             // E3: job exit
 
@@ -212,7 +205,24 @@ int main(int argc, char **argv)
                     cur->timeslice = quant;
                 }
             }
+        } else if (cur->timeslice <= 0) {
+            // E2: time slice expired
+            if (!isempty(loadqueue)) {
+                // swap in
+                //temp = dequeue(rr);
+                //temp.timeslice = quant;
+                Swap(loadqueue, rr, pol, ticker, quant, cur, opt);
+                //enqueue(rr, &temp);
+            } else {
+                // Schedule():
+                if (cur->jobtime > 0) {
+                    temp = dequeue(rr);
+                    temp.timeslice = quant;
+                    enqueue(rr, &temp);
+                }
+            }
         }
+
     }
 
     printf("time %d, simulation finished.\n", ticker);
