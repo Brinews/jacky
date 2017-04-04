@@ -3,11 +3,13 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "mempool.h"
+
 #define FREE    0
 #define USED    1
 
 struct mem {
-    char *addr;
+    int addr;
     int size;
     int type; /* 0: free, 1: allocated */
     struct mem *next;
@@ -15,7 +17,7 @@ struct mem {
 
 struct pool {
     struct mem *list;
-    char *memaddr;
+    int memaddr;
     int leftsize;
     int totalsize;
 };
@@ -31,7 +33,7 @@ struct pool *pool_create(int size)
 
     pol->leftsize = size;
     pol->totalsize = size;
-    pol->memaddr = (char *) malloc(size);
+    pol->memaddr = 0;
 
     pol->list = (struct mem*) malloc(sizeof(struct mem));
     pol->list->addr = pol->memaddr;
@@ -47,29 +49,79 @@ bool pool_destroy(struct pool *p)
     if (p->leftsize != p->totalsize) return false;
 
     free(p->list);
-    free(p->memaddr);
     free(p);
 
     return true;
 }
 
-char *pool_alloc(struct pool *p, int size)
+int pool_alloc(struct pool *p, int size, FitOpt opt)
 {
     if (size > p->leftsize) { /* max left space unfit */
-        return NULL;
+        return -1;
     }
 
     struct mem *ptr = p->list;
     struct mem *prev = NULL;
-    while (ptr != NULL) {
-        if (ptr->type == FREE && ptr->size >= size) {
-            break;
+
+    if (opt == FIRST) {
+        while (ptr != NULL) {
+            if (ptr->type == FREE && ptr->size >= size) {
+                break;
+            }
+            prev = ptr;
+            ptr = ptr->next;
         }
-        prev = ptr;
-        ptr = ptr->next;
+    } else if (opt == BEST) {
+        int bestfitsize = -1;
+        while (ptr != NULL) {
+            if (ptr->type == FREE && ptr->size >= size) {
+                if (bestfitsize == -1 || ptr->size < bestfitsize) {
+                    bestfitsize = ptr->size;
+                }
+            }
+
+            prev = ptr;
+            ptr = ptr->next;
+        }
+
+        if (bestfitsize != -1) {
+            prev = NULL;
+            ptr = p->list;
+            while (ptr != NULL) {
+                if (ptr->type == FREE && ptr->size == bestfitsize) {
+                    break;
+                }
+                prev = ptr;
+                ptr = ptr->next;
+            }
+        }
+    } else if (opt == WORST) {
+        int worstfitsize = -1;
+        while (ptr != NULL) {
+            if (ptr->type == FREE && ptr->size >= size) {
+                if (worstfitsize == -1 || ptr->size > worstfitsize) {
+                    worstfitsize = ptr->size;
+                }
+            }
+
+            prev = ptr;
+            ptr = ptr->next;
+        }
+
+        if (worstfitsize != -1) {
+            prev = NULL;
+            ptr = p->list;
+            while (ptr != NULL) {
+                if (ptr->type == FREE && ptr->size == worstfitsize) {
+                    break;
+                }
+                prev = ptr;
+                ptr = ptr->next;
+            }
+        }
     }
 
-    if (ptr == NULL) return NULL; /* no fit space */
+    if (ptr == NULL) return -1; /* no fit space */
 
     if (ptr->size == size) {
         ptr->type = USED;
@@ -99,7 +151,7 @@ char *pool_alloc(struct pool *p, int size)
     return node->addr;
 }
 
-bool pool_free(struct pool *p, char *addr)
+bool pool_free(struct pool *p, int addr)
 {
     struct mem *ptr = p->list;
     struct mem *prev = NULL;
@@ -133,12 +185,11 @@ bool pool_free(struct pool *p, char *addr)
             free(ptr);
         }
 
-
         return true;
     }
 }
 
-char *pool_realloc(struct pool *p, char *addr, int size)
+int pool_realloc(struct pool *p, int addr, int size, FitOpt opt)
 {
     struct mem *ptr = p->list;
     struct mem *prev = NULL;
@@ -192,8 +243,8 @@ char *pool_realloc(struct pool *p, char *addr, int size)
             return addr;
         } else {
             /* new alloc */
-            char *naddr = pool_alloc(p, size);
-            if (naddr != NULL) {
+            int naddr = pool_alloc(p, size, opt);
+            if (naddr != -1) {
                 pool_free(p, addr);
             }
 

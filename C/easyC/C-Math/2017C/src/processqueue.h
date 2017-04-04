@@ -9,7 +9,7 @@ struct pcb {
     int memsize;
     int jobtime;
     int timeslice;
-    char *memaddr;
+    int memaddr;
 };
 
 struct queue;

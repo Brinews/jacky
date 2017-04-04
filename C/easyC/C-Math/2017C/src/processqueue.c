@@ -21,7 +21,7 @@ struct pcb* create_pcb(int pid, int st, int ms, int jt)
     p->memsize = ms;
     p->jobtime = jt;
     p->timeslice = 0;
-    p->memaddr = NULL;
+    p->memaddr = -1;
 
     return p;
 }

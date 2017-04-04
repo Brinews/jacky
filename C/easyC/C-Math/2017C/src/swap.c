@@ -13,7 +13,6 @@ const int MAXQSIZE = 100;
 extern  int     optind;
 extern  char    *optarg;
 
-typedef enum { FIRST, BEST, WORST } FitOpt;
 
 void display(int ticker, int pid, int pnum, int hnum, int usage)
 {
@@ -21,25 +20,38 @@ void display(int ticker, int pid, int pnum, int hnum, int usage)
             ticker, pid, pnum, hnum, usage);
 }
 
-// adder = 1 means need re-push a process into rr queue later
 void Swap(struct queue *loadqueue, struct queue *rr, struct pool *pol,
-        int ticker, int quant, int adder)
+        int ticker, int quant, struct pcb *expired, FitOpt opt)
 {
     struct pcb temp;
 
     struct pcb *pc = queue_front(loadqueue);
 
-    char *addr = pool_alloc(pol, pc->memsize);
-    if (addr != NULL) {
+    int addr = pool_alloc(pol, pc->memsize, opt);
+    if (addr != -1) {
         // swap in new process
         temp = dequeue(loadqueue);
         temp.timeslice = quant;
         temp.memaddr = addr;
         temp.starttime =  ticker; // update loaded time
         enqueue(rr, &temp);
-        display(ticker, temp.pid, queue_size(rr)+adder, hole_count(pol), mem_usage(pol));
+        if (expired != NULL) {
+            enqueue(rr, expired);
+        }
+
+        //printf("$$\n");
+        //print_queue(rr);
+
+        display(ticker, temp.pid, queue_size(rr), hole_count(pol), mem_usage(pol));
     } else {
         // Swap(): swap out and swap in
+
+        //printf("^^\n");
+        //print_queue(rr);
+
+        if (expired != NULL) {
+            enqueue(rr, expired);
+        }
 
         do {
             temp = queue_swapout(rr, ticker);
@@ -52,7 +64,7 @@ void Swap(struct queue *loadqueue, struct queue *rr, struct pool *pol,
 
             temp.starttime = ticker;
             queue_insert(loadqueue, temp);
-        } while ((addr = pool_alloc(pol, pc->memsize)) == NULL);
+        } while ((addr = pool_alloc(pol, pc->memsize, opt)) == -1);
 
 
         // swap in
@@ -67,109 +79,13 @@ void Swap(struct queue *loadqueue, struct queue *rr, struct pool *pol,
         //pool_print_available(pol);
         //pool_print_active(pol);
 
-        display(ticker, temp.pid, queue_size(rr)+adder, hole_count(pol), mem_usage(pol));
+        display(ticker, temp.pid, queue_size(rr), hole_count(pol), mem_usage(pol));
 
+        //printf("++\n");
         //print_queue(loadqueue);
         //exit(0);
     }
 }
-
-void Schedule()
-{
-}
-
-// get_let() reads in a lowercase letter from input and returns
-//   it as an index from 0...25
-// effects: if unable to read in a letter, prints message and exits
-int get_let(void) {
-    char c = '\0';
-    int result = scanf(" %c", &c);
-  if (result != 1 || c < 'a' || c > 'z') {
-    printf("exit: invalid letter\n");
-    exit(1);
-  }
-  return c - 'a';
-}
-
-// get_int() reads in an int from input
-// effects: if unable to read in a number, prints message and exits
-int get_int(void) {
-  int i;
-  if (scanf("%d", &i) != 1) {
-    printf("exit: invalid number\n");
-    exit(1);
-  }
-  return i;
-}
-
-int test_memory(void) {
-  struct pool *p = NULL;
-  char *letters[26] = {0};
-  while (1) {
-    char cmd;
-    if (scanf(" %c", &cmd) != 1) break;
-    if (cmd == 'q') break;
-    if (cmd == 'c') {
-      int size = get_int();
-      if (p) {
-        printf("create: fail (already created)\n");
-      } else {
-        p = pool_create(size);
-      }
-    } else if (cmd == 'd') {
-      bool result = pool_destroy(p);
-      if (result) {
-        p = NULL;
-      } else {
-        printf("destroy: fail\n");
-      }
-    } else if (cmd == 'a') {
-      int let = get_let();      
-      int size = get_int();
-      if (letters[let]) {
-        printf("malloc %c %d: fail (already allocated)\n", 'a' + let, size);
-      } else {
-        char *ptr = pool_alloc(p, size);
-        if (ptr) {
-          letters[let] = ptr;
-        } else {
-          printf("malloc %c %d: fail\n", 'a' + let, size);
-        }
-      }
-    } else if (cmd == 'f') {
-      int let = get_let(); 
-      if (pool_free(p, letters[let])) {
-        letters[let] = NULL;
-      } else {
-        printf("free %c: fail\n", 'a' + let);
-      }
-    } else if (cmd == 'r') {
-      int let = get_let();      
-      int size = get_int();
-      char *ptr = pool_realloc(p, letters[let], size);
-      if (ptr) {
-        letters[let] = ptr;
-      } else {
-        printf("realloc %c %d: fail\n", 'a' + let, size);
-      } 
-    } else if (cmd == 'm') {
-      pool_print_active(p);
-    } else if (cmd == 'n') {
-      pool_print_available(p);
-    } else {
-      printf("Invalid command (%c).\n",cmd);
-      break;
-    }
-  }
-  if (p) {
-    if (pool_destroy(p)) {
-      printf("ERROR: did not destroy pool\n");
-    } else {
-      printf("ERROR: did not free all allocations\n");
-    }
-  }
-}
-
 
 int main(int argc, char **argv)
 {
@@ -242,10 +158,11 @@ int main(int argc, char **argv)
     while (!isempty(loadqueue) || !isempty(rr)) {
         if (pool_empty(pol)) {
             //E1: first load
-            Swap(loadqueue, rr, pol, ticker, quant, 0);
+            Swap(loadqueue, rr, pol, ticker, quant, NULL, opt);
         }
 
         cur = queue_front(rr);
+        
         /*
         printf("***\n");
         print_queue(rr);
@@ -257,7 +174,7 @@ int main(int argc, char **argv)
         cur->jobtime--;
         ticker++;
 
-        //printf("%d: ", ticker);
+        //printf("&&& %d: ", ticker);
         //print_pcb(cur);
 
         if (cur->timeslice <= 0) {
@@ -266,13 +183,15 @@ int main(int argc, char **argv)
                 // swap in
                 temp = dequeue(rr);
                 temp.timeslice = quant;
-                Swap(loadqueue, rr, pol, ticker, quant, 1);
-                enqueue(rr, &temp);
+                Swap(loadqueue, rr, pol, ticker, quant, &temp, opt);
+                //enqueue(rr, &temp);
             } else {
                 // Schedule():
-                temp = dequeue(rr);
-                temp.timeslice = quant;
-                enqueue(rr, &temp);
+                if (cur->jobtime > 0) {
+                    temp = dequeue(rr);
+                    temp.timeslice = quant;
+                    enqueue(rr, &temp);
+                }
             }
         }
 
@@ -285,16 +204,18 @@ int main(int argc, char **argv)
             
             if (!isempty(loadqueue)) {
                 // Swap():
-                Swap(loadqueue, rr, pol, ticker, quant, 0);
+                Swap(loadqueue, rr, pol, ticker, quant, NULL, opt);
             } else {
                 // Schedule()
-                cur = queue_front(rr);
-                cur->timeslice = quant;
+                if (!isempty(rr)) {
+                    cur = queue_front(rr);
+                    cur->timeslice = quant;
+                }
             }
         }
     }
 
-    printf("time %d, simulation finished.\n");
+    printf("time %d, simulation finished.\n", ticker);
 
     // free all memory
     queue_destroy(rr);
