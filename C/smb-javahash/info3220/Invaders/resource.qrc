@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/fireball.png</file>
+        <file>images/ship_giant.png</file>
+        <file>images/ship_large.png</file>
+        <file>images/ship_normal.png</file>
+        <file>images/ship_tiny.png</file>
+        <file>images/shape1.png</file>
+        <file>images/shape2.png</file>
+        <file>images/shape3.png</file>
+    </qresource>
+</RCC>
