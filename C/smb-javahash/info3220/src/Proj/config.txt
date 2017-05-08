@@ -1,0 +1,28 @@
+
+
+[settings]
+FRAMES_PER_SECOND = 60
+
+
+[space]
+name = Space_A
+
+[spaceships]
+name = Sol
+position_x  =  0
+position_y  =  0
+velocity_x  =  0
+velocity_y  =  0
+parent = Space_A
+
+[ship]
+name = Sun
+position_x = 0
+position_y = 0
+velocity_x = 0
+velocity_y = 68e3
+color = #FFFF00
+// small, middle or big
+size = middle
+parent  =  Sol
+
