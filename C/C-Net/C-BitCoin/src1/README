@@ -1,0 +1,6 @@
+Test:
+
+`make`
+
+You should probably write your own unit test as your implementation grows.
+The unit-test is also extremely helpful at reminding yourself how to use the interfaces.
