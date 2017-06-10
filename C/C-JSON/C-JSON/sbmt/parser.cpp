@@ -408,6 +408,77 @@ JSONParser::translateNumber( TokenNode &tokenNode )
    return true;
 }
 
+enum STATE{ S, A, B, C, D, E, F, G, H };
+
+static const char* RecognizeNumber(const char* str, STATE* last_state)
+{   
+    STATE state = S;
+    *last_state = S;
+    const char *p = str;
+    for (; *p != '\0'; p++){
+        const char& ch = *p;
+        switch (state){
+        case S:
+            if (ch == '0')      state = A;
+            else if (ch == '-') state = B;
+            else if (ch >= '1' && ch <= '9')state = C;
+            else return p;
+            break;
+        case A:
+            if (ch == 'e' || ch == 'E') state = E;
+            else if (ch == '.') state = D;
+            else return p;
+            break;
+        case B:
+            if (ch == '0')  state = A;
+            else if (ch >= '1' && ch <= '9') state = C;
+            else return p;
+            break;
+        case C:
+            if (isdigit(ch)) state = C;
+            else if (ch == '.') state = D;
+            else if (ch == 'e' || ch == 'E') state = E;
+            else return p;
+            break;
+        case D:
+            if (isdigit(ch)) state = F;
+            else return p;
+            break;
+        case E:
+            if (isdigit(ch)) state = H;
+            else if (ch == '+' || ch == '-') state = G;
+            else return p;
+            break;
+        case F:
+            if (isdigit(ch)) state = F;
+            else if (ch == 'e' || ch == 'E') state = E;
+            else return p;
+            break;
+        case G:
+            if (isdigit(ch)) state = H;
+            else return p;
+            break;
+        case H:
+            if (isdigit(ch)) state = H;
+            else return p;
+            break;
+        default:
+            assert(true);
+        }
+        *last_state = state;
+
+    }
+    return p;
+}
+
+static bool Recognize(const char* s)
+{
+    STATE state;
+    const char* endp = RecognizeNumber(s, &state);
+    bool onterminal = (state == A || state == C || state == F || state == H);
+    return *endp == '\0' && onterminal;
+}
+
 
 bool 
 JSONParser::translateDouble( TokenNode &tokenNode )
@@ -416,12 +487,15 @@ JSONParser::translateDouble( TokenNode &tokenNode )
    const int bufferSize = 32;
    Char buffer[bufferSize];
 
-   int count;
+   int count = 0;
    int length = int(tokenNode.tail_ - tokenNode.start_);
 
    memcpy( buffer, tokenNode.start_, length );
    buffer[length] = 0;
-   count = sscanf( buffer, "%lf", &value );
+
+   if (Recognize(buffer)) {
+       count = sscanf( buffer, "%lf", &value );
+   }
 
    if ( count != 1 )
       return addWrong( "exptected a double <" + std::string( tokenNode.start_, tokenNode.tail_ ) + ">;", tokenNode );
