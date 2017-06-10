@@ -1,0 +1,15 @@
+[
+  {
+    "age" : 17,
+    "favourite" : [ "footŃall", "basketball" ],
+    "married" : false,
+    "name" : "Tom",
+    "salary" : 12.20
+  },
+  {
+    "age" : 26,
+    "married" : true,
+    "name" : null,
+    "salary" : 1200.0
+  }
+]
