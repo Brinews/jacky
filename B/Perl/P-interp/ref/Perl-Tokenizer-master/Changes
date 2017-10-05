@@ -1,0 +1,33 @@
+Revision history for Perl-Tokenizer
+
+0.06    2017-08-10
+
+        [CHANGES AND IMPROVEMENTS]
+
+        - Added more tests.
+        - Improved documentation.
+        - The only function `perl_tokens` is now exported by default.
+
+        [BUG-FIXES]
+
+        - Fixed the `assignment_operator` token to include only assignment operators.
+        - The assignment operator `=` is now parsed correctly as an `assignment_operator` instead of `operator`.
+
+0.05    2016-11-28
+        - Added cache support for regular expressions that are dynamically generated.
+        - Added more tests.
+        - Updated the dependencies.
+
+0.04    2016-06-03
+        - Fixed the parsing of `$h{key}{s}`, `$h{key}{tr}`, etc...
+        - Fixed the parsing of `$o->s()`, `$o->tr()`, etc...
+        - Fixed the parsing of `$x++ < $y` and `$x-- < $y`
+
+0.03    2015-09-04
+        - Added support for the new bitwise operators (`^.`, `&.` and `|.`)
+
+0.02    2015-07-23
+        - Fixed the parsing of '__DATA__' when it's followed by a fat comma.
+
+0.01    2015-07-16
+        - First version, released on an unsuspecting world.
