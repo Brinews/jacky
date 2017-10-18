@@ -1,0 +1,79 @@
+1. Question 1
+
+a)
+    When there is one house, then choose this house is optimum.
+    When there are two houses, then choose the max house is optimum.
+    When there are more than two houses, we can split it into three sub-set by
+    n-2 way, where n is the size of houses.
+    For example, for houses {P1...Pi..Pn}, if we choose pi as the split, then
+    we get three subsets s1{P1..Pi-1}, s2{Pi}, s3{Pi+1..Pn}. 
+
+    Opt1(s) = Opt(s1-Pi-1) + V(pi) + Opt(s3-Pi+1), when we choose Pi, and not
+    choose Pi-1 and Pi+1.
+    Opt2(s) = Opt(s1) + Opt(s3), when we do not choose Pi.
+
+    Then, Opt(s) = max{Opt1(s), Opt2(s)}, where Opt(s) is the optimum of set s.
+    Opt(pi) = V(pi).
+
+    We can turn it into a bottom-up solution:
+    Opt[i,j] = max{Opt[i, k-2]+V(k)+Opt[k+2,j], Opt[i,k-1]+Opt[k+1,j]}, where i < k < j.
+
+b)  Proof:
+    If size(s) = 1, Opt(s) = V(s);
+    If size(s) = 2, Opt(s) = max(s), for adjacent house we can only select one;
+    If size(s) = 3, Opt(s) = max(P1+P3, P2), where P2 can be chosen or not;
+    If size(s) > 3, assume Opt(s) = max{Opt(s1)+V(P2)+Opt(s3),
+        Opt(s1)+Opt(s3)}. The Opt(s1) is the optimum of set s1, if not, we can
+        choose another optimum solution to get a more higher Opt(s), this is
+        contradicting the fact that Opt(s).
+    
+    According to our bottom-up formula, we will calculate the optimum of
+    different section of [i,j]. For each section, when the optimum is
+    determinied, then last [0, n-1] houses's optimum is determined at last.
+
+c)  According to our algorithm, we need calculate all Opt[i, j], where 0 < i,j < n.
+    Calcaulate all Opts need O(n^2) time complexity. 
+
+    In order to get the split point, we need traverse the array in O(n) time.
+    So the upper bound on the time complexity is O(n^3).
+
+2. Question 2
+
+a) 
+    When there is a house in tree, then choose it as the optimum;
+    When there are three houses, then there are two choice: one is choose the
+    root, the other is choose the two leaves. Optimum is max{V(P0),
+        V(P1)+V(P2)}
+    When there are more than 3 houses, we can split it into small trees.
+    P0
+   /   \
+  P1    P2  , the optimum has two case, one is chosen P0, the other is 
+ / \   / \
+s1 s2 s3  s4  not chosen P0. 
+    When P0 is chosen, Opt(s) = V(P0)+Opt(s1)+Opt(s2)+Opt(s3)+Opt(s4)
+    When P0 is not chosen, Opt(s) = Opt(P1) + Opt(P2)
+
+    Turn it into bottom-up solution:
+    Opt(s) = max { Opt(s1) + Opt(s2), Opt1(s1)+Opt1(s2)+V(P0)}, 
+        where s1 and s2 are subtree of s, 
+        Opt1(s1) is the optimum of tree s1 with s1's root not chosen.
+
+b) Proof:
+
+    First, the Opt(s) satisfies the above recurrence.
+    If size(s) = 1, the optimum is V(s).
+    If size(s) > 1, when the optimum contains root node, we can assure that
+    root's adjacent nodes will not be chosen. Then the left sub-trees'optmum
+    can be obtained by Opt(si). When the optimum does not contain root node,
+    then Opt(s) = Opt(s1)+Opt(s2), where s1 and s2 are child tree of root. If
+    not, we can use the Opt(subtree) to get a higher optimum.
+
+    Second, the algorithm returns the optimum of house tree.
+    Since we get all the sub-trees' optimum, the the whole tree's optimum can
+    be got by same optimum way.
+
+c) Upper bound on the time complexity: O(NlogN).
+   
+    We need calculate every tree node's Opt, and each calculation need
+    get the optimum of all the sub-tree nodes, which will cost O(logN). 
+    So the upper bound of time complexity is O(NlogN).

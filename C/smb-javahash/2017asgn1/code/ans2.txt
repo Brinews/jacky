@@ -1,0 +1,56 @@
+1. Question One
+(a) We can do a sort for P and get {p1, .. pn}. Then the imp(pi) = i-1
+if pi != pi-1, or imp(pi) = imp(pi-1) if pi = pi-1. And the start point's imp(p1) = 0.
+
+(b) Once the n points in 1-dimensional space is sorted in ascending order.
+Then we can assure that pi >= pj where i > j. If pi > pi-1, it means pi is
+superior to the other p0..pi-1 points, so imp(pi) = i-1. If pi = pi-1, it
+means they are superior to the same other points, so imp(pi) = imp(pi-1).
+
+(c) In order to sort the 1-dimension points array, we can use the merge-sort,
+    which first divided the array into two sub-array, and sort the two sub-array
+    seperately, then merge the two sorted sub-array into one.
+
+    In this way, we need do log(n)'s dividing. Each merging will compare all n
+    elements. So the time cost of merge-sort is O(nlogn).
+
+    After merge-sort, we need do a O(n) traverse of the sorted array to get
+    the imp(pi). So the upper bound on the time complexity is O(nlogn).
+
+2. Question Two
+(a)
+    i. According to the given P1 and P2, we know each point in P2 has a
+    superior x1-coordinates. So the importance of points in P1 will stay
+    unchange when P1 and P2 merged. We only need update the importance of each
+    points in P2 by this way:
+        * impl(qi) = impl(qi) + {points number(Ei) in P1 which have lower
+            x2-coordinates than qi}
+        * Ei = Ei-1 + {points in P1 with x2-coordinates between qi and qi-1}
+
+   ii. Obviously, the superior points need have bigger x1-coordinatates and
+   x-2coordinates. All points in P2 have bigger x1-coordinates. Also, points
+   in P2 are in order by x2-coordinates, which means qi is superior to the
+   points that are superior to qj where i > j.
+
+  iii. In our algorithm, we only need do a traverse of P1 and P2, so the upper
+  bound on time complexity is O(n).
+
+(b)
+    i. Like the quick sort algorithm, we can first select a pivot points and
+    divide the point set P into P1 and P2, then sort each set and get their
+    impl values. At last, do a merge with P1 and P2 using the algorithm in (a).
+    Of course, we can divide the P1 into P1' and P2' recursivly.
+
+   ii. If the point set is in order by x1-coordinates and then by
+   y1-coordinates, we can divided it into two sets, and for each set we can
+   divide it into two sets, and so on. For each pair of sub-set, we can
+   calculate their impl values. In this way, each sub-set's impl is
+   independant. Then using the above merge algorithm, we can get the impl
+   array at last.
+
+  iii. The time complexity has two parts, first is points sorting and second
+  is impl solution.
+  According to the merge sort algorithm, the time cost is O(nlogn).
+  And then the divide and conquer algorithm, like the merge sort algorithm
+  flow, the time cost is O(nlogn) too.
+  So the upper bound of time complexity is O(nlogn).

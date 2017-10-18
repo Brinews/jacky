@@ -1,0 +1,32 @@
+1. Question 
+
+(a) Description of how algorithm works
+
+We can divided the graph into several parts, nodes in each part have path to each other. Through depth-first-search(DFS), we can get the partitions easily. Then when we query a pair(u,v) has a path or not, we can just check whether they are in same part.
+
+(b) Why the algorithm is correct
+
+As we known, a pair(u, v) in undirected graph has a path means u and v are in the same group, otherwise they are not in same group. Nodes in one group can be reached from any node by depth-first-search(DFS).
+
+(c) Prove the upper bound on the time complexity of the algorithm
+
+The algorithm's complexity is depend on the depth-first-search(DFS). DFS's time complexity is O(m+n), do q times query need O(q*(m+n)).
+
+2. Question 2
+
+(a) Description of how algorithm works
+
+Like question 1, we can treat the same group nodes as one node in graph, where the same group means nodes has path in given A. After this operation, we will geta simple undirected graph, but there may be several edges between some pair nodes. If there are several edges between node pair, we only select the min-weight edge. Then we find the problem become a MST, through a greedy algorithm can we get the minimum edges cost.
+
+(b) Why the algorithm is correct
+
+First, nodes in same group do not need add connected edge. If we add a edge between node pair in same group, we can just remove it to get one connected network and get less cost.
+Second, after group simplify, we may get several edges between node pair. If we do not use the minimum edge, we can replace it with minimum edge to get a connected network and less cost.
+
+(c) Prove the upper bound on the time complexity of the algorithm
+
+The simplify processing can use depth-first-search(DFS) algorithm, time complexit is O(m+n).
+Get the minmum connected cost can use min-span-tree(MST) algorithm, time complexity is O(m*log(n)).
+So the upper bound on the time complexity is O(mlogn).
+
+
