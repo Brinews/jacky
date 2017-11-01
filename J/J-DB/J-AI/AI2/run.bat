@@ -1,0 +1,9 @@
+java Raft -p 31415 -i s3.in
+java Raft -p 31415 -i s0.in
+java Raft -p 31415 -i s9.in
+java Raft -p 31415 -i s6.in
+java Raft -p 31415 -i s8.in
+java Raft -p 31415 -i s0.in
+java Raft -p 31415 -i s1.in
+java Raft -p 31415 -i s2.in
+java Raft -p 31415 -i s3.in
