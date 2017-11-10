@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS records;
+
+CREATE TABLE records (
+  querykeys	CHAR(200), 
+  links		CHAR(1024),
+  score		INT, 
+  querydate	DATE, 
+  PRIMARY KEY (querykeys, links)
+);
+
