@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS records;
+DROP TABLE IF EXISTS tags;
+
+CREATE TABLE records (
+  querykeys	CHAR(200), 
+  links		CHAR(1024),
+  score		INT, 
+  querydate	DATE, 
+  PRIMARY KEY (querykeys, links, score)
+);
+
+CREATE TABLE tags (
+  querykeys CHAR(200),
+  relatewords CHAR(1024)
+);
+
